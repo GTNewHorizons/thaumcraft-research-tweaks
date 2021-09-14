@@ -33,8 +33,8 @@ idea {
 }
 
 version = "1.0"
-group = "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+group = "elan.thaumcraft.research.tweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "ThaumcraftResearchTweaks"
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
@@ -108,8 +108,8 @@ artifacts {
     archives sourcesJar
 }
 
-def mixinConfigJson = 'mixins.thaumcraft.research.tweaks.json'
-def mixingConfigRefMap = 'mixins.yourmodid.refmap.json'
+def mixinConfigJson = 'mixins.ThaumcraftResearchTweaks.json'
+def mixingConfigRefMap = 'mixins.ThaumcraftResearchTweaks.refmap.json'
 
 def mixinAnnotationProcessorJar = new File(projectDir.absolutePath + '/build/mixin-0.8-SNAPSHOT.jar')
 def mixinAnnotationProcessorUrl = new URL("https://github.com/TimeConqueror/SpongeMixins/raw/master/mixin-0.8-SNAPSHOT.jar")

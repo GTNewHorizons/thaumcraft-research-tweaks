@@ -1,18 +1,19 @@
 [
-{
-  "modid": "thaumcraft-research-tweaks",
-  "name": "Thaumcraft Research Tweaks",
-  "description": "Makes thaumcraft research table ui resizable.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["Elan"],
-  "credits": "GTNH pack dev for providing introduction into mod dev",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": [
-    ""
-  ]
-}
+  {
+    "modid": "thaumcraftResearchTweaks",
+    "name": "Thaumcraft Research Tweaks",
+    "description": "Makes thaumcraft research table ui resizable.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["Elan"],
+    "credits": "GTNH pack dev for providing introduction into mod dev",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": [
+      "Thaumcraft 4", 
+      "Mixins"
+    ]
+  }
 ]
