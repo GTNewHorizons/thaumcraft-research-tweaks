@@ -15,7 +15,6 @@ buildscript {
         }
     }
     dependencies {
-        // defaults to Java 8 & UTF-8 encoding
         classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
     }
 }
@@ -23,6 +22,19 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'forge'
+
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "1.7.10-${config.project.version}"
+group = "elan.thaumcraft.research.tweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "Thaumcraft-Research-Tweaks"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 idea {
     module {
@@ -32,13 +44,13 @@ idea {
     }
 }
 
-version = "1.0"
-group = "elan.thaumcraft.research.tweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "ThaumcraftResearchTweaks"
-
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
-    runDir = "eclipse"
+    runDir = "run"
+    
+    replaceIn "src/main/java/elan/thaumcraft/research/tweaks/Main.java"
+    def versionArray = project.version.tokenize('-')
+    replace "GRADLETOKEN_VERSION", versionArray.get(1)
 }
 
 repositories {
@@ -108,10 +120,10 @@ artifacts {
     archives sourcesJar
 }
 
-def mixinConfigJson = 'mixins.ThaumcraftResearchTweaks.json'
-def mixingConfigRefMap = 'mixins.ThaumcraftResearchTweaks.refmap.json'
+def mixinConfigJson = 'mixins.thaumcraftresearchtweaks.json'
+def mixingConfigRefMap = 'mixins.thaumcraftresearchtweaks.refmap.json'
 
-def mixinAnnotationProcessorJar = new File(projectDir.absolutePath + '/build/mixin-0.8-SNAPSHOT.jar')
+def mixinAnnotationProcessorJar = new File(projectDir.absolutePath + File.separator + '/build/mixin-0.8-SNAPSHOT.jar')
 def mixinAnnotationProcessorUrl = new URL("https://github.com/TimeConqueror/SpongeMixins/raw/master/mixin-0.8-SNAPSHOT.jar")
 
 def ensureMixinJarPresent = task ensureMixinJarPresent {
@@ -123,6 +135,7 @@ def ensureMixinJarPresent = task ensureMixinJarPresent {
                 }
     }
 }
+
 tasks.compileJava.dependsOn ensureMixinJarPresent
 
 def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
@@ -147,7 +160,6 @@ reobf {
 
 afterEvaluate {
     tasks.compileJava {
-        println "Path: " + projectDir.absolutePath
         options.compilerArgs += [
                 // There's a bug in the AnnotationProcessor for 0.7.11 that will generate the annotations pointing to the parent class instead of subclass
                 // resulting in the mixin not being applied.  This is fixed in 0.8, however 0.8 needs guava > 21.0, and minecraft ships with 17.0.
@@ -160,9 +172,6 @@ afterEvaluate {
     }
 }
 
-sourceSets {
-    main {
-        output.resourcesDir = output.classesDir
-        ext.refMap = mixingConfigRefMap
-    }
+runClient {
+    args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker", "--mixin", "mixins.thaumcraftresearchtweaks.json"
 }

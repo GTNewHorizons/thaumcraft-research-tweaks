@@ -1,6 +1,6 @@
 [
   {
-    "modid": "thaumcraftResearchTweaks",
+    "modid": "thaumcraftresearchtweaks",
     "name": "Thaumcraft Research Tweaks",
     "description": "Makes thaumcraft research table ui resizable.",
     "version": "${version}",
@@ -12,8 +12,8 @@
     "logoFile": "",
     "screenshots": [],
     "dependencies": [
-      "Thaumcraft 4", 
-      "Mixins"
+      "Thaumcraft", 
+      "SpongeMixins"
     ]
   }
 ]
