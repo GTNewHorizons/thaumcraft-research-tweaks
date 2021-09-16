@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.7.11",
   "package": "elan.thaumcraft.research.tweaks.mixin",
-  "refmap": "mixins.ThaumcraftResearchTweaks.refmap.json",
+  "refmap": "mixins.thaumcraftresearchtweaks.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "client": [

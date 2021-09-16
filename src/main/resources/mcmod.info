@@ -1,17 +1,18 @@
 [
   {
-    "modid": "thaumcraftresearchtweaks",
+    "modid": "${modid}",
     "name": "Thaumcraft Research Tweaks",
-    "description": "Makes thaumcraft research table ui resizable.",
+    "description": "Makes thaumcraft research table ui resizable, adjusts sorting and allows 10x at a time aspect combination",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "",
     "updateUrl": "",
-    "authorList": ["Elan"],
+    "authorList": ["Telan"],
     "credits": "GTNH pack dev for providing introduction into mod dev",
     "logoFile": "",
     "screenshots": [],
     "dependencies": [
+      "Forgelin", 
       "Thaumcraft", 
       "SpongeMixins"
     ]
