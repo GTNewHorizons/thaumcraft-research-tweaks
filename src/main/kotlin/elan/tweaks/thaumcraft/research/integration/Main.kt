@@ -1,12 +1,12 @@
-package elan.thaumcraft.research.tweaks
+package elan.tweaks.thaumcraft.research.integration
 
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLInitializationEvent
-import elan.thaumcraft.research.tweaks.Main.DEPENDENCIES
-import elan.thaumcraft.research.tweaks.Main.MOD_ID
-import elan.thaumcraft.research.tweaks.Main.MOD_LANGUAGE_ADAPTER
-import elan.thaumcraft.research.tweaks.Main.NAME
-import elan.thaumcraft.research.tweaks.Main.VERSION
+import elan.tweaks.thaumcraft.research.integration.Main.DEPENDENCIES
+import elan.tweaks.thaumcraft.research.integration.Main.MOD_ID
+import elan.tweaks.thaumcraft.research.integration.Main.MOD_LANGUAGE_ADAPTER
+import elan.tweaks.thaumcraft.research.integration.Main.NAME
+import elan.tweaks.thaumcraft.research.integration.Main.VERSION
 import net.minecraft.init.Blocks
 
 @Mod(

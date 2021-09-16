@@ -5,7 +5,7 @@
   - [ ] Better aspect sorting (depth in tree + alphabetic order) - aspect product is always after it's components
 
 ### Non-Functional
-  - [ ] Clean-up this and Forgelin 1.9 gradle
+  - [ ] Migrate and clean-up this and Forgelin 1.9 gradle
   - [ ] Fix asm trying to parse Forgelin zips and failing
   - [ ] Check licensing
 

@@ -1,4 +1,4 @@
-package elan.thaumcraft.research.tweaks.mixin
+package elan.tweaks.thaumcraft.research.integration.client.mixin
 
 import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.EntityPlayer

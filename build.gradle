@@ -125,6 +125,8 @@ artifacts {
     archives sourcesJar
 }
 
+// MIXINS
+
 def mixinConfigJson = "mixins.thaumcraftresearchtweaks.json"
 def mixingConfigRefMap = "mixins.thaumcraftresearchtweaks.refmap.json"
 def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
@@ -173,4 +175,15 @@ sourceSets {
 
 runClient {
     args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker", "--mixin", "mixins.thaumcraftresearchtweaks.json"
+}
+
+// TESTING
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.0")
+    testImplementation("org.assertj:assertj-core:3.20.2")
+}
+
+test {
+    useJUnitPlatform()
 }
