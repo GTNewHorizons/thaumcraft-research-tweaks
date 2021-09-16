@@ -18,8 +18,6 @@ class ResearchTableUIContainer(
     }
 }
 
-class Button: UIComponent
-
 interface UIComponent {
     val minimalSize: Scale
     val children: Set<UIComponent>

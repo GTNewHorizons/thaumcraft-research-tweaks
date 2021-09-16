@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.7.11",
-  "package": "elan.thaumcraft.research.tweaks.client.mixin",
+  "package": "elan.tweaks.thaumcraft.research.integration.client.mixin",
   "refmap": "mixins.thaumcraftresearchtweaks.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "elan.thaumcraft.tweaks.research.client.mixin.GuiResearchTableMixin"
+    "GuiResearchTableMixin"
   ],
   "injectors": {
     "defaultRequire": 1
