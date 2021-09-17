@@ -2,12 +2,18 @@ package elan.tweaks.thaumcraft.research.domain
 
 import com.google.common.base.Preconditions
 
+// There are actually couple of bounded contextes here:
+// - aspect pallet & combiner
+// - research item management (scribling tools, research paper & duplication?) 
+// - player inventory?
+// - actual research area
+
 data class ResearchProcess(
     val researchExpertise: Boolean,
     val researchMastery: Boolean,
     val researchDuplication: Boolean,
 
-    val atlas: KnowledgeHexAtlas,
+    val diagram: ResearchHexDiagram,
 
     val inkSource: InkSource,
 
@@ -15,22 +21,27 @@ data class ResearchProcess(
 )
 
 
-data class KnowledgeHexAtlas(
+data class ResearchHexDiagram(
     val radius: UInt,
-    val hexColumns: List<MutableList<Node>>
+    val columns: List<Column>,
+    private val mutablePaths: MutableList<Path>
 ) {
     init {
         Preconditions.checkArgument(radius > 1u, "Knowledge hex atlas radius ($radius) < 1")
     }
 
     val diameter get() = (2u * radius) - 1u
+    val paths: List<Path> get() = mutablePaths
+
+    data class Column(private val mutableNodes: MutableList<Node>) {
+        val nodes: List<Node> get() = mutableNodes
+    }
+
+    data class Path(private val mutableNodes: MutableList<Node.Filled>) {
+        val nodes: List<Node.Filled> get() = mutableNodes
+    }
 }
 
-data class HexColumn(
-    private val nodes: MutableList<Node>
-){
-    fun viewNodes(): List<Node> = nodes
-}
 
 sealed class Node {
     abstract val columnIndex: UInt
@@ -54,15 +65,9 @@ sealed class Node {
     ) : Node()
 }
 
-class KnowledgePath(
-    private val nodes: MutableList<Node.Filled>
-) {
-    fun viewNodes(): List<Node.Filled> = nodes
-}
-
 // API?
 
-interface ResearchNotesController {
+interface ResearchDiagramController {
     fun write(aspectTag: String, node: Node.Empty): Result<Unit>
     fun erase(node: Node.Filled): Result<Unit>
 }
@@ -74,15 +79,11 @@ interface InkSource {
     fun use(): Result<Unit>
 }
 
-interface AspectKnowledgePool {
-    fun hasAvailable(aspectTag: String): Boolean
-    fun regain(aspectTag: String): Result<Unit>
-    fun use(aspectTag: String): Result<Unit>
-}
+// probably MPI
 
-interface ResearchNotesView {
+interface ResearchDiagramView {
     // I should get this init logic out of here to the place where I call back when I need to update the view
-    fun init(hexColumns: List<HexColumn>, paths: List<KnowledgePath>): Result<Unit>
+    fun init(atlas: ResearchHexDiagram): Result<Unit>
     
     fun place(node: Node.Filled): Result<Unit>
     fun connect(first: Node.Filled, second: Node.Filled): Result<Unit>
