@@ -4,17 +4,8 @@ import com.google.common.base.Preconditions
 
 
 class AspectPool(
-    private val tagToOrdinal: Map<String, UInt>,
-    aspectsPoints: Set<AspectPoints>
-) {
-    
-    val aspectsPoints: List<AspectPoints> = aspectsPoints.sortedBy { tagToOrdinal[it.tag]!! }
-
-
-    companion object {
-        // do not create if ordinal not contains all available aspects
-    }
-}
+    private val aspectsPoints: MutableSet<AspectPoints>
+) 
 
 data class AspectPoints(
     val tag: String,
