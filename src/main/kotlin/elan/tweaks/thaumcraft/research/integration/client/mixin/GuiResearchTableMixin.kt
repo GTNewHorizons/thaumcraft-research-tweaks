@@ -41,7 +41,6 @@ abstract class GuiResearchTableMixin : Gui() {
 
   @Inject(method = ["drawAspects"], at = [At("HEAD")], remap = false, require = 1, cancellable = true)
   private fun onDrawAspects(x: Int, y: Int, ci: CallbackInfo) {
-    println("DRAWING X: $x Y: $y")
     val aspects = Thaumcraft.proxy.getPlayerKnowledge().getAspectsDiscovered(username)
     if (aspects != null) {
       var count = aspects.size()

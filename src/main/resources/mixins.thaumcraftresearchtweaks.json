@@ -5,6 +5,9 @@
   "refmap": "mixins.thaumcraftresearchtweaks.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "TableBlockMixin"
+  ],
   "client": [
     "GuiResearchTableMixin"
   ],
