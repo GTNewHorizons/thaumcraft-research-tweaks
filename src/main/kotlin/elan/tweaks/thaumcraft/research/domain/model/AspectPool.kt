@@ -1,22 +1,18 @@
 package elan.tweaks.thaumcraft.research.domain.model
 
-import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPool
+import com.google.common.base.Preconditions
 
-data class AspectPoolImpl(
-    private val aspects: MutableList<AspectPoints> 
-    // We probably would want to have sorting somewhere around here?
-    // This would require richer aspect dependency info
-): AspectPool {
-    override fun hasAvailable(aspectTag: String): Boolean {
-        TODO("Not yet implemented")
-    }
 
-    override fun takeBack(aspectTag: String): Result<Unit> {
-        TODO("Not yet implemented")
-    }
+class AspectPool(
+    private val tagToOrdinal: Map<String, UInt>,
+    aspectsPoints: Set<AspectPoints>
+) {
+    
+    val aspectsPoints: List<AspectPoints> = aspectsPoints.sortedBy { tagToOrdinal[it.tag]!! }
 
-    override fun use(vararg aspectPoints: AspectPoints): Result<Unit> {
-        TODO("Not yet implemented")
+
+    companion object {
+        // do not create if ordinal not contains all available aspects
     }
 }
 
@@ -25,6 +21,19 @@ data class AspectPoints(
     val amount: UInt
 )
 
-interface AspectCombinationController {
-    
+
+// Unused for now
+interface AspectCombinerController {
+    fun select(aspectTag: String): Result<Unit>
+    fun combine(): Result<Unit>
+    fun deselectLeft(): Result<Unit>
+    fun deselectRight(): Result<Unit>
+}
+
+interface AspectCombinerView {
+
+}
+
+interface NotificationLog {
+    fun notifyGain(points: AspectPoints)
 }
