@@ -11,6 +11,8 @@ import thaumcraft.common.blocks.BlockTable
 @Mixin(BlockTable::class)
 abstract class TableBlockMixin {
 
+    // TODO: Proper logging?
+    
     private companion object {
         private const val THAUMCRAFT_RESEARCH_TABLE_GUI_ID = 10
     }

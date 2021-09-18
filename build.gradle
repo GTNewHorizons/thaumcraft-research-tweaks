@@ -26,9 +26,9 @@ plugins {
 apply plugin: "idea"
 apply plugin: "forge"
 
-version = "1.7.10-${project.version}"
-group = "elan.thaumcraft.research.tweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "ThaumcraftResearchTweaks"
+version = modVersion
+group = "elan.tweaks.thaumcraft.research"
+archivesBaseName = modId
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -44,9 +44,6 @@ idea {
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
-
-    replaceIn "Main.kt"
-    replace "@GRADLE_PROJECT_VERSION@", project.version
 }
 
 repositories {
@@ -101,9 +98,10 @@ processResources {
     inputs.property "mcversion", project.minecraft.version
     from(sourceSets.main.resources.srcDirs) {
         include "mcmod.info"
-        expand "version": project.version,
-                "mcversion": project.minecraft.version,
-                "modid": archivesBaseName
+        expand "mcversion": project.minecraft.version,
+                "version": modVersion,
+                "modid": modId,
+                "modName": modName
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
@@ -142,6 +140,7 @@ jar {
                 "ForceLoadAsMod"             : true
         ])
     }
+    getArchiveAppendix().value("${minecraft.version}")
 }
 
 
@@ -166,15 +165,13 @@ afterEvaluate {
     }
 }
 
-sourceSets {
-    main {
-        output.resourcesDir = output.getClassesDirs().getFiles().stream().findAny().get()
-        ext.refMap = mixingConfigRefMap
-    }
-}
-
 runClient {
-    args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker", "--mixin", "mixins.thaumcraftresearchtweaks.json"
+    args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
+            // Having mixin in the same jar as normal mode makes FML ignore it.
+            // It should be fine in production, however I suppose it's not properly read here.
+            // The only option which worked for me was adding it as a mod explicitly via next argument:
+            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar"
+
 }
 
 // TESTING

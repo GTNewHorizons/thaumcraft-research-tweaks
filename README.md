@@ -1,12 +1,13 @@
 ## Roadmap
 ### Functional
-  - [ ] Additional aspect page
+  - [ ] Larger aspect pallet for research table
   - [ ] Mixing aspects 10x when ALT pressed? (shift + alt + click on aspect in pallet)
   - [ ] Better aspect sorting (depth in tree + alphabetic order) - aspect product is always after it's components
 
 ### Non-Functional
   - [ ] Migrate and clean-up this and Forgelin 1.9 gradle
   - [ ] Fix asm trying to parse Forgelin zips and failing
+  - [ ] Add proper logging
   - [ ] Check licensing
 
 ## Research table refactor
