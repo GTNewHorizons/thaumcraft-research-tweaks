@@ -1,23 +1,23 @@
 package elan.tweaks.thaumcraft.research.client.gui
 
-import elan.tweaks.thaumcraft.research.integration.client.gui.Point
+import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class PointTest {
+internal class VectorTest {
 
-    private val point = Point(10u, 10u)
+    private val point = Vector(10, 10)
 
     @Test
     fun `should be greater given any component of other is less then its`() {
         val points = listOf(
-            Point(5u, 5u),
+            Vector(5, 5),
             
-            Point(5u, 10u),
-            Point(10u, 5u),
+            Vector(5, 10),
+            Vector(10, 5),
             
-            Point(5u, 20u),
-            Point(20u, 5u),
+            Vector(5, 20),
+            Vector(20, 5),
         )
 
         points.forEach { other ->
@@ -30,10 +30,10 @@ internal class PointTest {
     @Test
     fun `should be less given both components of other are greater or equal to its`() {
         val points = listOf(
-            Point(15u, 15u),
+            Vector(15, 15),
             
-            Point(15u, 10u),
-            Point(10u, 15u),
+            Vector(15, 10),
+            Vector(10, 15),
         )
 
         points.forEach { other ->
@@ -45,7 +45,7 @@ internal class PointTest {
 
     @Test
     fun `should be equal given both components of other are equal`() {
-        val other = Point(10u, 10u)
+        val other = Vector(10, 10)
         
         assertThat(point == other).isTrue
     }

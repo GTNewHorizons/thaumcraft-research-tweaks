@@ -81,7 +81,7 @@ dependencies {
     compile "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
     compile "com.github.GTNewHorizons:SpongeMixins:1.3.3:dev"
 
-    kapt("org.spongepowered:mixin:0.8-SNAPSHOT") // using 0.8 to workaround a bug in 0.7 which fails mixin application
+    kapt("org.spongepowered:mixin:0.8-SNAPSHOT") // using 0.8 to workaround a issue in 0.7 which fails mixin application
     compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         // Mixin includes a lot of dependencies that are too up-to-date
         exclude module: "launchwrapper"
@@ -170,7 +170,8 @@ runClient {
             // Having mixin in the same jar as normal mode makes FML ignore it.
             // It should be fine in production, however I suppose it's not properly read here.
             // The only option which worked for me was adding it as a mod explicitly via next argument:
-            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar"
+            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar",
+            "--username", "Player"
 
 }
 

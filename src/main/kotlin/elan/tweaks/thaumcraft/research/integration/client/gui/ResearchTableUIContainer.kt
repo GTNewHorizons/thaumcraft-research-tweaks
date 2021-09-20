@@ -22,11 +22,11 @@ interface UIComponent {
     val minimalSize: Scale
     val children: Set<UIComponent>
     
-    fun draw(origin: Point, mousePosition: Point)
-    fun onClick(point: Point) 
-    fun onLeftMouseButtonDown(point: Point)
-    fun onLeftMouseButtonUp(point: Point)
-    fun onHover(point: Point)
+    fun draw(origin: Vector, mousePosition: Vector)
+    fun onClick(point: Vector) 
+    fun onLeftMouseButtonDown(point: Vector)
+    fun onLeftMouseButtonUp(point: Vector)
+    fun onHover(point: Vector)
 }
 
 interface UINode {
