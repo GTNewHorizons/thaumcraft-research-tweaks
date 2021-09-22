@@ -15,6 +15,7 @@ data class Scale(val width: Int, val height: Int)
 data class Vector(val x: Int, val y: Int) {
 
     operator fun plus(scale: Scale) = Vector(x = x + scale.width, y = y + scale.height)
+    operator fun plus(other: Vector) = Vector(x = x + other.x, y = y + other.y)
     operator fun compareTo(other: Vector) =
         when {
             this.x == other.x && this.y == other.y -> EQUAL

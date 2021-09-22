@@ -1,16 +1,16 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.textures
 
-import cpw.mods.fml.client.config.GuiUtils
 import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ResourceLocation
 
 abstract class ThaumcraftTextureInstance(
     path: String,
-    val u: Int,
-    val v: Int,
+    private val textureWidth: Int,
+    private val u: Int,
+    private val v: Int,
     override val width: Int,
-    override val height: Int,
+    override val height: Int
 ) : TextureInstance {
     companion object {
         private const val DOMAIN = "thaumcraft"
@@ -21,6 +21,9 @@ abstract class ThaumcraftTextureInstance(
 
     override fun draw(origin: Vector, zLevel: Float) {
         textureManager.bindTexture(resourceLocation)
-        GuiUtils.drawTexturedModalRect(origin.x, origin.y, u, v, width, height, zLevel)
+        DrawHelper.drawTexturedRectByParts(
+            x0 = origin.x, y0 = origin.y, width = width, height = height, zLevel = zLevel,
+            textureX = u, textureY = v, textureWidth = width, textureHeight = height, texturePartCount = textureWidth
+        )
     }
 }

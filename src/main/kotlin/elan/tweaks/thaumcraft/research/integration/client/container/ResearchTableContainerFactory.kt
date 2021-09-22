@@ -1,5 +1,6 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui
+package elan.tweaks.thaumcraft.research.integration.client.container
 
+import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer
@@ -12,13 +13,14 @@ object ResearchTableContainerFactory {
     private const val SCRIBE_TOOLS_SLOT_INDEX = 0
     private const val RESEARCH_NOTES_SLOT_INDEX = 1
     private val specializedSlotIndexRange = SCRIBE_TOOLS_SLOT_INDEX..RESEARCH_NOTES_SLOT_INDEX
+    private val inventorySlotOffset = Vector(8,8) // GuiContainer offsets inventory slots
 
     fun create(
         playerInventory: InventoryPlayer,
         tableTileEntity: TileResearchTable,
-        scribeToolsSlotOffset: Vector = Vector(14, 10),
-        notesSlotOffset: Vector = Vector(70, 10),
-        inventorySlotOffset: Vector = Vector(48, 175)
+        scribeToolsSlotOrigin: Vector = Vector(14, 10),
+        notesSlotOrigin: Vector = Vector(70, 10),
+        inventorySlotOrigin: Vector = Vector(48, 175)
     ) =
         SpecializedContainer(
             onEnchantItem = duplicateResearch(tableTileEntity),
@@ -29,19 +31,19 @@ object ResearchTableContainerFactory {
                 SpecializedContainer.SpecializedSlot.specializedOn<IScribeTools>(
                     tableTileEntity,
                     SCRIBE_TOOLS_SLOT_INDEX,
-                    scribeToolsSlotOffset.x,
-                    scribeToolsSlotOffset.y
+                    scribeToolsSlotOrigin.x,
+                    scribeToolsSlotOrigin.y
                 )
             )
             addSlotToContainer(
                 SpecializedContainer.SpecializedSlot.specializedOn<ItemResearchNotes>(
                     tableTileEntity,
                     RESEARCH_NOTES_SLOT_INDEX,
-                    notesSlotOffset.x,
-                    notesSlotOffset.y
+                    notesSlotOrigin.x,
+                    notesSlotOrigin.y
                 )
             )
-            addPlayerInventorySlots(playerInventory, inventorySlotOffset)
+            addPlayerInventorySlots(playerInventory, inventorySlotOrigin + inventorySlotOffset)
         }
 
     private fun duplicateResearch(tileEntity: TileResearchTable) = { player: EntityPlayer, button: Int ->

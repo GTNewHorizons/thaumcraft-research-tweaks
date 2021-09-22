@@ -1,6 +1,7 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui
 
 import cpw.mods.fml.common.network.IGuiHandler
+import elan.tweaks.thaumcraft.research.integration.client.container.ResearchTableContainerFactory
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
