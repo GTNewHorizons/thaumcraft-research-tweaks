@@ -13,7 +13,7 @@ object ResearchTableContainerFactory {
     private const val SCRIBE_TOOLS_SLOT_INDEX = 0
     private const val RESEARCH_NOTES_SLOT_INDEX = 1
     private val specializedSlotIndexRange = SCRIBE_TOOLS_SLOT_INDEX..RESEARCH_NOTES_SLOT_INDEX
-    private val inventorySlotOffset = Vector(8,8) // GuiContainer offsets inventory slots
+    private val inventorySlotOffset = Vector(8,7) // GuiContainer offsets inventory slots
 
     fun create(
         playerInventory: InventoryPlayer,

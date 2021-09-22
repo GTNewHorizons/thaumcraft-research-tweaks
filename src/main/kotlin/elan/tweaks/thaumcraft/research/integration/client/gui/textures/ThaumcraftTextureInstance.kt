@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation
 abstract class ThaumcraftTextureInstance(
     path: String,
     private val textureWidth: Int,
+    private val textureHeight: Int = textureWidth,
     private val u: Int,
     private val v: Int,
     override val width: Int,
@@ -23,7 +24,8 @@ abstract class ThaumcraftTextureInstance(
         textureManager.bindTexture(resourceLocation)
         DrawHelper.drawTexturedRectByParts(
             x0 = origin.x, y0 = origin.y, width = width, height = height, zLevel = zLevel,
-            textureX = u, textureY = v, textureWidth = width, textureHeight = height, texturePartCount = textureWidth
+            textureX = u, textureY = v, textureWidth = width, textureHeight = height, 
+            textureXPartCount = textureWidth, textureYPartCount = textureHeight
         )
     }
 }

@@ -4,7 +4,8 @@ import elan.tweaks.thaumcraft.research.integration.client.gui.UV
 import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
-    "textures/research/table/research-table.png", textureWidth = 332,
+    "textures/research/table/research-table.png", 
+    textureWidth = 332, textureHeight = 256,
     u = 0, v = 0,
     width = 332, height = 224
 ) {
