@@ -13,22 +13,25 @@
 ## Research table refactor
 
 UI elements:
-  - (1) Scribbling tools slot
-  - (2) Research paper slot
-  - (3) Research duplication button? (check how it worked)
-     - not visible till finished & have unlocked duplication
-     - shows tooltip on aspect cost?
-  - (4) Aspect pallet (7 columns by 13 rows?)
-     - has scrolling buttons
-  - (5) Aspect combiner
-     - left aspect
-     - right aspect
-     - combine button
-  - (6) Drawing paper
+  - [x] (I) Scribbling tools slot
+  - [x] (N) Research notes slot
+  - [ ] (C) Research duplication button? (check how it worked)
+     - not present when not unlocked
+     - not active till finished & have unlocked duplication
+     - shows cost tooltip
+  - [ ] (1,2) Aspect pallet 4 columns by 13 rows (104 aspect slots)
+     - Allows drag & drop aspect combination:
+       - Shift + Left click & having research = create this aspect
+       - Drag over other + Left click = combine 1 (dragging stopped)
+       - Drag over other + Right click = combine 1 (dragging continuous)
+       - Drag over other + Right/Left = combine 10 (dragging depends on button)
+  - [ ] (6) Drawing paper
      - hex grid
        - individual hexes
         - can connect as lines
      - random runes?
-  - (7) Player inventory
+  - [x] Player inventory
 
-![UI mock](doc/research-ui-redesign-mock.png)
+Mock:
+
+![UI mock](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png)
