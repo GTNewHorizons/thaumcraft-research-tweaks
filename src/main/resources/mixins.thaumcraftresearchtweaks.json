@@ -8,9 +8,6 @@
   "mixins": [
     "TableBlockMixin"
   ],
-  "client": [
-    "GuiResearchTableMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   }
