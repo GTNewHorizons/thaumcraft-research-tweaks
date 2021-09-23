@@ -52,3 +52,16 @@ When drawing background he uses:
     draw research
 ```
 find out what this changes
+
+notifications are not drawing on top of ui, this should fix it:
+```java
+    protected void drawGuiContainerForegroundLayer(final int mx, final int my) {
+        final Minecraft mc = Minecraft.getMinecraft();
+        final long time = System.nanoTime() / 1000000L;
+        if (PlayerNotifications.getListAndUpdate(time).size() > 0) {
+            GL11.glPushMatrix();
+            Thaumcraft.instance.renderEventHandler.notifyHandler.renderNotifyHUD(this.width, this.height, time);
+            GL11.glPopMatrix();
+        }
+    }
+```

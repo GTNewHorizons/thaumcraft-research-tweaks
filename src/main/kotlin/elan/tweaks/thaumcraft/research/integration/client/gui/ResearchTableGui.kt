@@ -11,6 +11,8 @@ import thaumcraft.api.aspects.Aspect
 import thaumcraft.api.aspects.AspectList
 import thaumcraft.client.lib.UtilsFX
 import thaumcraft.common.Thaumcraft
+import thaumcraft.common.lib.network.PacketHandler
+import thaumcraft.common.lib.network.playerdata.PacketAspectCombinationToServer
 import thaumcraft.common.tiles.TileResearchTable
 
 class ResearchTableGui(
@@ -24,6 +26,10 @@ class ResearchTableGui(
     }
 
     private val origin get() = Vector(x = guiLeft, y = guiTop)
+
+    private val discoveredAspects
+        get() =
+            Thaumcraft.proxy.getPlayerKnowledge().getAspectsDiscovered(player.commandSenderName)
 
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
         drawInventory()
@@ -47,7 +53,7 @@ class ResearchTableGui(
     }
 
     private fun drawAspectPools() {
-        val aspects = Thaumcraft.proxy.getPlayerKnowledge().getAspectsDiscovered(player.commandSenderName)
+        val aspects = discoveredAspects
         val bonusAspects = this.tileEntity.bonusAspects
 
         val (left, right) = partitionAspectsToLeftAndRightPool()
@@ -93,42 +99,6 @@ class ResearchTableGui(
         }
     }
 
-    private fun findAspectAt(point: Vector): Aspect? {
-        val uiPoint = point - origin
-        val (left, right) = partitionAspectsToLeftAndRightPool()
-
-        return when (uiPoint) {
-            in AspectPools.leftRectangle -> findAspectAt(uiPoint, AspectPools.leftRectangle, left)
-            in AspectPools.rightRectangle -> findAspectAt(uiPoint, AspectPools.rightRectangle, right)
-            else -> null
-        }
-    }
-
-    private fun partitionAspectsToLeftAndRightPool(): Pair<List<Aspect>, List<Aspect>> {
-        val aspects = Thaumcraft.proxy.getPlayerKnowledge().getAspectsDiscovered(player.commandSenderName)
-
-        val left = aspects.aspectsSorted.filterIndexed { index, _ -> index % 2 == 0 }
-        val right = aspects.aspectsSorted.filterIndexed { index, _ -> index % 2 != 0 }
-
-        return Pair(left, right)
-    }
-    
-    private fun findAspectAt(uiPoint: Vector, poolRectangle: Rectangle, aspects: List<Aspect>): Aspect? =
-        when (val aspectIndex = deduceAspectIndex(uiPoint, poolRectangle)) {
-            in aspects.indices -> aspects[aspectIndex]
-            else -> null
-        }
-
-    private fun deduceAspectIndex(
-        uiPoint: Vector,
-        poolRectangle: Rectangle
-    ): Int {
-        val poolPoint = uiPoint - poolRectangle.origin
-        val columnIndex = (poolPoint.x / AspectPools.ASPECT_SIZE_PIXEL).coerceAtMost(AspectPools.COLUMNS - 1)
-        val rowIndex = (poolPoint.y / AspectPools.ASPECT_SIZE_PIXEL).coerceAtMost(AspectPools.ROWS - 1)
-        return columnIndex + rowIndex * AspectPools.COLUMNS
-    }
-
     // TODO: Move to texture rendering object
     private fun drawTooltip(aspect: Aspect, mouseX: Int, mouseY: Int) {
         UtilsFX.drawCustomTooltip(
@@ -160,6 +130,84 @@ class ResearchTableGui(
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
         super.mouseClicked(mouseX, mouseY, mouseButton)
+        // TODO: Add RESEARCHER_2 check
+        if (isShiftKeyDown()) {
+            val mousePoint = Vector(mouseX, mouseY)
+            // TODO: Blow logic should actually be in domain
+            val aspect: Aspect? = findAspectAt(mousePoint)
+            if (aspect != null && aspect.isCompound && aspect.bothComponentsPresent) {
+                playButtonCombine()
+                sendCombinationRequestToServer(aspect)
+            }
+        }
+    }
+
+    private fun findAspectAt(point: Vector): Aspect? {
+        val uiPoint = point - origin
+        val (left, right) = partitionAspectsToLeftAndRightPool()
+
+        return when (uiPoint) {
+            in AspectPools.leftRectangle -> findAspectAt(uiPoint, AspectPools.leftRectangle, left)
+            in AspectPools.rightRectangle -> findAspectAt(uiPoint, AspectPools.rightRectangle, right)
+            else -> null
+        }
+    }
+
+    private fun partitionAspectsToLeftAndRightPool(): Pair<List<Aspect>, List<Aspect>> {
+        val aspects = discoveredAspects
+
+        val left = aspects.aspectsSorted.filterIndexed { index, _ -> index % 2 == 0 }
+        val right = aspects.aspectsSorted.filterIndexed { index, _ -> index % 2 != 0 }
+
+        return Pair(left, right)
+    }
+
+    private fun findAspectAt(uiPoint: Vector, poolRectangle: Rectangle, aspects: List<Aspect>): Aspect? =
+        when (val aspectIndex = deduceAspectIndex(uiPoint, poolRectangle)) {
+            in aspects.indices -> aspects[aspectIndex]
+            else -> null
+        }
+
+    private fun deduceAspectIndex(
+        uiPoint: Vector,
+        poolRectangle: Rectangle
+    ): Int {
+        val poolPoint = uiPoint - poolRectangle.origin
+        val columnIndex = (poolPoint.x / AspectPools.ASPECT_SIZE_PIXEL).coerceAtMost(AspectPools.COLUMNS - 1)
+        val rowIndex = (poolPoint.y / AspectPools.ASPECT_SIZE_PIXEL).coerceAtMost(AspectPools.ROWS - 1)
+        return columnIndex + rowIndex * AspectPools.COLUMNS
+    }
+
+    private val Aspect.bothComponentsPresent get() = componentPresent(0) && componentPresent(1)
+
+    private fun Aspect.componentPresent(index: Int, minimumAmount: Int = 1) = isCompound
+            && (discoveredAspects.getAmount(components[index]) + tileEntity.bonusAspects.getAmount(components[index]) >= minimumAmount)
+
+    private val Aspect.isCompound get() = !isPrimal
+
+    private fun playButtonCombine() {
+        mc.renderViewEntity.worldObj.playSound(
+            mc.renderViewEntity.posX,
+            mc.renderViewEntity.posY,
+            mc.renderViewEntity.posZ,
+            "thaumcraft:hhon",
+            0.3f,
+            1.0f,
+            false
+        )
+    }
+
+    private fun sendCombinationRequestToServer(aspect: Aspect) {
+        PacketHandler.INSTANCE.sendToServer(
+            PacketAspectCombinationToServer(
+                player,
+                tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, aspect.components[0],
+                aspect.components[1],
+                tileEntity.bonusAspects.getAmount(aspect.components[0]) > 0,
+                tileEntity.bonusAspects.getAmount(aspect.components[1]) > 0,
+                true
+            )
+        )
     }
 
 }
