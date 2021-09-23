@@ -29,7 +29,6 @@ object ThaumcraftResearchTweaks {
 
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
-        println(">>>>>>>>>>>")
         NetworkRegistry.INSTANCE.registerGuiHandler(ThaumcraftResearchTweaks, GuiHandler())
     }
 }
