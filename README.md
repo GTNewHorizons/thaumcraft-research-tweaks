@@ -22,9 +22,9 @@ UI elements:
   - [ ] (1,2) Aspect pallet 4 columns by 13 rows (104 aspect slots)
      - Allows drag & drop aspect combination:
        - Shift + Left click & having research = create this aspect
-       - Drag over other + Left click = combine 1 (dragging stopped)
-       - Drag over other + Right click = combine 1 (dragging continuous)
-       - Drag over other + Right/Left = combine 10 (dragging depends on button)
+       - Drop = combine x1
+       - Drag + Right click = combine x1
+       - (Drop || Drag + Right click) + Ctrl = combine 10
   - [ ] (6) Drawing paper
      - hex grid
        - individual hexes

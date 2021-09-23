@@ -14,13 +14,23 @@ class ResearchTableGui(container: Container) : GuiContainer(container) {
     private val origin get() = Vector(x = guiLeft, y = guiTop)
 
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
-        ResearchTableInventoryTexture.draw(
-            origin = origin,
+        drawInventory()
+
+        drawTable()
+    }
+
+    private fun drawTable() {
+        PlayerInventoryTexture.draw(
+            origin = origin + ResearchTableInventoryTexture.inventoryOrigin,
             zLevel = this.zLevel
         )
         
-        PlayerInventoryTexture.draw(
-            origin = origin + ResearchTableInventoryTexture.inventoryOrigin,
+        
+    }
+
+    private fun drawInventory() {
+        ResearchTableInventoryTexture.draw(
+            origin = origin,
             zLevel = this.zLevel
         )
     }

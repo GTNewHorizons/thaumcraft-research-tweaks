@@ -4,6 +4,8 @@ import cpw.mods.fml.common.network.IGuiHandler
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
+import thaumcraft.client.gui.GuiResearchTable
+import thaumcraft.common.tiles.TileResearchTable
 
 class GuiHandler : IGuiHandler {
 
