@@ -1,5 +1,6 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.textures
 
+import elan.tweaks.thaumcraft.research.integration.client.gui.Rectangle
 import elan.tweaks.thaumcraft.research.integration.client.gui.Scale
 import elan.tweaks.thaumcraft.research.integration.client.gui.UV
 import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
@@ -29,8 +30,17 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
 
         val leftOrigin = Vector(7, 24)
         val rightOrigin = Vector(245, 24)
-        val scale = Scale(width = COLUMNS * ASPECT_SIZE_PIXEL, height = ROWS * ASPECT_SIZE_PIXEL)
+        private val scale = Scale(width = COLUMNS * ASPECT_SIZE_PIXEL, height = ROWS * ASPECT_SIZE_PIXEL)
 
+        val leftRectangle = Rectangle(
+            leftOrigin,
+            scale
+        )
+        
+        val rightRectangle = Rectangle(
+            rightOrigin,
+            scale
+        )
     }
 
     val inventoryOrigin = Vector(x = 62, y = 198)

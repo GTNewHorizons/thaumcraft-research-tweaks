@@ -1,8 +1,9 @@
 ## Roadmap
 ### Functional
   - [ ] Larger aspect pallet for research table
-  - [ ] Mixing aspects 10x when ALT pressed? (shift + alt + click on aspect in pallet)
+  - [ ] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
   - [ ] Better aspect sorting (depth in tree + alphabetic order) - aspect product is always after it's components
+  - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
 
 ### Non-Functional
   - [ ] Migrate and clean-up this and Forgelin 1.9 gradle
@@ -35,3 +36,18 @@ UI elements:
 Mock:
 
 ![UI mock](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png)
+
+## Notes
+When drawing background he uses:
+```
+    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    GL11.glEnable(3042);
+    ...
+    draw backgrounds
+    draw aspects
+    ...
+    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    RenderHelper.disableStandardItemLighting();
+    draw research
+```
+find out what this changes
