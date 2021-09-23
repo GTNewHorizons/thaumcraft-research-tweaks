@@ -1,16 +1,6 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui
 
-
-data class Rectangle(
-    val origin: Vector,
-    val scale: Scale
-) {
-    private val originScaled by lazy { origin + scale }
-
-    fun contains(point: Vector) =
-        origin < point && point < originScaled
-}
-
+data class UV(val u: Int, val v: Int)
 data class Scale(val width: Int, val height: Int)
 data class Vector(val x: Int, val y: Int) {
 
@@ -31,4 +21,3 @@ data class Vector(val x: Int, val y: Int) {
         val ZERO = Vector(0, 0)
     }
 }
-data class UV(val u: Int, val v: Int)
