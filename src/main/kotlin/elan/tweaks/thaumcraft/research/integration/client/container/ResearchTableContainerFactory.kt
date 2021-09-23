@@ -18,33 +18,41 @@ object ResearchTableContainerFactory {
     fun create(
         playerInventory: InventoryPlayer,
         tableTileEntity: TileResearchTable,
-        scribeToolsSlotOrigin: Vector = Vector(14, 10),
-        notesSlotOrigin: Vector = Vector(70, 10),
-        inventorySlotOrigin: Vector = Vector(48, 175)
+        scribeToolsSlotOrigin: Vector,
+        notesSlotOrigin: Vector,
+        inventorySlotOrigin: Vector,
     ) =
         SpecializedContainer(
             onEnchantItem = duplicateResearch(tableTileEntity),
             onCanInteractWith = tableTileEntity::isUseableByPlayer,
             specializedSlotIndexRange = specializedSlotIndexRange,
         ).apply {
-            addSlotToContainer(
-                SpecializedContainer.SpecializedSlot.specializedOn<IScribeTools>(
-                    tableTileEntity,
-                    SCRIBE_TOOLS_SLOT_INDEX,
-                    scribeToolsSlotOrigin.x,
-                    scribeToolsSlotOrigin.y
-                )
-            )
-            addSlotToContainer(
-                SpecializedContainer.SpecializedSlot.specializedOn<ItemResearchNotes>(
-                    tableTileEntity,
-                    RESEARCH_NOTES_SLOT_INDEX,
-                    notesSlotOrigin.x,
-                    notesSlotOrigin.y
-                )
-            )
+            addResearchTableSlots(tableTileEntity, scribeToolsSlotOrigin, notesSlotOrigin)
             addPlayerInventorySlots(playerInventory, inventorySlotOrigin + inventorySlotOffset)
         }
+
+    private fun SpecializedContainer.addResearchTableSlots(
+        tableTileEntity: TileResearchTable,
+        scribeToolsSlotOrigin: Vector,
+        notesSlotOrigin: Vector
+    ) {
+        addSlotToContainer(
+            SpecializedContainer.SpecializedSlot.specializedOn<IScribeTools>(
+                tableTileEntity,
+                SCRIBE_TOOLS_SLOT_INDEX,
+                scribeToolsSlotOrigin.x,
+                scribeToolsSlotOrigin.y
+            )
+        )
+        addSlotToContainer(
+            SpecializedContainer.SpecializedSlot.specializedOn<ItemResearchNotes>(
+                tableTileEntity,
+                RESEARCH_NOTES_SLOT_INDEX,
+                notesSlotOrigin.x,
+                notesSlotOrigin.y
+            )
+        )
+    }
 
     private fun duplicateResearch(tileEntity: TileResearchTable) = { player: EntityPlayer, button: Int ->
         when (button) {
@@ -61,22 +69,8 @@ object ResearchTableContainerFactory {
         playerInventory: InventoryPlayer,
         inventorySlotOffset: Vector
     ) {
-        addInternalInventorySlots(playerInventory, inventorySlotOffset)
         addHobartSlots(playerInventory, inventorySlotOffset)
-    }
-
-    private fun SpecializedContainer.addInternalInventorySlots(
-        playerInventory: InventoryPlayer,
-        inventorySlotOffset: Vector
-    ) {
-        for (rowIndex in PlayerInventoryTexture.internalRowIndexes) {
-            for (columnIndex in PlayerInventoryTexture.columnIndexes) {
-                val inventoryIndex = columnIndex + rowIndex * PlayerInventoryTexture.SLOTS_IN_INVENTORY_ROW + PlayerInventoryTexture.SLOTS_IN_INVENTORY_ROW
-                val x = inventorySlotOffset.x + columnIndex * PlayerInventoryTexture.SLOT_SIZE_PIXELS
-                val y = inventorySlotOffset.y + rowIndex * PlayerInventoryTexture.SLOT_SIZE_PIXELS
-                addSlotToContainer(Slot(playerInventory, inventoryIndex, x, y))
-            }
-        }
+        addInternalInventorySlots(playerInventory, inventorySlotOffset)
     }
 
     private fun SpecializedContainer.addHobartSlots(
@@ -85,8 +79,24 @@ object ResearchTableContainerFactory {
     ) {
         for (columnIndex in PlayerInventoryTexture.columnIndexes) {
             val x = inventorySlotOffset.x + columnIndex * PlayerInventoryTexture.SLOT_SIZE_PIXELS
-            val y = inventorySlotOffset.y + PlayerInventoryTexture.HOTBAR_ROW_INDEX * PlayerInventoryTexture.SLOT_SIZE_PIXELS + PlayerInventoryTexture.HOTBAR_ROW_DELIMITER_HEIGHT_PIXELS
+            val y =
+                inventorySlotOffset.y + PlayerInventoryTexture.HOTBAR_ROW_INDEX * PlayerInventoryTexture.SLOT_SIZE_PIXELS + PlayerInventoryTexture.HOTBAR_ROW_DELIMITER_HEIGHT_PIXELS
             addSlotToContainer(Slot(playerInventory, columnIndex, x, y))
+        }
+    }
+
+    private fun SpecializedContainer.addInternalInventorySlots(
+        playerInventory: InventoryPlayer,
+        inventorySlotOffset: Vector
+    ) {
+        val hotbarSlots = PlayerInventoryTexture.SLOTS_IN_INVENTORY_ROW
+        for (rowIndex in PlayerInventoryTexture.internalRowIndexes) {
+            for (columnIndex in PlayerInventoryTexture.columnIndexes) {
+                val inventoryIndex = hotbarSlots + columnIndex + rowIndex * PlayerInventoryTexture.SLOTS_IN_INVENTORY_ROW
+                val x = inventorySlotOffset.x + columnIndex * PlayerInventoryTexture.SLOT_SIZE_PIXELS
+                val y = inventorySlotOffset.y + rowIndex * PlayerInventoryTexture.SLOT_SIZE_PIXELS
+                addSlotToContainer(Slot(playerInventory, inventoryIndex, x, y))
+            }
         }
     }
 }
