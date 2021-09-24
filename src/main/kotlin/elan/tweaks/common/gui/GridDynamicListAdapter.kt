@@ -19,7 +19,7 @@ class GridDynamicListAdapter<ElementT>(
      *
      * @return element if present
      */
-    override fun findAt(uiPoint: Vector): ElementT? {
+    override operator fun get(uiPoint: Vector): ElementT? {
         if (uiPoint !in bounds) {
             return null
         }

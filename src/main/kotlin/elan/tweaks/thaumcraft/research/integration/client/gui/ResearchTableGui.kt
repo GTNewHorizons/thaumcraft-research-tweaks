@@ -2,7 +2,6 @@ package elan.tweaks.thaumcraft.research.integration.client.gui
 
 import elan.tweaks.common.gui.Grid
 import elan.tweaks.common.gui.GridDynamicListAdapter
-import elan.tweaks.common.gui.Rectangle
 import elan.tweaks.common.gui.Vector
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture
@@ -153,7 +152,7 @@ class ResearchTableGui(
 
     private fun findAspectAt(point: Vector): Aspect? {
         val uiPoint = point - uiOrigin
-        return  leftAspectPoolGrid.findAt(uiPoint) ?:  rightAspectPoolGrid.findAt(uiPoint)
+        return leftAspectPoolGrid[uiPoint] ?: rightAspectPoolGrid[uiPoint]
     }
 
     private val Aspect.bothComponentsPresent get() = componentPresent(0) && componentPresent(1)
