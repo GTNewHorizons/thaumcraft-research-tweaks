@@ -1,6 +1,6 @@
 package elan.tweaks.thaumcraft.research.integration.client.container
 
-import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
+import elan.tweaks.common.gui.Vector
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer

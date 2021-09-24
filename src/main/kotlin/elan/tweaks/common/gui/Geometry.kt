@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui
+package elan.tweaks.common.gui
 
 data class UV(val u: Int, val v: Int)
 data class Scale(val width: Int, val height: Int)

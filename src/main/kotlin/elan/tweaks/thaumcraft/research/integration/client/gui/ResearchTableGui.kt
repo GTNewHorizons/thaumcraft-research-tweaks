@@ -1,5 +1,9 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui
 
+import elan.tweaks.common.gui.Grid
+import elan.tweaks.common.gui.GridDynamicListAdapter
+import elan.tweaks.common.gui.Rectangle
+import elan.tweaks.common.gui.Vector
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture.AspectPools
@@ -8,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
-import thaumcraft.api.aspects.AspectList
 import thaumcraft.client.lib.UtilsFX
 import thaumcraft.common.Thaumcraft
 import thaumcraft.common.lib.network.PacketHandler
@@ -25,11 +28,25 @@ class ResearchTableGui(
         ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
     }
 
-    private val origin get() = Vector(x = guiLeft, y = guiTop)
+    private val uiOrigin get() = Vector(x = guiLeft, y = guiTop)
 
     private val discoveredAspects
         get() =
             Thaumcraft.proxy.getPlayerKnowledge().getAspectsDiscovered(player.commandSenderName)
+
+    private val leftAspectPoolGrid: Grid<Aspect> = GridDynamicListAdapter(
+        bounds = AspectPools.leftRectangle,
+        cellSize = AspectPools.ASPECT_CELL_SIZE_PIXEL
+    ) {
+        discoveredAspects.aspectsSorted.filterIndexed { index, _ -> index % 2 == 0 }
+    }
+
+    private val rightAspectPoolGrid: Grid<Aspect> = GridDynamicListAdapter(
+        bounds = AspectPools.rightRectangle,
+        cellSize = AspectPools.ASPECT_CELL_SIZE_PIXEL
+    ) {
+        discoveredAspects.aspectsSorted.filterIndexed { index, _ -> index % 2 != 0 }
+    }
 
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
         drawInventory()
@@ -38,14 +55,14 @@ class ResearchTableGui(
 
     private fun drawInventory() {
         PlayerInventoryTexture.draw(
-            origin = origin + ResearchTableInventoryTexture.inventoryOrigin,
+            origin = uiOrigin + ResearchTableInventoryTexture.inventoryOrigin,
             zLevel = this.zLevel
         )
     }
 
     private fun drawTable() {
         ResearchTableInventoryTexture.draw(
-            origin = origin,
+            origin = uiOrigin,
             zLevel = this.zLevel
         )
 
@@ -53,34 +70,26 @@ class ResearchTableGui(
     }
 
     private fun drawAspectPools() {
-        val aspects = discoveredAspects
-        val bonusAspects = this.tileEntity.bonusAspects
 
-        val (left, right) = partitionAspectsToLeftAndRightPool()
-
-        drawAspectPool(AspectPools.leftOrigin, left, aspects, bonusAspects)
-        drawAspectPool(AspectPools.rightOrigin, right, aspects, bonusAspects)
+        drawAspectPool(leftAspectPoolGrid)
+        drawAspectPool(rightAspectPoolGrid)
     }
 
-    private fun drawAspectPool(
-        poolOrigin: Vector,
-        aspects: List<Aspect>,
-        allAspects: AspectList,
-        bonusAspects: AspectList
-    ) {
+    private fun drawAspectPool(aspectGrid: Grid<Aspect>) {
         val aspectTagBlend = 771
-        val absoluteOrigin = origin + poolOrigin
-        aspects.forEachIndexed { index, aspect ->
-            val faded = allAspects.getAmount(aspect) <= 0 && bonusAspects.getAmount(aspect) <= 0
+        aspectGrid.asOriginSequence().forEach { (relativeOrigin, aspect) ->
+            val amount = discoveredAspects.getAmount(aspect).toFloat()
+            val bonusAmount = tileEntity.bonusAspects.getAmount(aspect)
+
+            val faded = amount <= 0 && bonusAmount <= 0
             val alpha = if (faded) 0.33f else 1.0f
-            val xOffset = (index % AspectPools.COLUMNS) * AspectPools.ASPECT_SIZE_PIXEL
-            val yOffset = (index / AspectPools.COLUMNS) * AspectPools.ASPECT_SIZE_PIXEL
+
             UtilsFX.drawTag(
-                absoluteOrigin.x + xOffset,
-                absoluteOrigin.y + yOffset,
+                uiOrigin.x + relativeOrigin.x,
+                uiOrigin.y + relativeOrigin.y,
                 aspect,
-                allAspects.getAmount(aspect).toFloat(),
-                bonusAspects.getAmount(aspect),
+                amount,
+                bonusAmount,
                 zLevel.toDouble(),
                 aspectTagBlend,
                 alpha
@@ -143,39 +152,8 @@ class ResearchTableGui(
     }
 
     private fun findAspectAt(point: Vector): Aspect? {
-        val uiPoint = point - origin
-        val (left, right) = partitionAspectsToLeftAndRightPool()
-
-        return when (uiPoint) {
-            in AspectPools.leftRectangle -> findAspectAt(uiPoint, AspectPools.leftRectangle, left)
-            in AspectPools.rightRectangle -> findAspectAt(uiPoint, AspectPools.rightRectangle, right)
-            else -> null
-        }
-    }
-
-    private fun partitionAspectsToLeftAndRightPool(): Pair<List<Aspect>, List<Aspect>> {
-        val aspects = discoveredAspects
-
-        val left = aspects.aspectsSorted.filterIndexed { index, _ -> index % 2 == 0 }
-        val right = aspects.aspectsSorted.filterIndexed { index, _ -> index % 2 != 0 }
-
-        return Pair(left, right)
-    }
-
-    private fun findAspectAt(uiPoint: Vector, poolRectangle: Rectangle, aspects: List<Aspect>): Aspect? =
-        when (val aspectIndex = deduceAspectIndex(uiPoint, poolRectangle)) {
-            in aspects.indices -> aspects[aspectIndex]
-            else -> null
-        }
-
-    private fun deduceAspectIndex(
-        uiPoint: Vector,
-        poolRectangle: Rectangle
-    ): Int {
-        val poolPoint = uiPoint - poolRectangle.origin
-        val columnIndex = (poolPoint.x / AspectPools.ASPECT_SIZE_PIXEL).coerceAtMost(AspectPools.COLUMNS - 1)
-        val rowIndex = (poolPoint.y / AspectPools.ASPECT_SIZE_PIXEL).coerceAtMost(AspectPools.ROWS - 1)
-        return columnIndex + rowIndex * AspectPools.COLUMNS
+        val uiPoint = point - uiOrigin
+        return  leftAspectPoolGrid.findAt(uiPoint) ?:  rightAspectPoolGrid.findAt(uiPoint)
     }
 
     private val Aspect.bothComponentsPresent get() = componentPresent(0) && componentPresent(1)

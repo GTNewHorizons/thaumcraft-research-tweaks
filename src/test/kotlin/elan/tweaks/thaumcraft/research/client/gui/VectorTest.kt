@@ -1,6 +1,6 @@
 package elan.tweaks.thaumcraft.research.client.gui
 
-import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
+import elan.tweaks.common.gui.Vector
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

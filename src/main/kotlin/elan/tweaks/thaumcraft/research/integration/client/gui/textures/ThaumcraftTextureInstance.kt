@@ -1,6 +1,6 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.textures
 
-import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
+import elan.tweaks.common.gui.Vector
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ResourceLocation
 

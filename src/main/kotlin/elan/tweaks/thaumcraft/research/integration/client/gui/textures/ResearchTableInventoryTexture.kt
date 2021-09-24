@@ -1,9 +1,9 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.textures
 
-import elan.tweaks.thaumcraft.research.integration.client.gui.Rectangle
-import elan.tweaks.thaumcraft.research.integration.client.gui.Scale
-import elan.tweaks.thaumcraft.research.integration.client.gui.UV
-import elan.tweaks.thaumcraft.research.integration.client.gui.Vector
+import elan.tweaks.common.gui.Rectangle
+import elan.tweaks.common.gui.Scale
+import elan.tweaks.common.gui.UV
+import elan.tweaks.common.gui.Vector
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "textures/research/table/research-table.png",
@@ -24,13 +24,13 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     }
 
     object AspectPools {
-        const val ASPECT_SIZE_PIXEL = 16
+        const val ASPECT_CELL_SIZE_PIXEL = 16
         const val COLUMNS = 3
         const val ROWS = 12
 
         val leftOrigin = Vector(7, 24)
         val rightOrigin = Vector(245, 24)
-        private val scale = Scale(width = COLUMNS * ASPECT_SIZE_PIXEL, height = ROWS * ASPECT_SIZE_PIXEL)
+        private val scale = Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
 
         val leftRectangle = Rectangle(
             leftOrigin,
