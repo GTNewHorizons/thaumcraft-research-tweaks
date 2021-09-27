@@ -1,6 +1,6 @@
 package elan.tweaks.thaumcraft.research.integration.client.container
 
-import elan.tweaks.common.gui.Vector
+import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer
@@ -13,14 +13,14 @@ object ResearchTableContainerFactory {
     private const val SCRIBE_TOOLS_SLOT_INDEX = 0
     private const val RESEARCH_NOTES_SLOT_INDEX = 1
     private val specializedSlotIndexRange = SCRIBE_TOOLS_SLOT_INDEX..RESEARCH_NOTES_SLOT_INDEX
-    private val inventorySlotOffset = Vector(8,7) // GuiContainer offsets inventory slots
+    private val inventorySlotOffset = Vector2D(8,7) // GuiContainer offsets inventory slots
 
     fun create(
         playerInventory: InventoryPlayer,
         tableTileEntity: TileResearchTable,
-        scribeToolsSlotOrigin: Vector,
-        notesSlotOrigin: Vector,
-        inventorySlotOrigin: Vector,
+        scribeToolsSlotOrigin: Vector2D,
+        notesSlotOrigin: Vector2D,
+        inventorySlotOrigin: Vector2D,
     ) =
         SpecializedContainer(
             onEnchantItem = duplicateResearch(tableTileEntity),
@@ -33,8 +33,8 @@ object ResearchTableContainerFactory {
 
     private fun SpecializedContainer.addResearchTableSlots(
         tableTileEntity: TileResearchTable,
-        scribeToolsSlotOrigin: Vector,
-        notesSlotOrigin: Vector
+        scribeToolsSlotOrigin: Vector2D,
+        notesSlotOrigin: Vector2D
     ) {
         addSlotToContainer(
             SpecializedContainer.SpecializedSlot.specializedOn<IScribeTools>(
@@ -67,7 +67,7 @@ object ResearchTableContainerFactory {
 
     private fun SpecializedContainer.addPlayerInventorySlots(
         playerInventory: InventoryPlayer,
-        inventorySlotOffset: Vector
+        inventorySlotOffset: Vector2D
     ) {
         addHobartSlots(playerInventory, inventorySlotOffset)
         addInternalInventorySlots(playerInventory, inventorySlotOffset)
@@ -75,7 +75,7 @@ object ResearchTableContainerFactory {
 
     private fun SpecializedContainer.addHobartSlots(
         playerInventory: InventoryPlayer,
-        inventorySlotOffset: Vector
+        inventorySlotOffset: Vector2D
     ) {
         for (columnIndex in PlayerInventoryTexture.columnIndexes) {
             val x = inventorySlotOffset.x + columnIndex * PlayerInventoryTexture.SLOT_SIZE_PIXELS
@@ -87,7 +87,7 @@ object ResearchTableContainerFactory {
 
     private fun SpecializedContainer.addInternalInventorySlots(
         playerInventory: InventoryPlayer,
-        inventorySlotOffset: Vector
+        inventorySlotOffset: Vector2D
     ) {
         val hotbarSlots = PlayerInventoryTexture.SLOTS_IN_INVENTORY_ROW
         for (rowIndex in PlayerInventoryTexture.internalRowIndexes) {

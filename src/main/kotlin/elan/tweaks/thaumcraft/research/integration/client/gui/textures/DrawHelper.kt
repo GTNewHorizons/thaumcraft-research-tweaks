@@ -35,7 +35,7 @@ object DrawHelper {
      * Usually equal to original texture height in pixels.
      */
     fun drawTexturedRectByParts(
-        x0: Int, y0: Int, width: Int, height: Int, zLevel: Float,
+        x0: Int, y0: Int, width: Int, height: Int, zLevel: Double,
         textureX: Int, textureY: Int, textureWidth: Int, textureHeight: Int, 
         textureXPartCount: Int, textureYPartCount: Int = textureXPartCount,
     ) {
@@ -69,7 +69,7 @@ object DrawHelper {
      * @param textureYDivideFactor represents the value equal to 1 / parts. Part count determines in how many parts texture must be divided in both axis. Part description is mentioned above.
      */
     private fun drawTexturedRect(
-        x0: Int, y0: Int, width: Int, height: Int, zLevel: Float,
+        x0: Int, y0: Int, width: Int, height: Int, zLevel: Double,
         textureX: Int, textureY: Int, textureWidth: Int, textureHeight: Int, 
         textureXDivideFactor: Double, textureYDivideFactor: Double = textureXDivideFactor
     ) {
@@ -78,28 +78,28 @@ object DrawHelper {
         tess.addVertexWithUV(
             x0.toDouble(),
             y0.toDouble(),
-            zLevel.toDouble(),
+            zLevel,
             (textureX * textureXDivideFactor),
             (textureY * textureYDivideFactor)
         )
         tess.addVertexWithUV(
             x0.toDouble(),
             (y0 + height).toDouble(),
-            zLevel.toDouble(),
+            zLevel,
             (textureX * textureXDivideFactor),
             ((textureY + textureHeight) * textureYDivideFactor)
         )
         tess.addVertexWithUV(
             (x0 + width).toDouble(),
             (y0 + height).toDouble(),
-            zLevel.toDouble(),
+            zLevel,
             ((textureX + textureWidth) * textureXDivideFactor),
             ((textureY + textureHeight) * textureYDivideFactor)
         )
         tess.addVertexWithUV(
             (x0 + width).toDouble(),
             y0.toDouble(),
-            zLevel.toDouble(),
+            zLevel,
             ((textureX + textureWidth) * textureXDivideFactor),
             (textureY * textureYDivideFactor)
         )

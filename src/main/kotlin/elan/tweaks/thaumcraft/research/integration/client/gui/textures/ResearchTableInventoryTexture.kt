@@ -1,9 +1,9 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.textures
 
-import elan.tweaks.common.gui.Rectangle
-import elan.tweaks.common.gui.Scale
-import elan.tweaks.common.gui.UV
-import elan.tweaks.common.gui.Vector
+import elan.tweaks.common.gui.geometry.Rectangle
+import elan.tweaks.common.gui.geometry.Scale
+import elan.tweaks.common.gui.geometry.UV
+import elan.tweaks.common.gui.geometry.Vector2D
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "textures/research/table/research-table.png",
@@ -13,13 +13,13 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
 ) {
     object Slots {
         const val SIZE_PIXELS = 18
-        val scribeToolsOrigin = Vector(x = 70, y = 9)
-        val notesOrigin = Vector(x = 94, y = 9)
+        val scribeToolsOrigin = Vector2D(x = 70, y = 9)
+        val notesOrigin = Vector2D(x = 94, y = 9)
     }
 
     object Buttons {
         const val SIZE_PIXELS = 18
-        val copyOrigin = Vector(x = 117, y = 8)
+        val copyOrigin = Vector2D(x = 117, y = 8)
         val copyActiveUV = UV(u = 2, v = 227)
     }
 
@@ -28,8 +28,8 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
         const val COLUMNS = 3
         const val ROWS = 12
 
-        val leftOrigin = Vector(7, 24)
-        val rightOrigin = Vector(245, 24)
+        val leftOrigin = Vector2D(7, 24)
+        val rightOrigin = Vector2D(245, 24)
         private val scale = Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
 
         val leftRectangle = Rectangle(
@@ -43,6 +43,6 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
         )
     }
 
-    val inventoryOrigin = Vector(x = 62, y = 198)
+    val inventoryOrigin = Vector2D(x = 62, y = 198)
 }
 

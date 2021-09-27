@@ -1,4 +1,8 @@
-package elan.tweaks.common.gui
+package elan.tweaks.common.gui.geometry.grid
+
+import elan.tweaks.common.gui.geometry.Rectangle
+import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.geometry.VectorXY
 
 class GridDynamicListAdapter<ElementT>(
     private val bounds: Rectangle,
@@ -9,17 +13,17 @@ class GridDynamicListAdapter<ElementT>(
     private val elements: List<ElementT>
         get() = provideElements()
 
-    private val dimensions: Vector =
-        Vector(bounds.scale.width / cellSize, bounds.scale.height / cellSize)
+    private val dimensions: Vector2D =
+        Vector2D(bounds.scale.width / cellSize, bounds.scale.height / cellSize)
 
-    override fun contains(uiPoint: Vector): Boolean = uiPoint in bounds
+    override fun contains(uiPoint: VectorXY): Boolean = uiPoint in bounds
 
     /**
      * @point relative to ui origin (top left corner)
      *
      * @return element if present
      */
-    override operator fun get(uiPoint: Vector): ElementT? {
+    override operator fun get(uiPoint: VectorXY): ElementT? {
         if (uiPoint !in bounds) {
             return null
         }
@@ -32,7 +36,7 @@ class GridDynamicListAdapter<ElementT>(
             null
     }
 
-    private fun deduceIndex(uiPoint: Vector): Int {
+    private fun deduceIndex(uiPoint: VectorXY): Int {
         val point = uiPoint - bounds.origin
         val columnIndex = (point.x / cellSize).coerceAtMost(dimensions.x - 1)
         val rowIndex = (point.y / cellSize).coerceAtMost(dimensions.y - 1)
@@ -42,7 +46,7 @@ class GridDynamicListAdapter<ElementT>(
     /**
      * @return Sequence over elements and their origin relative to ui origin (top left corner)
      */
-    override fun asOriginSequence(): Sequence<Pair<Vector, ElementT>> =
+    override fun asOriginSequence(): Sequence<Pair<Vector2D, ElementT>> =
         elements
             .asSequence()
             .mapIndexed { index: Int, element: ElementT ->
@@ -50,7 +54,7 @@ class GridDynamicListAdapter<ElementT>(
             }
 
     private fun toCellOrigin(index: Int) =
-        Vector(
+        Vector2D(
             x = (index % dimensions.x) * cellSize,
             y = (index / dimensions.x) * cellSize
         ) + bounds.origin
