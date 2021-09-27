@@ -1,6 +1,6 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui
+package elan.tweaks.thaumcraft.research.integration.client.gui.component
 
-import elan.tweaks.common.gui.TooltipUtil
+import elan.tweaks.common.gui.drawing.TooltipUtil
 import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.ClickableUIComponent
 import elan.tweaks.common.gui.component.ScreenUIComponent

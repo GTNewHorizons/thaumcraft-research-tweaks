@@ -1,14 +1,18 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui
 
+import elan.tweaks.common.gui.ComposableContainerGui
 import elan.tweaks.common.gui.component.UIComponent
+import elan.tweaks.common.gui.component.texture.TextureBackgroundUIComponent.Companion.background
 import elan.tweaks.common.gui.geometry.Rectangle
+import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.grid.Grid
 import elan.tweaks.common.gui.geometry.grid.GridDynamicListAdapter
 import elan.tweaks.thaumcraft.research.integration.client.container.ResearchTableContainerFactory
+import elan.tweaks.thaumcraft.research.integration.client.gui.component.AspectPool
+import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture.AspectPools
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.world.World
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.Thaumcraft
@@ -21,14 +25,27 @@ object ResearchTableGuiFactory {
     fun createFor(
         player: EntityPlayer,
         world: World, x: Int, y: Int, z: Int
-    ): ResearchTableGui {
+    ): ComposableContainerGui {
         val tableEntity = world.getTableTileEntity(x, y, z)
 
-        return ResearchTableGui(
-            createContainer(player, world, x, y, z),
-            components = aspectPoolsOf(player, tableEntity)
+        return ComposableContainerGui(
+            createContainer(player, tableEntity),
+            components = tableAndInventoryBackgrounds() + aspectPoolsOf(player, tableEntity),
+            xSize = ResearchTableInventoryTexture.width,
+            ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
         )
     }
+
+    private fun tableAndInventoryBackgrounds() = listOf(
+        background(
+            uiOrigin = Vector2D.ZERO,
+            texture = ResearchTableInventoryTexture
+        ),
+        background(
+            uiOrigin = ResearchTableInventoryTexture.inventoryOrigin,
+            texture = PlayerInventoryTexture
+        )
+    )
 
     private fun aspectPoolsOf(
         player: EntityPlayer,
@@ -104,21 +121,17 @@ object ResearchTableGuiFactory {
         player: EntityPlayer,
         world: World, x: Int, y: Int, z: Int
     ) =
-        createContainer(
-            player.inventory,
-            world.getTableTileEntity(x, y, z),
-        )
+        createContainer(player, world.getTableTileEntity(x, y, z))
 
     private fun World.getTableTileEntity(x: Int, y: Int, z: Int) =
         getTileEntity(x, y, z) as TileResearchTable
 
-
     private fun createContainer(
-        playerInventory: InventoryPlayer,
+        player: EntityPlayer,
         researchTableTileEntity: TileResearchTable
     ) =
         ResearchTableContainerFactory.create(
-            playerInventory,
+            player.inventory,
             researchTableTileEntity,
             scribeToolsSlotOrigin = ResearchTableInventoryTexture.Slots.scribeToolsOrigin,
             notesSlotOrigin = ResearchTableInventoryTexture.Slots.notesOrigin,

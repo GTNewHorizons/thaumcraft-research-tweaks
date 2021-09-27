@@ -1,7 +1,6 @@
-package elan.tweaks.common.gui
+package elan.tweaks.common.gui.drawing
 
 import elan.tweaks.common.gui.component.UIContext
-import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.UtilsFX

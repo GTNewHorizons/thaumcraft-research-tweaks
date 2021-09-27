@@ -1,37 +1,36 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui
+package elan.tweaks.common.gui
 
 import elan.tweaks.common.gui.component.*
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
-import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
-import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.inventory.Container
 
-class ResearchTableGui(
+class ComposableContainerGui(
     container: Container,
-    private val components: List<UIComponent>
+    components: List<UIComponent>,
+    xSize: Int,
+    ySize: Int
 ) : GuiContainer(container), UIContext {
 
     init {
-        xSize = ResearchTableInventoryTexture.width
-        ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
+        super.xSize = xSize
+        super.ySize = ySize
     }
+    
+    override val fontRenderer: FontRenderer get() = fontRendererObj
 
-    override val fontRenderer: FontRenderer
-        get() = fontRendererObj
-
-    private val backgroundComponents by lazy { components.filterIsInstance<BackgroundUIComponent>() }
-    private val screenComponents by lazy { components.filterIsInstance<ScreenUIComponent>() }
-    private val clickableComponents by lazy { components.filterIsInstance<ClickableUIComponent>() }
+    private val backgroundComponents = components.filterIsInstance<BackgroundUIComponent>()
+    private val screenComponents = components.filterIsInstance<ScreenUIComponent>()
+    private val clickableComponents = components.filterIsInstance<ClickableUIComponent>()
 
     private val uiScreenOrigin get() = Vector3D(x = guiLeft, y = guiTop, z = zLevel.toDouble())
-    
+
     override fun toScreenOrigin(vectorXY: VectorXY): Vector3D =
-        uiScreenOrigin + vectorXY 
-    
+        uiScreenOrigin + vectorXY
+
     override fun setItemRenderZLevel(z: Float) {
         itemRender.zLevel = z
     }
@@ -45,33 +44,17 @@ class ResearchTableGui(
         )
     }
 
-    override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
-        drawInventory()
-        drawTable()
-
-        val mousePosition = uiMousePosition(mouseX, mouseY)
-        backgroundComponents.forEach { it.onDrawBackground(mousePosition, partialTicks, this) }
-    }
-
-    private fun drawInventory() {
-        PlayerInventoryTexture.draw(
-            origin = toScreenOrigin(ResearchTableInventoryTexture.inventoryOrigin)
-        )
-    }
-
-    private fun drawTable() {
-        ResearchTableInventoryTexture.draw(
-            origin = uiScreenOrigin
-        )
-    }
-
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
 
         val mousePosition = uiMousePosition(mouseX, mouseY)
         screenComponents.forEach { it.onDrawScreen(mousePosition, partialTicks, this) }
     }
-
+    
+    override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
+        val mousePosition = uiMousePosition(mouseX, mouseY)
+        backgroundComponents.forEach { it.onDrawBackground(mousePosition, partialTicks, this) }
+    }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
         super.mouseClicked(mouseX, mouseY, mouseButton)
