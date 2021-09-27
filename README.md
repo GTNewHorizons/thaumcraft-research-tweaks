@@ -38,6 +38,9 @@ Mock:
 
 ![UI mock](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png)
 
+## Development
+To run client with specific user name set it in `PLAYER_USER_NAME` environment variable.
+
 ## Notes
 When drawing background he uses:
 ```
