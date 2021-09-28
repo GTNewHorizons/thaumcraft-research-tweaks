@@ -1,9 +1,17 @@
 ## Roadmap
 ### Functional
+1. Must:
   - [x] Larger aspect pallet for research table
   - [x] Combining aspects via drag & drop
   - [x] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
+  - [ ] Combining multiple times when hovering
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
+  - [ ] Research notes
+  - [ ] Research duplication
+  - [ ] UI textures
+
+2. Nice to have:
+  - [ ] Batch aspect combination as one in one packet (see PacketAspectCombinationToServer)
   - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
 
 ### Non-Functional
