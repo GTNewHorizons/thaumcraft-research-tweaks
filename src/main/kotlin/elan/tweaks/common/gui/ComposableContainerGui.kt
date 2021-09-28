@@ -6,7 +6,9 @@ import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.inventory.GuiContainer
+import net.minecraft.client.renderer.Tessellator
 import net.minecraft.inventory.Container
+import org.lwjgl.input.Mouse
 
 class ComposableContainerGui(
     container: Container,
@@ -19,12 +21,15 @@ class ComposableContainerGui(
         super.xSize = xSize
         super.ySize = ySize
     }
-    
+
     override val fontRenderer: FontRenderer get() = fontRendererObj
 
-    private val backgroundComponents = components.filterIsInstance<BackgroundUIComponent>()
-    private val screenComponents = components.filterIsInstance<ScreenUIComponent>()
-    private val clickableComponents = components.filterIsInstance<ClickableUIComponent>()
+    private val backgrounds = components.filterIsInstance<BackgroundUIComponent>()
+    private val screens = components.filterIsInstance<ScreenUIComponent>()
+    private val clickables = components.filterIsInstance<ClickableUIComponent>()
+    private val draggableSources = components.filterIsInstance<DraggableSourceUIComponent>()
+    private val dropDestinations = components.filterIsInstance<DropDestinationUIComponent>()
+    private val dragAndDrops = components.filterIsInstance<DragAndDropUIComponent>()
 
     private val uiScreenOrigin get() = Vector3D(x = guiLeft, y = guiTop, z = zLevel.toDouble())
 
@@ -44,23 +49,62 @@ class ComposableContainerGui(
         )
     }
 
+    override fun drawQuads(configureTesselation: Tessellator.() -> Unit) {
+        Tessellator
+            .instance
+            .also { it.startDrawingQuads() }
+            .apply(configureTesselation)
+            .draw()
+    }
+
+    override fun nextRandomFloat(): Float =
+        mc.renderViewEntity.worldObj.rand.nextFloat()
+
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
 
-        val mousePosition = uiMousePosition(mouseX, mouseY)
-        screenComponents.forEach { it.onDrawScreen(mousePosition, partialTicks, this) }
+        val uiMousePosition = uiMousePosition(mouseX, mouseY)
+        drawScreens(uiMousePosition, partialTicks)
+        handleDragAndDrops(uiMousePosition, partialTicks)
+
     }
-    
+
+    private fun handleDragAndDrops(uiMousePosition: Vector3D, partialTicks: Float) =
+        if (Mouse.isButtonDown(0)) handleDragging(uiMousePosition, partialTicks)
+        else handleDropping(uiMousePosition, partialTicks)
+
+    private fun handleDragging(uiMousePosition: Vector3D, partialTicks: Float) {
+        val draggables = draggableSources.mapNotNull { it.onDrag(uiMousePosition, partialTicks, context = this) }
+        dragAndDrops.forEach { dragAndDrop ->
+            dragAndDrop.onAttemptDrag(draggables, uiMousePosition, context = this)
+
+            dragAndDrop.onDragging(uiMousePosition, context = this)
+        }
+    }
+
+    private fun handleDropping(uiMousePosition: Vector3D, partialTicks: Float) {
+        val draggables = dragAndDrops.mapNotNull { it.onDropping(context = this) }
+        dropDestinations.forEach { destination ->
+            draggables.forEach { draggable ->
+                destination.onDropped(draggable, uiMousePosition, partialTicks, context = this)
+            }
+        }
+    }
+
+    private fun drawScreens(uiMousePosition: Vector3D, partialTicks: Float) {
+        screens.forEach { it.onDrawScreen(uiMousePosition, partialTicks, context = this) }
+    }
+
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
         val mousePosition = uiMousePosition(mouseX, mouseY)
-        backgroundComponents.forEach { it.onDrawBackground(mousePosition, partialTicks, this) }
+        backgrounds.forEach { it.onDrawBackground(mousePosition, partialTicks, context = this) }
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
         super.mouseClicked(mouseX, mouseY, mouseButton)
 
         val mousePosition = uiMousePosition(mouseX, mouseY)
-        clickableComponents.forEach { it.onMouseClicked(mousePosition, mouseButton, this) }
+        clickables.forEach { it.onMouseClicked(mousePosition, mouseButton, context = this) }
     }
     
     private fun uiMousePosition(mouseX: Int, mouseY: Int) = 

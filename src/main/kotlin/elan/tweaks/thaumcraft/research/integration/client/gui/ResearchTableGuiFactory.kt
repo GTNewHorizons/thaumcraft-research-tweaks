@@ -8,6 +8,7 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.grid.Grid
 import elan.tweaks.common.gui.geometry.grid.GridDynamicListAdapter
 import elan.tweaks.thaumcraft.research.integration.client.container.ResearchTableContainerFactory
+import elan.tweaks.thaumcraft.research.integration.client.gui.component.AspectDragAndDropUIComponent
 import elan.tweaks.thaumcraft.research.integration.client.gui.component.AspectPool
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.client.gui.textures.ResearchTableInventoryTexture
@@ -30,7 +31,7 @@ object ResearchTableGuiFactory {
 
         return ComposableContainerGui(
             createContainer(player, tableEntity),
-            components = tableAndInventoryBackgrounds() + aspectPoolsOf(player, tableEntity),
+            components = tableAndInventoryBackgrounds() + aspectPoolsOf(player, tableEntity) + AspectDragAndDropUIComponent(),
             xSize = ResearchTableInventoryTexture.width,
             ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
         )
@@ -92,14 +93,14 @@ object ResearchTableGuiFactory {
     private fun aspectCombinationRequestSender(
         player: EntityPlayer,
         tableEntity: TileResearchTable
-    ) = { aspect: Aspect ->
+    ) = { firstAspect: Aspect, secondAspect: Aspect ->
         PacketHandler.INSTANCE.sendToServer(
             PacketAspectCombinationToServer(
                 player,
-                tableEntity.xCoord, tableEntity.yCoord, tableEntity.zCoord, aspect.components[0],
-                aspect.components[1],
-                tableEntity.bonusAspects.getAmount(aspect.components[0]) > 0,
-                tableEntity.bonusAspects.getAmount(aspect.components[1]) > 0,
+                tableEntity.xCoord, tableEntity.yCoord, tableEntity.zCoord,
+                firstAspect, secondAspect,
+                tableEntity.bonusAspects.getAmount(firstAspect) > 0,
+                tableEntity.bonusAspects.getAmount(secondAspect) > 0,
                 true
             )
         )

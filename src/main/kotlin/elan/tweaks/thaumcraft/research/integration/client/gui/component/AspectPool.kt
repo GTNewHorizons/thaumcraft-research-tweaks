@@ -1,10 +1,7 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.component
 
+import elan.tweaks.common.gui.component.*
 import elan.tweaks.common.gui.drawing.TooltipUtil
-import elan.tweaks.common.gui.component.BackgroundUIComponent
-import elan.tweaks.common.gui.component.ClickableUIComponent
-import elan.tweaks.common.gui.component.ScreenUIComponent
-import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.geometry.grid.Grid
@@ -17,8 +14,8 @@ class AspectPool(
     private val aspectGrid: Grid<Aspect>,
     private val findAspectAmount: (Aspect) -> Float,
     private val findBonusAspectAmount: (Aspect) -> Int,
-    private val sendCombinationRequestToServer: (Aspect) -> Unit // TODO: hide behind domain logic
-) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent {
+    private val sendCombinationRequestToServer: (Aspect, Aspect) -> Unit // TODO: hide behind domain logic
+) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent, DraggableSourceUIComponent, DropDestinationUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
         aspectGrid
@@ -82,15 +79,10 @@ class AspectPool(
         whenAspectAt(uiMousePosition) { aspect ->
             // TODO: Blow logic, including some called methods should be in domain or pass through. Also should check for RESEARCHER_2 (research mastery)
             if (isShiftKeyDown() && aspect.isCompound && aspect.bothComponentsPresent) {
-                playCombine(context)
-                sendCombinationRequestToServer(aspect)
+                context.playCombine()
+                sendCombinationRequestToServer(aspect.components[0], aspect.components[1])
             }
         }
-    }
-
-    private fun whenAspectAt(mousePosition: VectorXY, action: (Aspect) -> Unit) {
-        aspectGrid[mousePosition]
-            ?.run(action)
     }
 
     private val Aspect.bothComponentsPresent get() = componentPresent(0) && componentPresent(1)
@@ -100,8 +92,38 @@ class AspectPool(
 
     private val Aspect.isCompound get() = !isPrimal
 
-    private fun playCombine(context: UIContext) =
-        context.playSoundOnEntity(
+
+    override fun onDrag(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext): Any? =
+        aspectGrid[uiMousePosition]
+
+    override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
+        if (draggable !is Aspect) return
+
+        whenAspectAt(uiMousePosition) { targetAspect ->
+            if(targetAspect == draggable) return
+
+            context.playButtonClick()
+            context.playCombine()
+            sendCombinationRequestToServer(draggable, targetAspect)
+        }
+    }
+
+    private inline fun whenAspectAt(uiMousePosition: VectorXY, action: (Aspect) -> Unit) {
+        aspectGrid[uiMousePosition]
+            ?.run(action)
+    }
+
+
+    private fun UIContext.playButtonClick() =
+        playSoundOnEntity(
+            soundName = "thaumcraft:cameraclack",
+            volume = 0.4f,
+            pitch = 1.0f,
+            distanceDelay = false
+        )
+
+    private fun UIContext.playCombine() =
+        playSoundOnEntity(
             soundName = "thaumcraft:hhon",
             volume = 0.3f,
             pitch = 1.0f,
