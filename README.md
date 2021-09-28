@@ -11,6 +11,7 @@
   - [ ] UI textures
 
 2. Nice to have:
+  - [ ] Testing
   - [ ] Batch aspect combination as one in one packet (see PacketAspectCombinationToServer)
   - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
 
@@ -43,12 +44,12 @@ UI elements:
      - random runes?
   - [x] Player inventory
 
-Mock:
+New UI:
 
-![UI mock](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png)
+![UI](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png)
 
 ## Development
-To run client with specific user name set it in `PLAYER_USER_NAME` environment variable.
+To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
 
 ## Notes
 When drawing background he uses:
