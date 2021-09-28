@@ -9,6 +9,7 @@
   - [ ] Research notes re-implementation
   - [ ] Put aspect multiple times on notes when hovering (RMB)
   - [ ] Research duplication
+  - [ ] Missing ink message
   - [ ] UI textures
   - [ ] Update lang file
 
