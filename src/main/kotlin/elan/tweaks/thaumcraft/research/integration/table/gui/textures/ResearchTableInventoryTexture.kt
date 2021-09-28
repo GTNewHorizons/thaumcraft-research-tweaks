@@ -1,9 +1,10 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.textures
+package elan.tweaks.thaumcraft.research.integration.table.gui.textures
 
 import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Scale
 import elan.tweaks.common.gui.geometry.UV
 import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "textures/research/table/research-table.png",

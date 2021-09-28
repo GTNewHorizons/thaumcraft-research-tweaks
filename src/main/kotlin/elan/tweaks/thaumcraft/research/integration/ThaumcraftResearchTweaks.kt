@@ -8,7 +8,6 @@ import elan.tweaks.thaumcraft.research.integration.ThaumcraftResearchTweaks.MOD_
 import elan.tweaks.thaumcraft.research.integration.ThaumcraftResearchTweaks.MOD_LANGUAGE_ADAPTER
 import elan.tweaks.thaumcraft.research.integration.ThaumcraftResearchTweaks.NAME
 import elan.tweaks.thaumcraft.research.integration.ThaumcraftResearchTweaks.VERSION
-import elan.tweaks.thaumcraft.research.integration.client.gui.GuiHandler
 
 @Mod(
     modid = MOD_ID,

@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.textures
+package elan.tweaks.common.gui.textures
 
 import elan.tweaks.common.gui.geometry.Vector3D
 

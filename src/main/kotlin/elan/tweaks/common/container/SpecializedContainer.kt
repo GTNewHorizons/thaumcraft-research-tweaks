@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.integration.client.container
+package elan.tweaks.common.container
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container

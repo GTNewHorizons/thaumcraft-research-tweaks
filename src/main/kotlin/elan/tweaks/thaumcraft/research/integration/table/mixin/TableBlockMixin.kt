@@ -1,7 +1,7 @@
-package elan.tweaks.thaumcraft.research.integration.client.mixin
+package elan.tweaks.thaumcraft.research.integration.table.mixin
 
 import elan.tweaks.thaumcraft.research.integration.ThaumcraftResearchTweaks
-import elan.tweaks.thaumcraft.research.integration.client.gui.GuiHandler
+import elan.tweaks.thaumcraft.research.integration.GuiHandler
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import org.spongepowered.asm.mixin.Mixin

@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.textures
+package elan.tweaks.common.gui.drawing
 
 import net.minecraft.client.renderer.Tessellator
 
@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.Tessellator
  * https://github.com/TimeConqueror/LootGames/blob/64c1bfbae24a0c6c14ef883c4c8d558d3778ee22/src/main/java/ru/timeconqueror/timecore/api/util/client/DrawHelper.java#L6
  *
  */
-object DrawHelper {
+object TextureDrawer {
     /**
      * Draws textured rectangle.
      *

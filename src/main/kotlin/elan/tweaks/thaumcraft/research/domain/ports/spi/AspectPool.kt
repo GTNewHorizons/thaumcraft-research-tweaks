@@ -1,0 +1,13 @@
+package elan.tweaks.thaumcraft.research.domain.ports.spi
+
+import thaumcraft.api.aspects.Aspect
+
+interface AspectPool {
+    fun discovered(): Array<Aspect>
+    
+    fun amountOf(aspect: Aspect): Int
+    fun bonusAmountOf(aspect: Aspect): Int
+    fun totalAmountOf(aspect: Aspect): Int
+
+    fun anyComponentMissingFor(aspect: Aspect): Boolean
+}

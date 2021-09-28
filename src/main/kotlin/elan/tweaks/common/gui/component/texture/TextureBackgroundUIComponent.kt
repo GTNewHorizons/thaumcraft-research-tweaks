@@ -3,7 +3,7 @@ package elan.tweaks.common.gui.component.texture
 import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.geometry.VectorXY
-import elan.tweaks.thaumcraft.research.integration.client.gui.textures.TextureInstance
+import elan.tweaks.common.gui.textures.TextureInstance
 
 class TextureBackgroundUIComponent(
     private val uiOrigin: VectorXY,

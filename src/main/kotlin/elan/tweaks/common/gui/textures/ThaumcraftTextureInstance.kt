@@ -1,5 +1,6 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.textures
+package elan.tweaks.common.gui.textures
 
+import elan.tweaks.common.gui.drawing.TextureDrawer
 import elan.tweaks.common.gui.geometry.Vector3D
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ResourceLocation
@@ -22,7 +23,7 @@ abstract class ThaumcraftTextureInstance(
 
     override fun draw(origin: Vector3D) {
         textureManager.bindTexture(resourceLocation)
-        DrawHelper.drawTexturedRectByParts(
+        TextureDrawer.drawTexturedRectByParts(
             x0 = origin.x, y0 = origin.y, width = width, height = height, zLevel = origin.z,
             textureX = u, textureY = v, textureWidth = width, textureHeight = height, 
             textureXPartCount = textureWidth, textureYPartCount = textureHeight

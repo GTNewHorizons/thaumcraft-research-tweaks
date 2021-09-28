@@ -5,7 +5,7 @@ import elan.tweaks.common.gui.geometry.VectorXY
 import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.UtilsFX
 
-object TooltipUtil {
+object TooltipDrawer {
     // TODO: Rewrite
     fun drawCustomTooltip(context: UIContext, var4: List<*>, mousePosition: VectorXY, subTipColor: Int) {
         GL11.glDisable(32826)

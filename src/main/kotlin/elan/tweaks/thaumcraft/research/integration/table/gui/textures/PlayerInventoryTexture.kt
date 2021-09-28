@@ -1,4 +1,6 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.textures
+package elan.tweaks.thaumcraft.research.integration.table.gui.textures
+
+import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object PlayerInventoryTexture : ThaumcraftTextureInstance(
     "textures/gui/guiresearchtable2.png", 

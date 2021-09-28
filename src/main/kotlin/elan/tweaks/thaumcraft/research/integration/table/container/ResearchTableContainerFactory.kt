@@ -1,7 +1,8 @@
-package elan.tweaks.thaumcraft.research.integration.client.container
+package elan.tweaks.thaumcraft.research.integration.table.container
 
+import elan.tweaks.common.container.SpecializedContainer
 import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.thaumcraft.research.integration.client.gui.textures.PlayerInventoryTexture
+import elan.tweaks.thaumcraft.research.integration.table.gui.textures.PlayerInventoryTexture
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.Slot
@@ -13,14 +14,14 @@ object ResearchTableContainerFactory {
     private const val SCRIBE_TOOLS_SLOT_INDEX = 0
     private const val RESEARCH_NOTES_SLOT_INDEX = 1
     private val specializedSlotIndexRange = SCRIBE_TOOLS_SLOT_INDEX..RESEARCH_NOTES_SLOT_INDEX
-    private val inventorySlotOffset = Vector2D(8,7) // GuiContainer offsets inventory slots
+    private val inventorySlotOffset = Vector2D(8, 7) // GuiContainer offsets inventory slots
 
     fun create(
         playerInventory: InventoryPlayer,
         tableTileEntity: TileResearchTable,
-        scribeToolsSlotOrigin: Vector2D,
-        notesSlotOrigin: Vector2D,
-        inventorySlotOrigin: Vector2D,
+        scribeToolsSlotOrigin: Vector2D = Vector2D.ZERO,
+        notesSlotOrigin: Vector2D = Vector2D.ZERO,
+        inventorySlotOrigin: Vector2D = Vector2D.ZERO,
     ) =
         SpecializedContainer(
             onEnchantItem = duplicateResearch(tableTileEntity),

@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.component
+package elan.tweaks.thaumcraft.research.integration.table.gui.component
 
 import cpw.mods.fml.client.FMLClientHandler
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent

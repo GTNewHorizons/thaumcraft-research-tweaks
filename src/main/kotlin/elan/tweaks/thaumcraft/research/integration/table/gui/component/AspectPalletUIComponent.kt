@@ -1,39 +1,41 @@
-package elan.tweaks.thaumcraft.research.integration.client.gui.component
+package elan.tweaks.thaumcraft.research.integration.table.gui.component
 
-import elan.tweaks.common.gui.component.*
+import elan.tweaks.common.gui.component.BackgroundUIComponent
+import elan.tweaks.common.gui.component.ClickableUIComponent
+import elan.tweaks.common.gui.component.ScreenUIComponent
+import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
-import elan.tweaks.common.gui.drawing.TooltipUtil
+import elan.tweaks.common.gui.drawing.TooltipDrawer
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.geometry.grid.Grid
+import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
 import net.minecraft.client.gui.inventory.GuiContainer.isShiftKeyDown
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.lib.UtilsFX
 
-class AspectPool(
+class AspectPalletUIComponent(
     private val aspectGrid: Grid<Aspect>,
-    private val findAspectAmount: (Aspect) -> Float,
-    private val findBonusAspectAmount: (Aspect) -> Int,
-    private val sendCombinationRequestToServer: (Aspect, Aspect) -> Unit // TODO: hide behind domain logic
-) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent, DraggableSourceUIComponent, DropDestinationUIComponent {
+    private val pallet: AspectPalletPort,
+) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent,
+    DraggableSourceUIComponent, DropDestinationUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
         aspectGrid
             .asOriginSequence()
             .forEach { (uiOrigin, aspect) ->
-                val amount = findAspectAmount(aspect)
-                val bonusAmount = findBonusAspectAmount(aspect)
+                val (amount, bonusAmount) = pallet.amountAndBonusOf(aspect)
 
                 // TODO: Hide this behind some aspect drawing component
-                val faded = amount <= 0 && bonusAmount <= 0
+                val faded = pallet.isDrainedOf(aspect)
                 val alpha = if (faded) 0.33f else 1.0f
 
                 val absolutePosition = context.toScreenOrigin(uiOrigin)
                 UtilsFX.drawTag(
                     absolutePosition.x, absolutePosition.y,
-                    aspect, amount, bonusAmount,
+                    aspect, amount.toFloat(), bonusAmount,
                     absolutePosition.z,
                     ASPECT_TAG_BLEND, alpha
                 )
@@ -47,7 +49,7 @@ class AspectPool(
     // TODO: Move to texture rendering object
     private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
         val screenOrigin = context.toScreenOrigin(uiOrigin)
-        TooltipUtil.drawCustomTooltip(
+        TooltipDrawer.drawCustomTooltip(
             context, listOf(aspect.name, aspect.localizedDescription), Vector2D(0, y = -8) + screenOrigin, 11
         )
         // TODO: Add research check, this should be somehow passed via Domain
@@ -79,34 +81,31 @@ class AspectPool(
 
     override fun onMouseClicked(uiMousePosition: VectorXY, button: Int, context: UIContext) {
         whenAspectAt(uiMousePosition) { aspect ->
-            // TODO: Blow logic, including some called methods should be in domain or pass through. Also should check for RESEARCHER_2 (research mastery)
-            if (isShiftKeyDown() && aspect.isCompound && aspect.bothComponentsPresent) {
-                context.playCombine()
-                sendCombinationRequestToServer(aspect.components[0], aspect.components[1])
+            if (isShiftKeyDown() && button == 0) {
+                pallet
+                    .derive(aspect)
+                    .onSuccess { context.playCombine() }
             }
         }
     }
 
-    private val Aspect.bothComponentsPresent get() = componentPresent(0) && componentPresent(1)
-
-    private fun Aspect.componentPresent(index: Int, minimumAmount: Int = 1) = isCompound
-            && (findAspectAmount(components[index]) + findBonusAspectAmount(components[index]) >= minimumAmount)
-
-    private val Aspect.isCompound get() = !isPrimal
-
-
-    override fun onDrag(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext): Any? =
-        aspectGrid[uiMousePosition]
+    override fun onDrag(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext): Any? {
+        val aspect = aspectGrid[uiMousePosition] ?: return null
+        if(pallet.isDrainedOf(aspect)) return null
+        return aspect
+    }
 
     override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (draggable !is Aspect) return
 
         whenAspectAt(uiMousePosition) { targetAspect ->
-            if(targetAspect == draggable) return
-
-            context.playButtonClick()
-            context.playCombine()
-            sendCombinationRequestToServer(draggable, targetAspect)
+            pallet
+                .combine(draggable, targetAspect)
+                .onSuccess {
+                    context
+                        .playButtonClick()
+                        .playCombine()
+                }
         }
     }
 
@@ -115,21 +114,22 @@ class AspectPool(
             ?.run(action)
     }
 
-
-    private fun UIContext.playButtonClick() =
+    private fun UIContext.playButtonClick() = apply {
         playSoundOnEntity(
             soundName = "thaumcraft:cameraclack",
             volume = 0.4f,
             pitch = 1.0f,
             distanceDelay = false
         )
+    }
 
-    private fun UIContext.playCombine() =
+    private fun UIContext.playCombine() = apply {
         playSoundOnEntity(
             soundName = "thaumcraft:hhon",
             volume = 0.3f,
             pitch = 1.0f,
             distanceDelay = false
         )
+    }
 
 }
