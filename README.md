@@ -2,7 +2,7 @@
 ### Functional
   - [x] Larger aspect pallet for research table
   - [x] Combining aspects via drag & drop
-  - [ ] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
+  - [x] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
   - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
 

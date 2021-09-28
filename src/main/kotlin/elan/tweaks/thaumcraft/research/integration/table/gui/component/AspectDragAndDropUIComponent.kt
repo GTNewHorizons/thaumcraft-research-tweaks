@@ -1,8 +1,8 @@
 package elan.tweaks.thaumcraft.research.integration.table.gui.component
 
 import cpw.mods.fml.client.FMLClientHandler
-import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.component.UIContext
+import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
 import org.lwjgl.opengl.GL11
@@ -17,29 +17,18 @@ class AspectDragAndDropUIComponent : DragAndDropUIComponent {
 
     override fun onAttemptDrag(draggable: Any, uiMousePosition: VectorXY, context: UIContext) {
         if (this.draggable != null || draggable !is Aspect) return
-        println("Drag of ${draggable.name} started")
-        context.playButtonAspect()
-
+        
         this.draggable = draggable
     }
 
     override fun onDropping(context: UIContext): Any? {
         val droppedAspect = draggable ?: return null
-        println("Dropping ${droppedAspect.name} started")
 
         draggable = null
         return droppedAspect
     }
 
 
-    private fun UIContext.playButtonAspect() {
-        playSoundOnEntity(
-            "thaumcraft:hhoff",
-            0.2f,
-            1.0f + nextRandomFloat() * 0.1f,
-            false
-        )
-    }
 
     override fun onDragging(uiMousePosition: VectorXY, context: UIContext) {
         val draggedAspect = draggable ?: return

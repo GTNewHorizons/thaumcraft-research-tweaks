@@ -11,6 +11,7 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.geometry.grid.Grid
 import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
+import net.minecraft.client.gui.inventory.GuiContainer.isCtrlKeyDown
 import net.minecraft.client.gui.inventory.GuiContainer.isShiftKeyDown
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
@@ -81,46 +82,53 @@ class AspectPalletUIComponent(
 
     override fun onMouseClicked(uiMousePosition: VectorXY, button: Int, context: UIContext) {
         whenAspectAt(uiMousePosition) { aspect ->
-            if (isShiftKeyDown() && button == 0) {
-                pallet
-                    .derive(aspect)
-                    .onSuccess { context.playCombine() }
+            if (button == 0 && isIntendingToDeriveAspect()) {
+                derive(aspect).onSuccess { context.playCombine() }
             }
         }
     }
 
+    private fun derive(aspect: Aspect) =
+        if (isIntendingToBatch()) pallet.deriveBatch(aspect)
+        else pallet.derive(aspect)
+
     override fun onDrag(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext): Any? {
         val aspect = aspectGrid[uiMousePosition] ?: return null
-        if(pallet.isDrainedOf(aspect)) return null
+        if (pallet.isDrainedOf(aspect) || isIntendingToDeriveAspect()) return null
+
+        context.playButtonAspect()
         return aspect
     }
 
+    private fun isIntendingToDeriveAspect() = 
+        isShiftKeyDown()
+
+    private fun UIContext.playButtonAspect() {
+        playSoundOnEntity(
+            "thaumcraft:hhoff",
+            0.2f,
+            1.0f + nextRandomFloat() * 0.1f,
+            false
+        )
+    }
+    
     override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (draggable !is Aspect) return
 
         whenAspectAt(uiMousePosition) { targetAspect ->
-            pallet
-                .combine(draggable, targetAspect)
-                .onSuccess {
-                    context
-                        .playButtonClick()
-                        .playCombine()
-                }
+            combine(draggable, targetAspect).onSuccess { context.playCombine() }
         }
     }
 
-    private inline fun whenAspectAt(uiMousePosition: VectorXY, action: (Aspect) -> Unit) {
-        aspectGrid[uiMousePosition]
-            ?.run(action)
-    }
+    private fun combine(draggable: Aspect, targetAspect: Aspect) =
+        if (isIntendingToBatch()) pallet.combineBatch(draggable, targetAspect)
+        else pallet.combine(draggable, targetAspect)
 
-    private fun UIContext.playButtonClick() = apply {
-        playSoundOnEntity(
-            soundName = "thaumcraft:cameraclack",
-            volume = 0.4f,
-            pitch = 1.0f,
-            distanceDelay = false
-        )
+    private fun isIntendingToBatch() = 
+        isCtrlKeyDown()
+
+    private inline fun whenAspectAt(uiMousePosition: VectorXY, action: (Aspect) -> Unit) {
+        aspectGrid[uiMousePosition]?.run(action)
     }
 
     private fun UIContext.playCombine() = apply {
