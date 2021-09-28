@@ -1,7 +1,7 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.component
 
 import cpw.mods.fml.client.FMLClientHandler
-import elan.tweaks.common.gui.component.DragAndDropUIComponent
+import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY

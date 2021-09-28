@@ -1,6 +1,9 @@
 package elan.tweaks.common.gui
 
 import elan.tweaks.common.gui.component.*
+import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
+import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
+import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY

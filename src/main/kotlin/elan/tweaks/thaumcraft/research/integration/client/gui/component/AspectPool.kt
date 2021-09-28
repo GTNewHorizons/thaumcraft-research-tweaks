@@ -1,6 +1,8 @@
 package elan.tweaks.thaumcraft.research.integration.client.gui.component
 
 import elan.tweaks.common.gui.component.*
+import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
+import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.drawing.TooltipUtil
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
