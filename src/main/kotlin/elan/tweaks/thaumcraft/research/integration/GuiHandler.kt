@@ -2,7 +2,7 @@ package elan.tweaks.thaumcraft.research.integration
 
 import cpw.mods.fml.common.network.IGuiHandler
 import elan.tweaks.thaumcraft.research.integration.table.gui.ResearchTableGuiFactory
-import elan.tweaks.thaumcraft.research.integration.aspect.pool.AspectPoolFactory
+import elan.tweaks.thaumcraft.research.integration.aspect.pool.AspectPalletFactory
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.player.EntityPlayer
@@ -34,7 +34,7 @@ class GuiHandler : IGuiHandler {
         tableEntity: TileResearchTable
     ) = ResearchTableGuiFactory.create(
         player,
-        AspectPoolFactory.create(player, tableEntity),
+        AspectPalletFactory.create(player, tableEntity),
         tableEntity
     )
 

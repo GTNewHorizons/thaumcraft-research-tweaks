@@ -4,7 +4,7 @@ import elan.tweaks.thaumcraft.research.domain.model.AspectPallet
 import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.common.tiles.TileResearchTable
 
-object AspectPoolFactory {
+object AspectPalletFactory {
     fun create(player: EntityPlayer, tableEntity: TileResearchTable) =
         AspectPallet(
             pool = AspectPoolAdapter(player, tableEntity),
