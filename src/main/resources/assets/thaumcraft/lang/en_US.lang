@@ -1,0 +1,16 @@
+## Rewrite with batch mechanic explained
+tc.research_page.RESEARCHER1.1=You have become more efficient at performing research.<BR>Whenever you remove an aspect that you placed in a hex, there is a 25% chance that you will regain the research point.<BR>You are also able to see what aspects you need to combine to create an aspect you are hovering over.
+tc.research_page.RESEARCHER2.1=You have become even more efficient at performing research.<BR>Whenever you remove an aspect that you placed in a hex, there is a 50% chance that you will regain the research point.<BR>Additionally there is a 10% chance that whenever you place an aspect that it will not cost any research points to do so.<BR>Lastly you are able to combine aspects in the research table by shift-clicking on the aspect you wish to create. If you have enough of the component aspects they will automatically combine to create the clicked aspect.
+
+## Rewrite to include:
+# - new UI image
+# - drag & drop 
+# - pallet combination mechanics
+tc.research_page.RESEARCH.6=<IMG>thaumcraft:textures/misc/research2.png:0:0:128:83:1</IMG>You should see all the primal aspects (and possibly some compound aspects) listed in the area marked §l3§r with varying amounts attached to them. When you enter a world for the first time, every player is assigned a small pool of primal aspects to get them started.<BR>If you had done some exploring with
+tc.research_page.RESEARCH.7=the thaumometer beforehand then you might have a significant number of primal and compound aspects listed here.<BR>You can now start combining aspects into more complex compound aspects but simply clicking on those you wish to combine or dragging it to the runic circles in area §l4§r. The selected aspects will appear in area §l4§r and when you have two selected pressing the purple button will attempt to combine them. If successful you should see what was gained in the bottom right and it should appear in area §l3§r.<BR>The component aspects are consumed even if the combination did not result in valid compound aspect.
+
+# Swap image to new UI
+tc.research_page.RESEARCH.8=§l   §n(3) Primary Research§r<IMG>thaumcraft:textures/misc/research2.png:0:88:255:158:.5</IMG>You need to be carrying a set of scribing tools and paper for this step.<BR>If you open your Thaumonomicon you will see all the knowledge have and also all the knowledge that you are now able to pursue.<BR>Flashing square or round icons represent primary researches.
+
+# Add a note about combining/placing aspects analogous to the pallets  
+tc.research_page.RESEARCH.11=You continue doing this until you have formed a pattern connecting all the starting aspects. The outer aspects need not be connected to all the others, they simply need to form a connected whole.<BR>Once this is done the research will complete and the research note will turn into a discovery.<LINE>NOTE: Placing and removing aspects from the hex grid consumes ink from your scribing tools. If it runs out you will not be able to proceed until you refill it.
