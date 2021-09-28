@@ -10,6 +10,7 @@
   - [ ] Put aspect multiple times on notes when hovering (RMB)
   - [ ] Research duplication
   - [ ] UI textures
+  - [ ] Update lang file
 
 2. Nice to have:
   - [ ] Testing
