@@ -5,7 +5,7 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.geometry.VectorXY
 
 interface DragAndDropUIComponent: UIComponent {
-    
+        
     /**
      * Called when left mouse button down and any source can provide a draggable
      */
@@ -29,5 +29,10 @@ interface DragAndDropUIComponent: UIComponent {
      * Called repeatedly when left mouse button is up
      */
     fun onDropping(context: UIContext): Any?
+
+    /**
+     * Called when mouse clicked over drag click receiver
+     */
+    fun onDragClick(context: UIContext): Any?
     
 }

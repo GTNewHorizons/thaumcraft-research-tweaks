@@ -4,12 +4,14 @@ import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.ClickableUIComponent
 import elan.tweaks.common.gui.component.ScreenUIComponent
 import elan.tweaks.common.gui.component.UIContext
+import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.drawing.TooltipDrawer
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.geometry.grid.Grid
+import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
 import net.minecraft.client.gui.inventory.GuiContainer.isCtrlKeyDown
 import net.minecraft.client.gui.inventory.GuiContainer.isShiftKeyDown
@@ -21,7 +23,7 @@ class AspectPalletUIComponent(
     private val aspectGrid: Grid<Aspect>,
     private val pallet: AspectPalletPort,
 ) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent,
-    DraggableSourceUIComponent, DropDestinationUIComponent {
+    DraggableSourceUIComponent, DropDestinationUIComponent, DragClickableDestinationUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
         aspectGrid
@@ -80,9 +82,9 @@ class AspectPalletUIComponent(
         const val ASPECT_TAG_BLEND = 771
     }
 
-    override fun onMouseClicked(uiMousePosition: VectorXY, button: Int, context: UIContext) {
+    override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
         whenAspectAt(uiMousePosition) { aspect ->
-            if (button == 0 && isIntendingToDeriveAspect()) {
+            if (button is MouseButton.Left && isIntendingToDeriveAspect()) {
                 derive(aspect).onSuccess { context.playCombine() }
             }
         }
@@ -115,6 +117,16 @@ class AspectPalletUIComponent(
     override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (draggable !is Aspect) return
 
+        whenAspectAt(uiMousePosition) { targetAspect ->
+            combine(draggable, targetAspect).onSuccess { context.playCombine() }
+        }
+    }
+
+
+    override fun onDragClick(draggable: Any, uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
+        if (draggable !is Aspect || button !is MouseButton.Right) return
+        
+        
         whenAspectAt(uiMousePosition) { targetAspect ->
             combine(draggable, targetAspect).onSuccess { context.playCombine() }
         }

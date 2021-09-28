@@ -4,9 +4,10 @@
   - [x] Larger aspect pallet for research table
   - [x] Combining aspects via drag & drop
   - [x] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
-  - [ ] Combining multiple times when hovering
+  - [x] Combining multiple times when hovering (RMB)
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
-  - [ ] Research notes
+  - [ ] Research notes re-implementation
+  - [ ] Put aspect multiple times on notes when hovering (RMB)
   - [ ] Research duplication
   - [ ] UI textures
 

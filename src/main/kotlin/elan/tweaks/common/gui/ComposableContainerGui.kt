@@ -2,16 +2,17 @@ package elan.tweaks.common.gui
 
 import elan.tweaks.common.gui.component.*
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
+import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.peripheral.MouseButton
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.inventory.Container
-import org.lwjgl.input.Mouse
 
 class ComposableContainerGui(
     container: Container,
@@ -32,6 +33,7 @@ class ComposableContainerGui(
     private val clickables = components.filterIsInstance<ClickableUIComponent>()
     private val draggableSources = components.filterIsInstance<DraggableSourceUIComponent>()
     private val dropDestinations = components.filterIsInstance<DropDestinationUIComponent>()
+    private val dragClickables = components.filterIsInstance<DragClickableDestinationUIComponent>()
     private val dragAndDrops = components.filterIsInstance<DragAndDropUIComponent>()
 
     private val uiScreenOrigin get() = Vector3D(x = guiLeft, y = guiTop, z = zLevel.toDouble())
@@ -73,7 +75,7 @@ class ComposableContainerGui(
     }
 
     private fun handleDragAndDrops(uiMousePosition: Vector3D, partialTicks: Float) =
-        if (Mouse.isButtonDown(0)) handleDragging(uiMousePosition, partialTicks)
+        if (MouseButton.Left.isDown()) handleDragging(uiMousePosition, partialTicks)
         else handleDropping(uiMousePosition, partialTicks)
 
     private fun handleDragging(uiMousePosition: Vector3D, partialTicks: Float) {
@@ -103,13 +105,29 @@ class ComposableContainerGui(
         backgrounds.forEach { it.onDrawBackground(mousePosition, partialTicks, context = this) }
     }
 
-    override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
-        super.mouseClicked(mouseX, mouseY, mouseButton)
+    override fun mouseClicked(mouseX: Int, mouseY: Int, buttonIndex: Int) {
+        super.mouseClicked(mouseX, mouseY, buttonIndex)
 
-        val mousePosition = uiMousePosition(mouseX, mouseY)
-        clickables.forEach { it.onMouseClicked(mousePosition, mouseButton, context = this) }
+        val uiMousePosition = uiMousePosition(mouseX, mouseY)
+        val button = MouseButton.of(buttonIndex)
+        handleClickables(uiMousePosition, button)
+        handleDragClickables(uiMousePosition, button)
     }
-    
+
+    private fun handleDragClickables(uiMousePosition: Vector3D, button: MouseButton) {
+        val draggables = dragAndDrops.mapNotNull { it.onDragClick(context = this) }
+        dragClickables.forEach { destination ->
+            draggables.forEach { draggable ->
+                destination.onDragClick(draggable, uiMousePosition, button, context = this)
+            }
+        }
+    }
+
+    private fun handleClickables(uiMousePosition: Vector3D, button: MouseButton) {
+        clickables.forEach { it.onMouseClicked(uiMousePosition, button, context = this) }
+    }
+
+
     private fun uiMousePosition(mouseX: Int, mouseY: Int) = 
         Vector2D(mouseX, mouseY) - uiScreenOrigin
 }

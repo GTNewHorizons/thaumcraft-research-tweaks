@@ -28,7 +28,8 @@ class AspectDragAndDropUIComponent : DragAndDropUIComponent {
         return droppedAspect
     }
 
-
+    override fun onDragClick(context: UIContext): Any? = 
+        draggable
 
     override fun onDragging(uiMousePosition: VectorXY, context: UIContext) {
         val draggedAspect = draggable ?: return
