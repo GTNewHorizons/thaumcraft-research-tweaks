@@ -1,14 +1,14 @@
-package elan.tweaks.common.gui.geometry.grid
+package elan.tweaks.common.gui.layout.grid
 
 import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 
-class GridDynamicListAdapter<ElementT>(
+class GridLayoutDynamicListAdapter<ElementT>(
     private val bounds: Rectangle,
     private val cellSize: Int,
     private val provideElements: () -> List<ElementT>
-) : Grid<ElementT> {
+) : GridLayout<ElementT> {
     
     private val elements: List<ElementT>
         get() = provideElements()
@@ -24,9 +24,7 @@ class GridDynamicListAdapter<ElementT>(
      * @return element if present
      */
     override operator fun get(uiPoint: VectorXY): ElementT? {
-        if (uiPoint !in bounds) {
-            return null
-        }
+        if (uiPoint !in bounds) return null
 
         val elementIndex = deduceIndex(uiPoint)
 

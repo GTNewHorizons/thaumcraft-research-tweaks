@@ -10,7 +10,7 @@ import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.drawing.TooltipDrawer
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
-import elan.tweaks.common.gui.geometry.grid.Grid
+import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
 import net.minecraft.client.gui.inventory.GuiContainer.isCtrlKeyDown
@@ -20,7 +20,7 @@ import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.lib.UtilsFX
 
 class AspectPalletUIComponent(
-    private val aspectGrid: Grid<Aspect>,
+    private val aspectGrid: GridLayout<Aspect>,
     private val pallet: AspectPalletPort
 ) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent,
     DraggableSourceUIComponent, DropDestinationUIComponent, DragClickableDestinationUIComponent {

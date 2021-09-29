@@ -7,6 +7,7 @@
   - [x] Combining multiple times when hovering (RMB)
   - [ ] Research notes re-implementation
   - [ ] Put aspect multiple times on notes when hovering (RMB)
+  - [ ] Make sure expertise and mastery rules about aspect conservation apply correctly
   - [ ] Research duplication
   - [ ] Missing ink message
   - [ ] Notification on aspect combination rendering
@@ -81,4 +82,11 @@ notifications are not drawing on top of ui, this should fix it:
             GL11.glPopMatrix();
         }
     }
+```
+
+```
+ResearchManager.HexEntry types:
+ - `0`: Empty
+ - `1`: Root
+ - `2`: Placed by user
 ```

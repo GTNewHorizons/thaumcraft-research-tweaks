@@ -8,5 +8,11 @@ class ResearchNotesAdapter(
     private val table: TileResearchTable
 ) : ResearchNotes {
     override val present: Boolean
-        get() = table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX) != null
+        get() = notes != null
+    
+    override val complete: Boolean
+        get() = notes.stackTagCompound.getBoolean("complete")
+
+    private val notes get() = 
+        table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
 }
