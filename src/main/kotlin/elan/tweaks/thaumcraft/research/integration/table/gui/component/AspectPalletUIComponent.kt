@@ -94,7 +94,7 @@ class AspectPalletUIComponent(
         if (isIntendingToBatch()) pallet.deriveBatch(aspect)
         else pallet.derive(aspect)
 
-    override fun onDrag(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext): Any? {
+    override fun onDrag(uiMousePosition: VectorXY, context: UIContext): Any? {
         val aspect = aspectGrid[uiMousePosition] ?: return null
         if (pallet.isDrainedOf(aspect) || isIntendingToDeriveAspect()) return null
 

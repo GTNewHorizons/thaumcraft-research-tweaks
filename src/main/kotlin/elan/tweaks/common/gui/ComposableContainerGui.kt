@@ -71,18 +71,14 @@ class ComposableContainerGui(
         val uiMousePosition = uiMousePosition(mouseX, mouseY)
         drawScreens(uiMousePosition, partialTicks)
         handleDragAndDrops(uiMousePosition, partialTicks)
-
     }
 
     private fun handleDragAndDrops(uiMousePosition: Vector3D, partialTicks: Float) =
-        if (MouseButton.Left.isDown()) handleDragging(uiMousePosition, partialTicks)
+        if (MouseButton.Left.isDown()) handleDragging(uiMousePosition)
         else handleDropping(uiMousePosition, partialTicks)
 
-    private fun handleDragging(uiMousePosition: Vector3D, partialTicks: Float) {
-        val draggables = draggableSources.mapNotNull { it.onDrag(uiMousePosition, partialTicks, context = this) }
+    private fun handleDragging(uiMousePosition: Vector3D) {
         dragAndDrops.forEach { dragAndDrop ->
-            dragAndDrop.onAttemptDrag(draggables, uiMousePosition, context = this)
-
             dragAndDrop.onDragging(uiMousePosition, context = this)
         }
     }
@@ -111,7 +107,13 @@ class ComposableContainerGui(
         val uiMousePosition = uiMousePosition(mouseX, mouseY)
         val button = MouseButton.of(buttonIndex)
         handleClickables(uiMousePosition, button)
-        handleDragClickables(uiMousePosition, button)
+        handleDraggables(button, uiMousePosition)
+        println("Mouse clicked ($mouseX; $mouseY)")
+    }
+
+    private fun handleDraggables(button: MouseButton, uiMousePosition: Vector3D) {
+        if (button is MouseButton.Left) handleDragAttempt(uiMousePosition, button) 
+        else handleDragClickables(uiMousePosition, button)
     }
 
     private fun handleDragClickables(uiMousePosition: Vector3D, button: MouseButton) {
@@ -120,6 +122,13 @@ class ComposableContainerGui(
             draggables.forEach { draggable ->
                 destination.onDragClick(draggable, uiMousePosition, button, context = this)
             }
+        }
+    }
+
+    private fun handleDragAttempt(uiMousePosition: Vector3D, button: MouseButton) {
+        val draggables = draggableSources.mapNotNull { it.onDrag(uiMousePosition, context = this) }
+        dragAndDrops.forEach { dragAndDrop ->
+            dragAndDrop.onAttemptDrag(draggables, uiMousePosition, context = this)
         }
     }
 

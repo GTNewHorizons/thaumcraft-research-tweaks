@@ -35,7 +35,7 @@ object ResearchTableGuiFactory {
 
         return ComposableContainerGui(
             container,
-            components = tableAndInventoryBackgrounds() + componentsOf(pallet) + AspectDragAndDropUIComponent(),
+            components = tableAndInventoryBackgrounds() + componentsOf(pallet) + AspectDragAndDropUIComponent(pallet),
             xSize = ResearchTableInventoryTexture.width,
             ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
         )

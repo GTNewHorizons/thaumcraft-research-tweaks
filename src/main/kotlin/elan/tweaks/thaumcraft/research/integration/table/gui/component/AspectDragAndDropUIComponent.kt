@@ -3,8 +3,8 @@ package elan.tweaks.thaumcraft.research.integration.table.gui.component
 import cpw.mods.fml.client.FMLClientHandler
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
-import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.fx.ParticleEngine
@@ -12,7 +12,9 @@ import thaumcraft.client.lib.UtilsFX
 import thaumcraft.common.config.Config
 import java.awt.Color
 
-class AspectDragAndDropUIComponent : DragAndDropUIComponent {
+class AspectDragAndDropUIComponent(
+    private val pallet: AspectPalletPort
+) : DragAndDropUIComponent {
     private var draggable: Aspect? = null
 
     override fun onAttemptDrag(draggable: Any, uiMousePosition: VectorXY, context: UIContext) {
@@ -33,13 +35,19 @@ class AspectDragAndDropUIComponent : DragAndDropUIComponent {
 
     override fun onDragging(uiMousePosition: VectorXY, context: UIContext) {
         val draggedAspect = draggable ?: return
-        GL11.glEnable(3042)
-        val orbOrigin = context.toScreenOrigin(uiMousePosition)
-        drawOrb(orbOrigin, draggedAspect.color, context)
-        GL11.glDisable(3042)
+        if(pallet.isDrainedOf(draggedAspect)) {
+            draggable = null
+            return
+        }
+            
+        drawOrb(uiMousePosition, draggedAspect.color, context)
     }
 
-    private fun drawOrb(origin: Vector3D, color: Int, context: UIContext) {
+    private fun drawOrb(uiOrigin: VectorXY, color: Int, context: UIContext) {
+        val origin = context.toScreenOrigin(uiOrigin)
+        
+        GL11.glEnable(3042)
+        
         val count = FMLClientHandler.instance().client.thePlayer.ticksExisted
         val c = Color(color)
         var red = c.red.toFloat() / 255.0f
@@ -68,5 +76,7 @@ class AspectDragAndDropUIComponent : DragAndDropUIComponent {
             addVertexWithUV(0.0, 0.0, origin.z, var8.toDouble(), var11.toDouble())
         }
         GL11.glPopMatrix()
+        
+        GL11.glDisable(3042)
     }
 }

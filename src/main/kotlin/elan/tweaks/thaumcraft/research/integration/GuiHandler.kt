@@ -1,9 +1,9 @@
 package elan.tweaks.thaumcraft.research.integration
 
 import cpw.mods.fml.common.network.IGuiHandler
-import elan.tweaks.thaumcraft.research.integration.table.gui.ResearchTableGuiFactory
 import elan.tweaks.thaumcraft.research.integration.aspect.pool.AspectPalletFactory
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
+import elan.tweaks.thaumcraft.research.integration.table.gui.ResearchTableGuiFactory
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
@@ -11,6 +11,7 @@ import thaumcraft.client.gui.GuiResearchTable
 import thaumcraft.common.container.ContainerResearchTable
 import thaumcraft.common.tiles.TileResearchTable
 
+// TODO make this a research table gui specific handler which always provides table components and reference it instead of mod when creating gui
 class GuiHandler : IGuiHandler {
 
     object IDs {

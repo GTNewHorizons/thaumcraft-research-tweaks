@@ -5,5 +5,5 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.geometry.VectorXY
 
 interface DraggableSourceUIComponent: UIComponent {
-    fun onDrag(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext): Any?
+    fun onDrag(uiMousePosition: VectorXY, context: UIContext): Any?
 }
