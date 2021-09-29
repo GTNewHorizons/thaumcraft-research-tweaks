@@ -37,7 +37,8 @@ class HexLayoutResearchNoteDataAdapter(
         // 0 left bottom
         // 1 left top
         // 2 top
-        // hex.getNeighbour(index) 
+        // hex.getNeighbour(index)
+        // start from roots and connect as much as we can, ignore rest as unconnected
         hexes
             .keys
             .asSequence()
