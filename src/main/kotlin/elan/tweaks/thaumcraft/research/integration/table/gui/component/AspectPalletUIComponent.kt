@@ -12,7 +12,7 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.geometry.grid.Grid
 import elan.tweaks.common.gui.peripheral.MouseButton
-import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
+import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
 import net.minecraft.client.gui.inventory.GuiContainer.isCtrlKeyDown
 import net.minecraft.client.gui.inventory.GuiContainer.isShiftKeyDown
 import org.lwjgl.opengl.GL11

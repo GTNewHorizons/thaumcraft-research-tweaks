@@ -4,7 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.geometry.VectorXY
-import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
+import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
 import net.minecraft.client.renderer.RenderHelper
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect

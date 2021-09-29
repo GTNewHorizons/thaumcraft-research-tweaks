@@ -7,8 +7,9 @@ import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.grid.Grid
 import elan.tweaks.common.gui.geometry.grid.GridDynamicListAdapter
-import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
-import elan.tweaks.thaumcraft.research.domain.ports.api.ResearchAreaPort
+import elan.tweaks.thaumcraft.research.domain.model.Research
+import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
+import elan.tweaks.thaumcraft.research.integration.adapters.ResearchNotesAdapter
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectDragAndDropUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectPalletUIComponent
@@ -25,11 +26,11 @@ object ResearchTableGuiFactory {
     fun create(
         player: EntityPlayer,
         pallet: AspectPalletPort,
-        tableEntity: TileResearchTable
+        table: TileResearchTable
     ): ComposableContainerGui {
         val container = ResearchTableContainerFactory.create(
             player.inventory,
-            tableEntity,
+            table,
             scribeToolsSlotOrigin = ResearchTableInventoryTexture.Slots.scribeToolsOrigin,
             notesSlotOrigin = ResearchTableInventoryTexture.Slots.notesOrigin,
             inventorySlotOrigin = ResearchTableInventoryTexture.inventoryOrigin,
@@ -40,7 +41,7 @@ object ResearchTableGuiFactory {
             components = 
                     tableAndInventoryBackgrounds() 
                             + componentsOf(pallet) 
-                            + researchArea()
+                            + researchArea(table)
                             + aspectDragAndDrop(pallet),
             xSize = ResearchTableInventoryTexture.width,
             ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
@@ -97,10 +98,11 @@ object ResearchTableGuiFactory {
         )
     }
 
-    private fun researchArea(): UIComponent {
-        val area = object : ResearchAreaPort {
-            override fun missingResearchNotes(): Boolean = false
-        }
+    // TODO: move to factory
+    private fun researchArea(table: TileResearchTable): UIComponent {
+        val area = Research(
+            notes = ResearchNotesAdapter(table)       
+        )
 
         return ResearchAreaUIComponent(
             area, 

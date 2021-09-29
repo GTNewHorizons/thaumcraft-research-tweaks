@@ -1,6 +1,6 @@
-package elan.tweaks.thaumcraft.research.integration.aspect.pool
+package elan.tweaks.thaumcraft.research.integration.adapters
 
-import elan.tweaks.thaumcraft.research.domain.ports.spi.KnowledgeBase
+import elan.tweaks.thaumcraft.research.domain.ports.required.KnowledgeBase
 import thaumcraft.common.lib.research.ResearchManager
 
 class KnowledgeBaseAdapter(

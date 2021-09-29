@@ -3,10 +3,10 @@ package elan.tweaks.thaumcraft.research.domain.model
 import elan.tweaks.thaumcraft.research.domain.failures.AspectCombinationFailure.Companion.cannotCombinePrimalAspect
 import elan.tweaks.thaumcraft.research.domain.failures.AspectCombinationFailure.Companion.missingComponents
 import elan.tweaks.thaumcraft.research.domain.failures.MissingResearchFailure.Companion.missingResearchMastery
-import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
-import elan.tweaks.thaumcraft.research.domain.ports.spi.AspectCombiner
-import elan.tweaks.thaumcraft.research.domain.ports.spi.AspectPool
-import elan.tweaks.thaumcraft.research.domain.ports.spi.KnowledgeBase
+import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
+import elan.tweaks.thaumcraft.research.domain.ports.required.AspectCombiner
+import elan.tweaks.thaumcraft.research.domain.ports.required.AspectPool
+import elan.tweaks.thaumcraft.research.domain.ports.required.KnowledgeBase
 import thaumcraft.api.aspects.Aspect
 
 

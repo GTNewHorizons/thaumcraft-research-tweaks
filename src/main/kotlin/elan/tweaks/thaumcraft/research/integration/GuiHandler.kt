@@ -1,7 +1,7 @@
 package elan.tweaks.thaumcraft.research.integration
 
 import cpw.mods.fml.common.network.IGuiHandler
-import elan.tweaks.thaumcraft.research.integration.aspect.pool.AspectPalletFactory
+import elan.tweaks.thaumcraft.research.integration.adapters.AspectPalletFactory
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.integration.table.gui.ResearchTableGuiFactory
 import net.minecraft.client.multiplayer.WorldClient

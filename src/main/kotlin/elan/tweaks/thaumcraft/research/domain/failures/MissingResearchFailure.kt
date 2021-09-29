@@ -1,6 +1,6 @@
 package elan.tweaks.thaumcraft.research.domain.failures
 
-import elan.tweaks.thaumcraft.research.domain.ports.spi.KnowledgeBase
+import elan.tweaks.thaumcraft.research.domain.ports.required.KnowledgeBase
 
 class MissingResearchFailure(message: String) : Exception(message) {
     companion object {

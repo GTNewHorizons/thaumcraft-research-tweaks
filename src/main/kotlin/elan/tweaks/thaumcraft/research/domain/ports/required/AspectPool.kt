@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.domain.ports.spi
+package elan.tweaks.thaumcraft.research.domain.ports.required
 
 import thaumcraft.api.aspects.Aspect
 

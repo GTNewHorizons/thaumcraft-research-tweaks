@@ -11,8 +11,9 @@ import thaumcraft.common.items.ItemResearchNotes
 import thaumcraft.common.tiles.TileResearchTable
 
 object ResearchTableContainerFactory {
-    private const val SCRIBE_TOOLS_SLOT_INDEX = 0
-    private const val RESEARCH_NOTES_SLOT_INDEX = 1
+    // TODO: is this a layout constants too?
+    const val SCRIBE_TOOLS_SLOT_INDEX = 0
+    const val RESEARCH_NOTES_SLOT_INDEX = 1
     private val specializedSlotIndexRange = SCRIBE_TOOLS_SLOT_INDEX..RESEARCH_NOTES_SLOT_INDEX
     private val inventorySlotOffset = Vector2D(8, 7) // GuiContainer offsets inventory slots
 

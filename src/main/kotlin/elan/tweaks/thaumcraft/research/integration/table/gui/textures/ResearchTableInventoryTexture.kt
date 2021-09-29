@@ -12,6 +12,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     u = 0, v = 0,
     width = 300, height = 222
 ) {
+    // TODO: All this constants probably should live in ResearchTableLayout
     object Slots {
         const val SIZE_PIXELS = 18
         val scribeToolsOrigin = Vector2D(x = 70, y = 9)

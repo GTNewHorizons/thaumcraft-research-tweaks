@@ -1,6 +1,6 @@
-package elan.tweaks.thaumcraft.research.integration.aspect.pool
+package elan.tweaks.thaumcraft.research.integration.adapters
 
-import elan.tweaks.thaumcraft.research.domain.ports.spi.AspectPool
+import elan.tweaks.thaumcraft.research.domain.ports.required.AspectPool
 import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.Thaumcraft
@@ -8,7 +8,7 @@ import thaumcraft.common.tiles.TileResearchTable
 
 class AspectPoolAdapter(
     private val player: EntityPlayer,
-    private val tableEntity: TileResearchTable
+    private val table: TileResearchTable
 ) : AspectPool {
     override fun discovered(): Array<Aspect> =
         playerAspectList()
@@ -35,6 +35,6 @@ class AspectPoolAdapter(
             .getAspectsDiscovered(player.commandSenderName)
 
     override fun bonusAmountOf(aspect: Aspect): Int =
-        tableEntity.bonusAspects.getAmount(aspect)
+        table.bonusAspects.getAmount(aspect)
 
 }
