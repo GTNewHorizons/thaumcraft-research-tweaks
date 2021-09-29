@@ -7,6 +7,7 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
+import elan.tweaks.common.gui.drawing.AspectDrawer
 import elan.tweaks.common.gui.drawing.TooltipDrawer
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
@@ -30,17 +31,13 @@ class AspectPalletUIComponent(
             .asOriginSequence()
             .forEach { (uiOrigin, aspect) ->
                 val (amount, bonusAmount) = pallet.amountAndBonusOf(aspect)
+                val screenOrigin = context.toScreenOrigin(uiOrigin)
 
                 // TODO: Hide this behind some aspect drawing component
-                val faded = pallet.isDrainedOf(aspect)
-                val alpha = if (faded) 0.33f else 1.0f
-
-                val absolutePosition = context.toScreenOrigin(uiOrigin)
-                UtilsFX.drawTag(
-                    absolutePosition.x, absolutePosition.y,
+                AspectDrawer.drawTag(
+                    screenOrigin,
                     aspect, amount.toFloat(), bonusAmount,
-                    absolutePosition.z,
-                    ASPECT_TAG_BLEND, alpha
+                    alpha = if (pallet.isDrainedOf(aspect)) 0.33f else 1.0f
                 )
             }
 
@@ -71,15 +68,13 @@ class AspectPalletUIComponent(
             GL11.glScaled(1.25, 1.25, 0.0)
             UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
             GL11.glPopMatrix()
-            UtilsFX.drawTag(screenOrigin.x + 26, screenOrigin.y + 8, aspect.components[1], 0.0f, 0, 0.0)
-            UtilsFX.drawTag(screenOrigin.x + 8, screenOrigin.y + 8, aspect.components[0], 0.0f, 0, 0.0)
+
+            AspectDrawer.drawTag(screenOrigin + Vector2D(8,8), aspect.components[0], 0.0f, 0)
+            AspectDrawer.drawTag(screenOrigin + Vector2D(26,8), aspect.components[1], 0.0f, 0)
+
             GL11.glDisable(GL11.GL_BLEND)
             GL11.glPopMatrix()
         }
-    }
-
-    companion object {
-        const val ASPECT_TAG_BLEND = 771
     }
 
     override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {

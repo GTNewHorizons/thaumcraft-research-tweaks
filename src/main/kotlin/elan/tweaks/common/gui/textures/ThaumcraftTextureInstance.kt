@@ -3,7 +3,6 @@ package elan.tweaks.common.gui.textures
 import elan.tweaks.common.gui.drawing.TextureDrawer
 import elan.tweaks.common.gui.geometry.Vector3D
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 
@@ -23,16 +22,13 @@ abstract class ThaumcraftTextureInstance(
     private val resourceLocation = ResourceLocation(DOMAIN, "textures/$path")
     private val textureManager by lazy { Minecraft.getMinecraft().textureManager }
 
-    override fun draw(origin: Vector3D, disableStandardLightning: Boolean) {
+    override fun draw(origin: Vector3D) {
         GL11.glPushMatrix()
-        
-        if(disableStandardLightning) {
-            RenderHelper.disableStandardItemLighting()
-        }
+       
         GL11.glEnable(GL11.GL_BLEND)
         textureManager.bindTexture(resourceLocation)
         TextureDrawer.drawTexturedRectByParts(
-            x0 = origin.x, y0 = origin.y, width = width, height = height, zLevel = origin.z,
+            x = origin.x, y = origin.y, width = width, height = height, zLevel = origin.z,
             textureX = u, textureY = v, textureWidth = width, textureHeight = height, 
             textureXPartCount = textureWidth, textureYPartCount = textureHeight
         )

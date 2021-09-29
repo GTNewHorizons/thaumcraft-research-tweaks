@@ -3,7 +3,8 @@ package elan.tweaks.thaumcraft.research.domain.ports.required
 import thaumcraft.api.aspects.Aspect
 
 interface AspectPool {
-    fun discovered(): Array<Aspect>
+    fun hasDiscovered(aspect: Aspect): Boolean
+    fun allDiscovered(): Array<Aspect>
     
     fun amountOf(aspect: Aspect): Int
     fun bonusAmountOf(aspect: Aspect): Int

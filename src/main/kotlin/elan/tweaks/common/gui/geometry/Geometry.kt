@@ -1,5 +1,7 @@
 package elan.tweaks.common.gui.geometry
 
+import kotlin.math.roundToInt
+
 data class UV(val u: Int, val v: Int)
 data class Scale(val width: Int, val height: Int)
 
@@ -7,6 +9,9 @@ interface VectorXY {
     val x: Int
     val y: Int
 
+    operator fun times(scalar: Double): VectorXY
+    operator fun minus(scalar: Int): VectorXY
+    operator fun plus(scalar: Int): VectorXY
     operator fun plus(scale: Scale): VectorXY
     operator fun plus(other: VectorXY): VectorXY
     operator fun minus(other: VectorXY): VectorXY
@@ -30,6 +35,9 @@ data class Vector3D(
     override val y: Int,
     val z: Double
 ) : VectorXY {
+    override fun times(scalar: Double): Vector3D = Vector3D(x = (x * scalar).roundToInt(), y = (y * scalar).roundToInt(), z = z * scalar)
+    override fun minus(scalar: Int): Vector3D = Vector3D(x = x - scalar, y = y - scalar, z = z - scalar)
+    override fun plus(scalar: Int): Vector3D = Vector3D(x = x + scalar, y = y + scalar, z = z + scalar)
     override operator fun plus(scale: Scale) = Vector2D(x = x + scale.width, y = y + scale.height)
     operator fun plus(other: Vector3D) = Vector3D(x = x + other.x, y = y + other.y, z = z + other.z)
     operator fun minus(other: Vector3D) = Vector3D(x = x - other.x, y = y - other.y, z = z - other.z)
@@ -45,6 +53,10 @@ data class Vector2D(
     override val x: Int,
     override val y: Int
 ) : VectorXY {
+
+    override fun times(scalar: Double): VectorXY = Vector2D(x = (x * scalar).roundToInt(), y = (y * scalar).roundToInt())
+    override fun minus(scalar: Int): Vector2D = Vector2D(x = x - scalar, y = y - scalar)
+    override fun plus(scalar: Int): VectorXY = Vector2D(x = x + scalar, y = y + scalar)
     override operator fun plus(scale: Scale) = Vector2D(x = x + scale.width, y = y + scale.height)
     operator fun plus(other: Vector3D) = other.copy(x = x + other.x, y = y + other.y)
     operator fun minus(other: Vector3D) = other.copy(x = x - other.x, y = y - other.y)

@@ -1,10 +1,9 @@
-package elan.tweaks.thaumcraft.research.integration.adapters
+package elan.tweaks.thaumcraft.research.integration.adapters.layout
 
 import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.thaumcraft.research.domain.model.Research
 import thaumcraft.common.lib.research.ResearchNoteData
 import thaumcraft.common.lib.utils.HexUtils
 import kotlin.math.roundToInt
@@ -15,7 +14,7 @@ class HexLayoutResearchNoteDataAdapter(
     private val hexSize: Int,
     private val centerUiOrigin: VectorXY,
     private val notesDataProvider: () -> ResearchNoteData
-) : HexLayout<Research.Hex> {
+) : HexLayout<AspectHex> {
     private val hexEntries get() = notesDataProvider().hexEntries
     private val hexes get() = notesDataProvider().hexes
 
@@ -26,29 +25,32 @@ class HexLayoutResearchNoteDataAdapter(
         return hexEntries.containsKey(hexKey) && hexes.containsKey(hexKey)
     }
 
-    override fun get(uiPoint: VectorXY): Research.Hex? {
+    override fun get(uiPoint: VectorXY): AspectHex? {
         if (uiPoint !in bounds) return null
         
         val hexKey = uiPoint.toHexKey()
         return toHex(hexKey)
     }
 
-    override fun asOriginSequence(): Sequence<Pair<VectorXY, Research.Hex>> =
+    override fun asOriginSequence(): Sequence<Pair<VectorXY, AspectHex>> =
         hexes
             .keys
             .asSequence()
             .mapNotNull(this::toHex)
             .map { it.uiOrigin to it }
 
-    private fun toHex(hexKey: String): Research.Hex? {
+    private fun toHex(hexKey: String): AspectHex? {
         val entry = hexEntries[hexKey] ?: return null
         val hexCentralOrigin = hexes[hexKey]?.origin ?: return null
-        val uiOrigin = hexCentralOrigin + centerUiOrigin
+        val uiCenter = hexCentralOrigin + centerUiOrigin
+        val uiOrigin = uiCenter - hexSize + 1 // move to hex texture
 
         return when (entry.type) {
-            HexType.VACANT -> Research.Hex.Vacant(uiOrigin)
-            HexType.ROOT -> Research.Hex.Occupied.Root(uiOrigin, entry.aspect)
-            HexType.NODE -> Research.Hex.Occupied.Node(uiOrigin, entry.aspect)
+            HexType.VACANT -> AspectHex.Vacant(uiCenter)
+            // TODO: evaluate connections here
+            HexType.ROOT -> AspectHex.Occupied.Root(uiOrigin, uiCenter, entry.aspect, setOf(uiCenter + Vector2D(9,9)))
+            // TODO: evaluate connections here
+            HexType.NODE -> AspectHex.Occupied.Node(uiOrigin, uiCenter, entry.aspect, disconnectedFromRoot = false, emptySet()) 
             else -> null // TODO: should not get here afaik, log if does
         }
     }

@@ -10,7 +10,13 @@ class AspectPoolAdapter(
     private val player: EntityPlayer,
     private val table: TileResearchTable
 ) : AspectPool {
-    override fun discovered(): Array<Aspect> =
+
+    override fun hasDiscovered(aspect: Aspect): Boolean =
+        Thaumcraft.proxy
+            .getPlayerKnowledge()
+            .hasDiscoveredAspect(player.commandSenderName, aspect)
+
+    override fun allDiscovered(): Array<Aspect> =
         playerAspectList()
             .getAspects()
 

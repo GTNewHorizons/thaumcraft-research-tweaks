@@ -25,7 +25,7 @@ class AspectPallet(
         pool.amountOf(aspect) to pool.bonusAmountOf(aspect)
 
     override fun discoveredAspects(): Array<Aspect> =
-        pool.discovered()
+        pool.allDiscovered()
 
     override fun deriveBatch(desiredAspect: Aspect): Result<Unit> =
         batch {

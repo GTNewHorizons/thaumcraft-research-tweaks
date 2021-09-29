@@ -11,7 +11,6 @@ import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.peripheral.MouseButton
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.inventory.GuiContainer
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.inventory.Container
 
 class ComposableContainerGui(
@@ -52,14 +51,6 @@ class ComposableContainerGui(
             soundName,
             volume, pitch, distanceDelay
         )
-    }
-
-    override fun drawQuads(configureTesselation: Tessellator.() -> Unit) {
-        Tessellator
-            .instance
-            .also { it.startDrawingQuads() }
-            .apply(configureTesselation)
-            .draw()
     }
 
     override fun nextRandomFloat(): Float =
@@ -108,7 +99,6 @@ class ComposableContainerGui(
         val button = MouseButton.of(buttonIndex)
         handleClickables(uiMousePosition, button)
         handleDraggables(button, uiMousePosition)
-        println("Mouse clicked ($mouseX; $mouseY)")
     }
 
     private fun handleDraggables(button: MouseButton, uiMousePosition: Vector3D) {
