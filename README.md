@@ -9,6 +9,7 @@
   - [ ] Put aspect multiple times on notes when hovering (RMB)
   - [ ] Research duplication
   - [ ] Missing ink message
+  - [ ] Notification on aspect combination rendering
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
   - [ ] UI textures
   - [ ] Update lang file
@@ -35,7 +36,7 @@ UI elements:
      - not present when not unlocked
      - not active till finished & have unlocked duplication
      - shows cost tooltip
-  - [ ] (1,2) Aspect pallet 4 columns by 13 rows (104 aspect slots)
+  - [x] (1,2) Aspect pallet 4 columns by 13 rows (104 aspect slots)
      - Allows drag & drop aspect combination:
        - Shift + Left click & having research = create this aspect
        - Drop = combine x1
@@ -59,7 +60,6 @@ To run client with specific username set it in `PLAYER_USER_NAME` environment va
 When drawing background he uses:
 ```
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    GL11.glEnable(3042);
     ...
     draw backgrounds
     draw aspects

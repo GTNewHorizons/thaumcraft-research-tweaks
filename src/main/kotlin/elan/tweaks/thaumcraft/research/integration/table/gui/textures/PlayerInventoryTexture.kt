@@ -3,7 +3,7 @@ package elan.tweaks.thaumcraft.research.integration.table.gui.textures
 import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object PlayerInventoryTexture : ThaumcraftTextureInstance(
-    "textures/gui/guiresearchtable2.png", 
+    "gui/guiresearchtable2.png", 
     textureWidth = 256,
     u = 0, v = 167,
     width = 176, height = 88

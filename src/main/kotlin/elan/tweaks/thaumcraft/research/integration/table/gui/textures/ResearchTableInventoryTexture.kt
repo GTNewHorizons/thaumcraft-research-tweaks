@@ -7,7 +7,7 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
-    "textures/research/table/research-table.png",
+    "research/table/research-table.png",
     textureWidth = 300, textureHeight = 256,
     u = 0, v = 0,
     width = 300, height = 222
@@ -29,19 +29,21 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
         const val COLUMNS = 3
         const val ROWS = 12
 
-        val leftOrigin = Vector2D(7, 24)
-        val rightOrigin = Vector2D(245, 24)
-        private val scale = Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
+        val scale = Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
 
-        val leftRectangle = Rectangle(
-            leftOrigin,
+        val leftBound = Rectangle(
+            origin = Vector2D(x = 7, y = 24),
             scale
         )
         
-        val rightRectangle = Rectangle(
-            rightOrigin,
+        val rightBound = Rectangle(
+            origin = Vector2D(x = 245, y = 24),
             scale
         )
+    }
+    
+    object ResearchArea {
+        val origin = Vector2D(75, 40)
     }
 
     val inventoryOrigin = Vector2D(x = 62, y = 198)

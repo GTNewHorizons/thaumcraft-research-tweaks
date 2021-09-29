@@ -6,13 +6,13 @@ import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.UtilsFX
 
 object TooltipDrawer {
-    // TODO: Rewrite
-    fun drawCustomTooltip(context: UIContext, var4: List<*>, mousePosition: VectorXY, subTipColor: Int) {
+    // TODO: Rewrite, fix rect shading
+    fun drawCustomTooltip(context: UIContext, lines: List<*>, mousePosition: VectorXY, subTipColor: Int) {
         GL11.glDisable(32826)
         GL11.glDisable(2929)
-        if (var4.isNotEmpty()) {
+        if (lines.isNotEmpty()) {
             var var5 = 0
-            val var6 = var4.iterator()
+            val var6 = lines.iterator()
             var var16: Int
             while (var6.hasNext()) {
                 val var7 = var6.next() as String
@@ -24,8 +24,8 @@ object TooltipDrawer {
             val var15 = mousePosition.x + 12
             var16 = mousePosition.y - 12
             var var9 = 8
-            if (var4.size > 1) {
-                var9 += 2 + (var4.size - 1) * 10
+            if (lines.size > 1) {
+                var9 += 2 + (lines.size - 1) * 10
             }
             context.setItemRenderZLevel(300.0f)
             val var10 = -267386864
@@ -40,8 +40,8 @@ object TooltipDrawer {
             UtilsFX.drawGradientRect(var15 + var5 + 2, var16 - 3 + 1, var15 + var5 + 3, var16 + var9 + 3 - 1, var11, var12)
             UtilsFX.drawGradientRect(var15 - 3, var16 - 3, var15 + var5 + 3, var16 - 3 + 1, var11, var11)
             UtilsFX.drawGradientRect(var15 - 3, var16 + var9 + 2, var15 + var5 + 3, var16 + var9 + 3, var12, var12)
-            for (var13 in var4.indices) {
-                var var14 = var4[var13] as String
+            for (var13 in lines.indices) {
+                var var14 = lines[var13] as String
                 var14 = if (var13 == 0) {
                     "§" + Integer.toHexString(subTipColor) + var14
                 } else {
@@ -55,6 +55,6 @@ object TooltipDrawer {
             }
         }
         context.setItemRenderZLevel(0.0f)
-        GL11.glEnable(2929)
+        GL11.glEnable(GL11.GL_DEPTH_TEST)
     }
 }

@@ -21,7 +21,7 @@ import thaumcraft.client.lib.UtilsFX
 
 class AspectPalletUIComponent(
     private val aspectGrid: Grid<Aspect>,
-    private val pallet: AspectPalletPort,
+    private val pallet: AspectPalletPort
 ) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent,
     DraggableSourceUIComponent, DropDestinationUIComponent, DragClickableDestinationUIComponent {
 
@@ -58,7 +58,7 @@ class AspectPalletUIComponent(
         // TODO: Add research check, this should be somehow passed via Domain
         if (!aspect.isPrimal) {
             GL11.glPushMatrix()
-            GL11.glEnable(3042)
+            GL11.glEnable(GL11.GL_BLEND)
             GL11.glBlendFunc(770, 771)
             UtilsFX.bindTexture("textures/aspects/_back.png")
             GL11.glPushMatrix()
@@ -73,7 +73,7 @@ class AspectPalletUIComponent(
             GL11.glPopMatrix()
             UtilsFX.drawTag(screenOrigin.x + 26, screenOrigin.y + 8, aspect.components[1], 0.0f, 0, 0.0)
             UtilsFX.drawTag(screenOrigin.x + 8, screenOrigin.y + 8, aspect.components[0], 0.0f, 0, 0.0)
-            GL11.glDisable(3042)
+            GL11.glDisable(GL11.GL_BLEND)
             GL11.glPopMatrix()
         }
     }

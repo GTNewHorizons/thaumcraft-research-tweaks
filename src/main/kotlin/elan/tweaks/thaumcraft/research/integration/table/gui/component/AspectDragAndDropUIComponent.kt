@@ -5,6 +5,7 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.thaumcraft.research.domain.ports.api.AspectPalletPort
+import net.minecraft.client.renderer.RenderHelper
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.fx.ParticleEngine
@@ -45,8 +46,11 @@ class AspectDragAndDropUIComponent(
 
     private fun drawOrb(uiOrigin: VectorXY, color: Int, context: UIContext) {
         val origin = context.toScreenOrigin(uiOrigin)
-        
-        GL11.glEnable(3042)
+
+        GL11.glPushMatrix()
+
+        RenderHelper.disableStandardItemLighting()
+        GL11.glEnable(GL11.GL_BLEND)
         
         val count = FMLClientHandler.instance().client.thePlayer.ticksExisted
         val c = Color(color)
@@ -58,7 +62,6 @@ class AspectDragAndDropUIComponent(
             green /= 1.8f
             blue /= 1.8f
         }
-        GL11.glPushMatrix()
         UtilsFX.bindTexture(ParticleEngine.particleTexture)
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
         GL11.glTranslated(origin.x - 8.0, origin.y - 8.0, 0.0)
@@ -76,7 +79,6 @@ class AspectDragAndDropUIComponent(
             addVertexWithUV(0.0, 0.0, origin.z, var8.toDouble(), var11.toDouble())
         }
         GL11.glPopMatrix()
-        
-        GL11.glDisable(3042)
+
     }
 }

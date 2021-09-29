@@ -16,7 +16,8 @@ class TextureBackgroundUIComponent(
         )
 
     companion object {
-        fun background(uiOrigin: VectorXY, texture: TextureInstance) = TextureBackgroundUIComponent(uiOrigin, texture)
+        fun background(uiOrigin: VectorXY, texture: TextureInstance) = 
+            TextureBackgroundUIComponent(uiOrigin, texture)
     }
 
 }
