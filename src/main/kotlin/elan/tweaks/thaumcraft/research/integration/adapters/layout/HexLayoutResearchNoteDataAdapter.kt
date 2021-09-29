@@ -33,6 +33,11 @@ class HexLayoutResearchNoteDataAdapter(
     }
 
     override fun asOriginSequence(): Sequence<Pair<VectorXY, AspectHex>> =
+        // TODO: build a graph and map it to sequence
+        // 0 left bottom
+        // 1 left top
+        // 2 top
+        // hex.getNeighbour(index) 
         hexes
             .keys
             .asSequence()
@@ -41,14 +46,14 @@ class HexLayoutResearchNoteDataAdapter(
 
     private fun toHex(hexKey: String): AspectHex? {
         val entry = hexEntries[hexKey] ?: return null
-        val hexCentralOrigin = hexes[hexKey]?.origin ?: return null
-        val uiCenter = hexCentralOrigin + centerUiOrigin
-        val uiOrigin = uiCenter - hexSize + 1 // move to hex texture
-
+        val hex = hexes[hexKey]  ?: return null
+        val uiCenter = hex.origin + centerUiOrigin
+        val uiOrigin = uiCenter - hexSize + 1 // TODO: move to hex texture object? or is it an issue of rounding when getting origin?
+                
         return when (entry.type) {
             HexType.VACANT -> AspectHex.Vacant(uiCenter)
             // TODO: evaluate connections here
-            HexType.ROOT -> AspectHex.Occupied.Root(uiOrigin, uiCenter, entry.aspect, setOf(uiCenter + Vector2D(9,9)))
+            HexType.ROOT -> AspectHex.Occupied.Root(uiOrigin, uiCenter, entry.aspect, emptySet())
             // TODO: evaluate connections here
             HexType.NODE -> AspectHex.Occupied.Node(uiOrigin, uiCenter, entry.aspect, disconnectedFromRoot = false, emptySet()) 
             else -> null // TODO: should not get here afaik, log if does
