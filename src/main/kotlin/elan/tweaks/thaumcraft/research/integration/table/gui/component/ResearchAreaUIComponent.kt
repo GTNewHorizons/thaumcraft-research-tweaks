@@ -23,14 +23,22 @@ class ResearchAreaUIComponent(
     private val research: ResearchPort,
     private val hexLayout: HexLayout<AspectHex>,
     private val uiOrigin: VectorXY
-) : BackgroundUIComponent,
-    ClickableUIComponent, DropDestinationUIComponent {
+) : BackgroundUIComponent, ClickableUIComponent,
+    DropDestinationUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (research.missingNotes()) return
 
         drawBackgroundParchment(context)
+        drawMouseOverHighlight(uiMousePosition, context)
         drawHexes(context)
+    }
+
+    private fun drawMouseOverHighlight(uiMousePosition: VectorXY, context: UIContext) {
+        whenHexAt(uiMousePosition) { hex ->
+            if (hex is AspectHex.Occupied.Root) return
+            drawHexHighlight(hex.uiCenterOrigin, context)
+        }
     }
 
     private fun drawBackgroundParchment(context: UIContext) {
@@ -109,7 +117,7 @@ class ResearchAreaUIComponent(
         }
     }
 
-    // TODO: Extract to texture
+    // TODO: Extract to hex texture
     private fun drawHexBorder(uiOrigin: VectorXY, context: UIContext) {
         val screenOrigin = context.toScreenOrigin(uiOrigin)
         
@@ -131,29 +139,59 @@ class ResearchAreaUIComponent(
         GL11.glPopMatrix()
     }
 
+    // TODO: Extract to hex texture
+    private fun drawHexHighlight(uiOrigin: VectorXY, context: UIContext) {
+        val screenOrigin = context.toScreenOrigin(uiOrigin)
+        GL11.glPushMatrix()
+        GL11.glAlphaFunc(516, 0.003921569f)
+        GL11.glEnable(GL11.GL_BLEND)
+        GL11.glBlendFunc(770, 1)
+        UtilsFX.bindTexture("textures/gui/hex2.png")
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
+        GL11.glTranslated(screenOrigin.x.toDouble(), screenOrigin.y.toDouble(), 0.0)
+        Tessellator.instance.drawQuads {
+            setBrightness(240)
+            setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f)
+            addVertexWithUV(-8.0, 8.0, screenOrigin.z, 0.0, 1.0)
+            addVertexWithUV(8.0, 8.0, screenOrigin.z, 1.0, 1.0)
+            addVertexWithUV(8.0, -8.0, screenOrigin.z, 1.0, 0.0)
+            addVertexWithUV(-8.0, -8.0, screenOrigin.z, 0.0, 0.0)
+        }
+        GL11.glBlendFunc(770, 771)
+        GL11.glAlphaFunc(516, 0.1f)
+        GL11.glPopMatrix()
+    }
+    
     override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
-        if (research.notEditable()) return
-        val hex = hexLayout[uiMousePosition] ?: return
-        if(hex !is AspectHex.Occupied.Node) return // TODO: this check should be a part of domain
-        
-        research.erase(hex.key).onSuccess {
-            context
-                .playCombine()
-                .playErase()
+        whenHexAt(uiMousePosition) { hex ->
+            if(hex !is AspectHex.Occupied.Node) return // TODO: this check should be a part of domain
+
+            research.erase(hex.key).onSuccess {
+                context
+                    .playCombine()
+                    .playErase()
+            }
         }
     }
 
     override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (research.notEditable()) return
         if (draggable !is Aspect) return
-        val hex = hexLayout[uiMousePosition]
-        if (hex !is AspectHex.Vacant) return // TODO: this check should be a part of domain
 
-        research.write(hex.key, draggable).onSuccess {
-            context
-                .playCombine()
-                .playWrite()
+        whenHexAt(uiMousePosition) { hex ->
+            if (hex !is AspectHex.Vacant) return // TODO: this check should be a part of domain
+
+            research.write(hex.key, draggable).onSuccess {
+                context
+                    .playCombine()
+                    .playWrite()
+            }
         }
+    }
+
+
+    private inline fun whenHexAt(uiMousePosition: VectorXY, action: (AspectHex) -> Unit) {
+        if (research.notEditable()) return
+        hexLayout[uiMousePosition]?.run(action)
     }
 
     private fun UIContext.playCombine() = apply {

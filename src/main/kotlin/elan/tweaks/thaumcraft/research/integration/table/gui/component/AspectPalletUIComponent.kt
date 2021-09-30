@@ -2,7 +2,7 @@ package elan.tweaks.thaumcraft.research.integration.table.gui.component
 
 import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.ClickableUIComponent
-import elan.tweaks.common.gui.component.ScreenUIComponent
+import elan.tweaks.common.gui.component.MouseOverUIComponent
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
@@ -23,7 +23,7 @@ import thaumcraft.client.lib.UtilsFX
 class AspectPalletUIComponent(
     private val aspectGrid: GridLayout<Aspect>,
     private val pallet: AspectPalletPort
-) : BackgroundUIComponent, ScreenUIComponent, ClickableUIComponent,
+) : BackgroundUIComponent, MouseOverUIComponent, ClickableUIComponent,
     DraggableSourceUIComponent, DropDestinationUIComponent, DragClickableDestinationUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
@@ -41,7 +41,7 @@ class AspectPalletUIComponent(
                 )
             }
 
-    override fun onDrawScreen(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
+    override fun onMouseOver(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
         whenAspectAt(uiMousePosition) { aspect ->
             drawTooltip(aspect, uiOrigin = uiMousePosition, context)
         }

@@ -28,7 +28,7 @@ class ComposableContainerGui(
     override val fontRenderer: FontRenderer get() = fontRendererObj
 
     private val backgrounds = components.filterIsInstance<BackgroundUIComponent>()
-    private val screens = components.filterIsInstance<ScreenUIComponent>()
+    private val mouseOverables = components.filterIsInstance<MouseOverUIComponent>()
     private val clickables = components.filterIsInstance<ClickableUIComponent>()
     private val draggableSources = components.filterIsInstance<DraggableSourceUIComponent>()
     private val dropDestinations = components.filterIsInstance<DropDestinationUIComponent>()
@@ -60,7 +60,7 @@ class ComposableContainerGui(
         super.drawScreen(mouseX, mouseY, partialTicks)
 
         val uiMousePosition = uiMousePosition(mouseX, mouseY)
-        drawScreens(uiMousePosition, partialTicks)
+        handleMouseOver(uiMousePosition, partialTicks)
         handleDragAndDrops(uiMousePosition, partialTicks)
     }
 
@@ -83,8 +83,8 @@ class ComposableContainerGui(
         }
     }
 
-    private fun drawScreens(uiMousePosition: Vector3D, partialTicks: Float) {
-        screens.forEach { it.onDrawScreen(uiMousePosition, partialTicks, context = this) }
+    private fun handleMouseOver(uiMousePosition: Vector3D, partialTicks: Float) {
+        mouseOverables.forEach { it.onMouseOver(uiMousePosition, partialTicks, context = this) }
     }
 
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
