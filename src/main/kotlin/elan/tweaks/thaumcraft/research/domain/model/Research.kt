@@ -11,13 +11,22 @@ class Research(
     private val pool: AspectPool,
 ) : ResearchPort {
 
+    override fun notEditable(): Boolean =
+        missingNotes() || notes.complete
+
     override fun missingNotes(): Boolean =
         !notes.present
-    
+
     override fun incomplete(): Boolean =
         notes.present && !notes.complete
-
+        
     override fun shouldObfuscate(aspect: Aspect): Boolean =
         !pool.hasDiscovered(aspect)
+
+    override fun erase(hexKey: String): Result<Unit> =
+        notes.erase(hexKey)
+
+    override fun write(hexKey: String, aspect: Aspect): Result<Unit> =
+        notes.write(hexKey, aspect)
 
 }

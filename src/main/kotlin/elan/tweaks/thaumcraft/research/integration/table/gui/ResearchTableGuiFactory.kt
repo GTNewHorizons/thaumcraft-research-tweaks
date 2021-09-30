@@ -107,21 +107,23 @@ object ResearchTableGuiFactory {
 
     // TODO: move to factory
     private fun researchArea(player: EntityPlayer, table: TileResearchTable): UIComponent {
-        val area = Research(
-            notes = ResearchNotesAdapter(table),
-            pool = AspectPoolAdapter(player, table)
-        )
-        
-        val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
-            bounds = ResearchArea.bounds,
-            centerUiOrigin = ResearchArea.centerOrigin,
-            aspectTree = AspectsTree(),
-            hexSize = 9 // TODO: move to hex texture constants
-        ) {
+        val notesDataProvider = {
             ResearchManager.getData(
                 table.getStackInSlot(ResearchTableContainerFactory.RESEARCH_NOTES_SLOT_INDEX)
             )
         }
+        val area = Research(
+            notes = ResearchNotesAdapter(player, table, notesDataProvider),
+            pool = AspectPoolAdapter(player, table)
+        )
+
+        val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
+            bounds = ResearchArea.bounds,
+            centerUiOrigin = ResearchArea.centerOrigin,
+            aspectTree = AspectsTree(),
+            hexSize = 9, // TODO: move to hex texture constants
+            notesDataProvider = notesDataProvider
+        )
 
         return ResearchAreaUIComponent(
             area,

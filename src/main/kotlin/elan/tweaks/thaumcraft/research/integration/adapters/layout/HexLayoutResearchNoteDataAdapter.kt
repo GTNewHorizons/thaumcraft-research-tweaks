@@ -31,7 +31,7 @@ class HexLayoutResearchNoteDataAdapter(
     override fun get(uiPoint: VectorXY): AspectHex? {
         if (uiPoint !in bounds) return null
 
-        val hexKey = uiPoint.toHexKey()
+        val hexKey = (uiPoint - centerUiOrigin).toHexKey()
         return keyToAspectHex[hexKey]
     }
 
@@ -81,13 +81,17 @@ class HexLayoutResearchNoteDataAdapter(
                 connectionTargetsCenters = connections
             )
             HexType.NODE -> AspectHex.Occupied.Node(
+                key = key,
                 uiOrigin = uiOrigin,
                 uiCenterOrigin = uiCenter,
-                aspect = aspect, 
+                aspect = aspect,
                 onRootPath = key in traversedKeys,
                 connectionTargetsCenters = connections
             )
-            else -> AspectHex.Vacant(uiCenterOrigin = uiCenter)
+            else -> AspectHex.Vacant(
+                key = key,
+                uiCenterOrigin = uiCenter,
+            )
         }
     }
 
