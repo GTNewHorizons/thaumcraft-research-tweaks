@@ -11,7 +11,7 @@
   - [ ] Draw random runes on parchment when researching
   - [ ] Research duplication
   - [ ] Missing ink message
-  - [ ] Notification on aspect combination rendering
+  - [ ] Fix aspect combination notification rendering
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
   - [ ] UI textures
   - [ ] Update lang file
