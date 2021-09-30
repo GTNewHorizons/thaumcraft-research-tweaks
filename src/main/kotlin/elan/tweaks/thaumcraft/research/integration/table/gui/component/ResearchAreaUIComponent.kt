@@ -4,6 +4,7 @@ import elan.tweaks.common.ext.drawQuads
 import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.ClickableUIComponent
 import elan.tweaks.common.gui.component.UIContext
+import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.drawing.AspectDrawer
 import elan.tweaks.common.gui.fx.LineParticle
@@ -23,13 +24,16 @@ class ResearchAreaUIComponent(
     private val research: ResearchPort,
     private val hexLayout: HexLayout<AspectHex>,
     private val uiOrigin: VectorXY
-) : BackgroundUIComponent, ClickableUIComponent,
+) : BackgroundUIComponent,
+    ClickableUIComponent,
+    DragClickableDestinationUIComponent,
     DropDestinationUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (research.missingNotes()) return
 
         drawBackgroundParchment(context)
+        // with current highlight texture best effect us achieved when drawing it under border, TODO: combined texture to draw over with
         drawMouseOverHighlight(uiMousePosition, context)
         drawHexes(context)
     }
@@ -177,6 +181,21 @@ class ResearchAreaUIComponent(
     override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (draggable !is Aspect) return
 
+        writeToHexWhenPresent(uiMousePosition, draggable, context)
+    }
+
+    override fun onDragClick(draggable: Any, uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
+        if (draggable !is Aspect) return
+        if (button !is MouseButton.Right) return
+
+        writeToHexWhenPresent(uiMousePosition, draggable, context)
+    }
+
+    private fun writeToHexWhenPresent(
+        uiMousePosition: VectorXY,
+        draggable: Aspect,
+        context: UIContext
+    ) {
         whenHexAt(uiMousePosition) { hex ->
             if (hex !is AspectHex.Vacant) return // TODO: this check should be a part of domain
 
@@ -187,7 +206,6 @@ class ResearchAreaUIComponent(
             }
         }
     }
-
 
     private inline fun whenHexAt(uiMousePosition: VectorXY, action: (AspectHex) -> Unit) {
         if (research.notEditable()) return
