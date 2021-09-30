@@ -4,7 +4,8 @@ import thaumcraft.api.aspects.Aspect
 
 interface ResearchPort {
     
-    fun missingOrComplete(): Boolean
+    fun missingNotes(): Boolean
+    fun incomplete(): Boolean
     fun shouldObfuscate(aspect: Aspect): Boolean
     
 }

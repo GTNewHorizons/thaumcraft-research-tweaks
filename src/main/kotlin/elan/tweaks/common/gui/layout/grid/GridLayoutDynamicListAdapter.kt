@@ -41,12 +41,8 @@ class GridLayoutDynamicListAdapter<ElementT>(
         return columnIndex + rowIndex * dimensions.x
     }
 
-    /**
-     * @return Sequence over elements and their origin relative to ui origin (top left corner)
-     */
-    override fun asOriginSequence(): Sequence<Pair<Vector2D, ElementT>> =
+    override fun asOriginList(): List<Pair<Vector2D, ElementT>> =
         elements
-            .asSequence()
             .mapIndexed { index: Int, element: ElementT ->
                 toCellOrigin(index) to element
             }

@@ -8,6 +8,7 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
+import elan.tweaks.thaumcraft.research.domain.model.AspectsTree
 import elan.tweaks.thaumcraft.research.domain.model.Research
 import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
 import elan.tweaks.thaumcraft.research.integration.adapters.AspectPoolAdapter
@@ -114,6 +115,7 @@ object ResearchTableGuiFactory {
         val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
             bounds = ResearchArea.bounds,
             centerUiOrigin = ResearchArea.centerOrigin,
+            aspectTree = AspectsTree(),
             hexSize = 9 // TODO: move to hex texture constants
         ) {
             ResearchManager.getData(

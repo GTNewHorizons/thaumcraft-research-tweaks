@@ -28,7 +28,7 @@ class AspectPalletUIComponent(
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
         aspectGrid
-            .asOriginSequence()
+            .asOriginList()
             .forEach { (uiOrigin, aspect) ->
                 val (amount, bonusAmount) = pallet.amountAndBonusOf(aspect)
                 val screenOrigin = context.toScreenOrigin(uiOrigin)

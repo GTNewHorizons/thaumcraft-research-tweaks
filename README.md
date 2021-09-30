@@ -8,6 +8,7 @@
   - [ ] Research notes re-implementation
   - [ ] Put aspect multiple times on notes when hovering (RMB)
   - [ ] Make sure expertise and mastery rules about aspect conservation apply correctly
+  - [ ] Draw random runes on parchment when researching
   - [ ] Research duplication
   - [ ] Missing ink message
   - [ ] Notification on aspect combination rendering
@@ -15,6 +16,7 @@
   - [ ] UI textures
   - [ ] Update lang file
   - [ ] Clean up TODOs
+  - [ ] Optimize memory consumption (caches)
 
 2. Nice to have:
   - [ ] Testing

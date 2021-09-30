@@ -17,13 +17,13 @@ import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.lib.UtilsFX
 
 class ResearchAreaUIComponent(
-    private val area: ResearchPort,
+    private val research: ResearchPort,
     private val hexLayout: HexLayout<AspectHex>,
     private val uiOrigin: VectorXY
 ) : BackgroundUIComponent {
     
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if(area.missingOrComplete()) return
+        if (research.missingNotes()) return
 
         drawBackgroundParchment(context)
         drawHexes(context)
@@ -37,31 +37,38 @@ class ResearchAreaUIComponent(
 
     private fun drawHexes(context: UIContext) {
         hexLayout
-            .asOriginSequence()
-            .forEach { (uiOrigin, hex) ->
+            .asOriginList()
+            .onEach { (uiCenterOrigin, hex) ->
+                if (hex !is AspectHex.Occupied.Root && research.incomplete()) 
+                    drawHexBorder(uiCenterOrigin, context)
+            }
+            .map(Pair<VectorXY, AspectHex>::second)
+            .filterIsInstance<AspectHex.Occupied>()
+            .onEach { hex ->
+                drawConnections(hex, context)
+            }.forEach { hex ->
                 when (hex) {
                     is AspectHex.Occupied.Root -> draw(hex, context)
                     is AspectHex.Occupied.Node -> draw(hex, context)
-                    is AspectHex.Vacant -> drawHexBorder(uiOrigin, context)
                 }
             }
     }
 
     private fun draw(hex: AspectHex.Occupied.Root, context: UIContext) {
-        OrbParticle.draw(context.toScreenOrigin(hex.uiCenter))
-        if (area.shouldObfuscate(hex.aspect)) drawUnknownAspectTexture(hex.uiOrigin, context)
-        else drawAspectWithConnections(hex, context)
+        OrbParticle.draw(context.toScreenOrigin(hex.uiCenterOrigin))
+        if (research.shouldObfuscate(hex.aspect)) drawUnknownAspectTexture(hex.uiOrigin, context)
+        else drawAspect(hex, context)
     }
 
     private fun draw(hex: AspectHex.Occupied.Node, context: UIContext) {
-        drawHexBorder(hex.uiCenter, context)
         when {
-            area.shouldObfuscate(hex.aspect) -> drawUnknownAspectTexture(hex.uiOrigin, context)
-            hex.disconnectedFromRoot -> drawInactiveAspect(hex.uiOrigin, hex.aspect, context)
-            else -> drawAspectWithConnections(hex, context)
+            research.shouldObfuscate(hex.aspect) -> drawUnknownAspectTexture(hex.uiOrigin, context)
+            hex.notOnRootPath -> drawInactiveAspect(hex.uiOrigin, hex.aspect, context)
+            else -> drawAspect(hex, context)
         }
     }
 
+    // TODO: Extract to texture
     private fun drawUnknownAspectTexture(uiOrigin: VectorXY, context: UIContext) {
         val screenOrigin = context.toScreenOrigin(uiOrigin)
         UtilsFX.bindTexture("textures/aspects/_unknown.png")
@@ -83,11 +90,6 @@ class ResearchAreaUIComponent(
         AspectDrawer.drawMonochromeTag(screenOrigin, aspect, alpha)
     }
 
-    private fun drawAspectWithConnections(hex: AspectHex.Occupied, context: UIContext) {
-        drawConnections(hex, context)
-        drawAspect(hex, context)
-    }
-
     private fun drawAspect(hex: AspectHex.Occupied, context: UIContext) {
         val screenOrigin = context.toScreenOrigin(hex.uiOrigin)
         val alpha = 1.0f
@@ -96,22 +98,22 @@ class ResearchAreaUIComponent(
     }
 
     private fun drawConnections(hex: AspectHex.Occupied, context: UIContext) {
-        val sourceCenter = context.toScreenOrigin(hex.uiCenter)
+        val sourceCenter = context.toScreenOrigin(hex.uiCenterOrigin)
         hex.connectionTargetsCenters.forEach { connectionTargetCenter ->
             val targetCenter = context.toScreenOrigin(connectionTargetCenter)
             LineParticle.draw(sourceCenter, targetCenter)
         }
     }
 
-    // TODO: Move to hex texture drawing
+    // TODO: Extract to texture
     private fun drawHexBorder(uiOrigin: VectorXY, context: UIContext) {
+        val screenOrigin = context.toScreenOrigin(uiOrigin)
+        
         GL11.glPushMatrix()
         GL11.glAlphaFunc(516, 0.003921569f)
         GL11.glEnable(GL11.GL_BLEND)
         UtilsFX.bindTexture("textures/gui/hex1.png")
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.25f)
-
-        val screenOrigin = context.toScreenOrigin(uiOrigin)
         GL11.glTranslated(screenOrigin.x.toDouble(), screenOrigin.y.toDouble(), 0.0)
         Tessellator.instance.drawQuads {
             setBrightness(240)
