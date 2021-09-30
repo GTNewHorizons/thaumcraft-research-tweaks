@@ -5,9 +5,9 @@
   - [x] Combining aspects via drag & drop
   - [x] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
   - [x] Combining multiple times when hovering (RMB)
-  - [ ] Research notes re-implementation
-  - [ ] Put aspect multiple times on notes when hovering (RMB)
-  - [ ] Make sure expertise and mastery rules about aspect conservation apply correctly
+  - [x] Research notes re-implementation
+  - [x] Put aspect multiple times on notes when hovering (RMB)
+  - [x] Make sure expertise and mastery rules about aspect conservation apply correctly
   - [ ] Draw random runes on parchment when researching
   - [ ] Research duplication
   - [ ] Missing ink message
@@ -92,3 +92,5 @@ ResearchManager.HexEntry types:
  - `1`: Root
  - `2`: Placed by user
 ```
+
+Should I allow replacing aspect when hex already occupied?
