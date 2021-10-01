@@ -18,10 +18,7 @@ import elan.tweaks.thaumcraft.research.integration.adapters.*
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
-import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectDragAndDropUIComponent
-import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectPalletUIComponent
-import elan.tweaks.thaumcraft.research.integration.table.gui.component.CopyButtonUIComponent
-import elan.tweaks.thaumcraft.research.integration.table.gui.component.InkNotificationUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.component.*
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.ParchmentUIComponent
@@ -68,7 +65,8 @@ object ResearchTableGuiFactory {
                     + copyButton(research, pallet, knowledge)
                     + componentsOf(pallet)
                     + InkNotificationUIComponent(research, scribeTools, ResearchArea.centerOrigin)
-                    + aspectDragAndDrop(pallet),
+                    + aspectDragAndDrop(pallet)
+                    + KnowledgeNotificationUIComponent(),
             xSize = ResearchTableInventoryTexture.width,
             ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
         )

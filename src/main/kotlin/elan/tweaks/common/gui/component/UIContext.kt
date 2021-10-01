@@ -5,7 +5,7 @@ import elan.tweaks.common.gui.geometry.VectorXY
 import net.minecraft.client.gui.FontRenderer
 
 interface UIContext {
-
+    
     val fontRenderer: FontRenderer
 
     fun setItemRenderZLevel(z: Float)

@@ -5,6 +5,7 @@ import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
+import elan.tweaks.common.gui.geometry.Scale
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
@@ -24,10 +25,10 @@ class ComposableContainerGui(
         super.xSize = xSize
         super.ySize = ySize
     }
-
     override val fontRenderer: FontRenderer get() = fontRendererObj
 
     private val backgrounds = components.filterIsInstance<BackgroundUIComponent>()
+    private val foregrounds = components.filterIsInstance<ForegroundUIComponent>()
     private val tickables = components.filterIsInstance<TickingUIComponent>()
     private val mouseOverables = components.filterIsInstance<MouseOverUIComponent>()
     private val clickables = components.filterIsInstance<ClickableUIComponent>()
@@ -102,6 +103,12 @@ class ComposableContainerGui(
 
     private fun drawBackgrounds(mousePosition: Vector3D, partialTicks: Float) {
         backgrounds.forEach { it.onDrawBackground(mousePosition, partialTicks, context = this) }
+    }
+
+    override fun drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int) {
+        val mousePosition = uiMousePosition(mouseX, mouseY)
+        val scale = Scale(width = width, height = height)
+        foregrounds.forEach { it.onDrawForeground(mousePosition, scale, context = this) }
     }
 
     private fun callTickables(partialTicks: Float) {
