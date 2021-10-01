@@ -8,18 +8,19 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
+import elan.tweaks.thaumcraft.research.domain.model.AspectPallet
 import elan.tweaks.thaumcraft.research.domain.model.AspectsTree
 import elan.tweaks.thaumcraft.research.domain.model.Research
 import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
 import elan.tweaks.thaumcraft.research.domain.ports.provided.ResearchPort
-import elan.tweaks.thaumcraft.research.integration.adapters.AspectPoolAdapter
-import elan.tweaks.thaumcraft.research.integration.adapters.ResearchNotesAdapter
-import elan.tweaks.thaumcraft.research.integration.adapters.ScribeToolsAdapter
+import elan.tweaks.thaumcraft.research.domain.ports.required.KnowledgeBase
+import elan.tweaks.thaumcraft.research.integration.adapters.*
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectDragAndDropUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectPalletUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.component.CopyButtonUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.InkNotificationUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapUIComponent
@@ -28,6 +29,7 @@ import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ParchmentT
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTableInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTableInventoryTexture.AspectPools
+import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTableInventoryTexture.CopyButton
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTableInventoryTexture.ResearchArea
 import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.api.aspects.Aspect
@@ -38,7 +40,6 @@ object ResearchTableGuiFactory {
 
     fun create(
         player: EntityPlayer,
-        pallet: AspectPalletPort,
         table: TileResearchTable
     ): ComposableContainerGui {
         val container = ResearchTableContainerFactory.create(
@@ -53,19 +54,37 @@ object ResearchTableGuiFactory {
             notes = ResearchNotesAdapter(player, table),
             pool = AspectPoolAdapter(player, table)
         )
+        val knowledge = KnowledgeBaseAdapter(playerCommandSenderName = player.commandSenderName)
+
+        val pallet = createPallet(player, table, knowledge)
+
+        val scribeTools = ScribeToolsAdapter(table)
 
         return ComposableContainerGui(
             container,
             components =
             tableAndInventoryBackgrounds()
-                    + componentsOf(pallet)
                     + researchArea(research, table)
-                    + InkNotificationUIComponent(research, ScribeToolsAdapter(table),  ResearchArea.centerOrigin)
+                    + copyButton(research, pallet, knowledge)
+                    + componentsOf(pallet)
+                    + InkNotificationUIComponent(research, scribeTools, ResearchArea.centerOrigin)
                     + aspectDragAndDrop(pallet),
             xSize = ResearchTableInventoryTexture.width,
             ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
         )
     }
+
+    private fun copyButton(
+        research: Research,
+        pallet: AspectPallet,
+        knowledge: KnowledgeBaseAdapter
+    ) = CopyButtonUIComponent(
+        bounds = CopyButton.bounds,
+        requirementsUiOrigin = CopyButton.requirementsUiOrigin,
+        research = research,
+        aspectPallet = pallet,
+        knowledge = knowledge
+    )
 
     private fun aspectDragAndDrop(pallet: AspectPalletPort) = 
         AspectDragAndDropUIComponent(
@@ -150,5 +169,12 @@ object ResearchTableGuiFactory {
             AspectHexMapEditorUIComponent(research, hexLayout)
         )
     }
+
+    private fun createPallet(player: EntityPlayer, table: TileResearchTable, knowledge: KnowledgeBase) =
+        AspectPallet(
+            pool = AspectPoolAdapter(player, table),
+            knowledge = knowledge,
+            combiner = AspectCombinerAdapter(player, table)
+        )
 
 }

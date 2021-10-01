@@ -20,17 +20,19 @@ class AspectPoolAdapter(
         playerAspectList()
             .getAspects()
 
-    override fun totalAmountOf(aspect: Aspect): Int =
-        amountOf(aspect) + bonusAmountOf(aspect)
-
     override fun anyComponentMissingFor(aspect: Aspect): Boolean {
         val components = aspect.components ?: return false
         return aspect.isCompound && components.size == 2
                 && totalAmountOf(components[0]) <= 0
                 && totalAmountOf(components[1]) <= 0
     }
-
     private val Aspect.isCompound get() = !isPrimal
+
+    override fun missing(usedAspectAmounts: Map<Aspect, Int>): Boolean =
+        usedAspectAmounts.any { (aspect, requiredAmount) -> totalAmountOf(aspect) < requiredAmount }
+
+    override fun totalAmountOf(aspect: Aspect): Int =
+        amountOf(aspect) + bonusAmountOf(aspect)
 
     override fun amountOf(aspect: Aspect): Int =
         playerAspectList().getAmount(aspect)

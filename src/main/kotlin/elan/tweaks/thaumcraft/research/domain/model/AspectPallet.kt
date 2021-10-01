@@ -27,6 +27,9 @@ class AspectPallet(
     override fun discoveredAspects(): Array<Aspect> =
         pool.allDiscovered()
 
+    override fun missing(aspectAmounts: Map<Aspect, Int>): Boolean =
+        pool.missing(aspectAmounts)
+
     override fun deriveBatch(desiredAspect: Aspect): Result<Unit> =
         batch {
             derive(desiredAspect)

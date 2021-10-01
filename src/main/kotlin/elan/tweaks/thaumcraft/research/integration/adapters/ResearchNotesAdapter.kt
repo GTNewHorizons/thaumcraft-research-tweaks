@@ -7,6 +7,7 @@ import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTable
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import thaumcraft.api.aspects.Aspect
+import thaumcraft.api.research.ResearchCategories
 import thaumcraft.common.lib.network.PacketHandler
 import thaumcraft.common.lib.network.playerdata.PacketAspectPlaceToServer
 import thaumcraft.common.lib.research.ResearchManager
@@ -46,6 +47,14 @@ class ResearchNotesAdapter(
 
         return success()
     }
+
+    override fun findUsedAspectAmounts(): Map<Aspect, Int> {
+        val researchData = getResearchData()
+        val aspects = ResearchCategories.getResearch(researchData.key).tags
+        
+        return aspects.getAspects().associateWith { aspect -> researchData.copies + aspects.getAmount(aspect) }
+    }
+
 
     private fun getResearchData() =
         ResearchManager.getData(

@@ -76,7 +76,11 @@ class ParchmentUIComponent(
 
         val runeUiOrigin = hex.toVector(hexSize) + uiOrigin + centerOffset
 
-        if (hexLayout.contains(runeUiOrigin) || keysToRunes.containsKey(hex.key)) return
+        val aspectHex = hexLayout[runeUiOrigin]
+        if (
+            (research.incomplete() && aspectHex != null) 
+            || (!research.incomplete() && aspectHex is AspectHex.Occupied) 
+            || keysToRunes.containsKey(hex.key)) return
 
         val rune = Rune(
             index = (0..16).random(), // TODO: move range to texture object?

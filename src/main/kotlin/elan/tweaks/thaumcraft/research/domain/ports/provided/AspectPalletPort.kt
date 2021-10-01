@@ -13,6 +13,6 @@ interface AspectPalletPort {
     fun amountAndBonusOf(aspect: Aspect): Pair<Int, Int>
     
     fun discoveredAspects(): Array<Aspect>
-    
+    fun missing(usedAspectAmounts: Map<Aspect, Int>): Boolean 
 }
 

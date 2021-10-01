@@ -14,8 +14,12 @@ object ResearchTableContainerFactory {
     // TODO: is this a layout constants too?
     const val SCRIBE_TOOLS_SLOT_INDEX = 0
     const val RESEARCH_NOTES_SLOT_INDEX = 1
+
+    const val ENCHANT_ACTION_ID = 5
+
     private val specializedSlotIndexRange = SCRIBE_TOOLS_SLOT_INDEX..RESEARCH_NOTES_SLOT_INDEX
     private val inventorySlotOffset = Vector2D(8, 7) // GuiContainer offsets inventory slots
+
 
     fun create(
         playerInventory: InventoryPlayer,
@@ -59,7 +63,7 @@ object ResearchTableContainerFactory {
     private fun duplicateResearch(tileEntity: TileResearchTable) = { player: EntityPlayer, button: Int ->
         when (button) {
             1 -> true
-            5 -> {
+            ENCHANT_ACTION_ID -> {
                 tileEntity.duplicate(player);
                 true
             }

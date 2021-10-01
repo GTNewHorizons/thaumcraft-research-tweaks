@@ -11,4 +11,5 @@ interface AspectPool {
     fun totalAmountOf(aspect: Aspect): Int
 
     fun anyComponentMissingFor(aspect: Aspect): Boolean
+    fun missing(usedAspectAmounts: Map<Aspect, Int>): Boolean
 }

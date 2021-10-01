@@ -9,6 +9,7 @@ class KnowledgeBaseAdapter(
     companion object {
         private const val RESEARCH_EXPERTISE = "RESEARCHER1"
         private const val RESEARCH_MASTERY = "RESEARCHER2"
+        private const val RESEARCH_DUPLICATION = "RESEARCHDUPE"
     }
 
     override fun notDiscoveredResearchExpertise(): Boolean =
@@ -16,6 +17,9 @@ class KnowledgeBaseAdapter(
 
     override fun notDiscoveredResearchMastery(): Boolean =
         !hasDiscovered(RESEARCH_MASTERY)
+
+    override fun notDiscoveredResearchDuplication(): Boolean =
+        !hasDiscovered(RESEARCH_DUPLICATION)
 
     private fun hasDiscovered(researchName: String) = 
         ResearchManager.isResearchComplete(playerCommandSenderName, researchName)

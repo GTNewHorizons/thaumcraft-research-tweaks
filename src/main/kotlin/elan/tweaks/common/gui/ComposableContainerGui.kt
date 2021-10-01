@@ -60,6 +60,9 @@ class ComposableContainerGui(
     override fun nextRandomInt(bound: Int): Int =
         mc.renderViewEntity.worldObj.rand.nextInt(bound)
 
+    override fun sendEnchantPacket(actionId: Int) =
+        mc.playerController.sendEnchantPacket(this.inventorySlots.windowId, actionId);
+
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
 

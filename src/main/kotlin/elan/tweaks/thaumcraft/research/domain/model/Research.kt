@@ -11,6 +11,9 @@ class Research(
     private val pool: AspectPool,
 ) : ResearchPort {
 
+    override val usedAspectAmounts: Map<Aspect, Int>
+        get() = notes.findUsedAspectAmounts()
+
     override fun notEditable(): Boolean =
         missingNotes() || notes.complete
 

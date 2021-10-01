@@ -15,7 +15,7 @@ class InkNotificationUIComponent(
 ) : BackgroundUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (research.missingNotes() || scribeTools.getNotEmptyAndPresent()) return
+        if (research.missingNotes() || scribeTools.arePresentAndNotEmpty()) return
         drawNoInkTooltip(context)
     }
 

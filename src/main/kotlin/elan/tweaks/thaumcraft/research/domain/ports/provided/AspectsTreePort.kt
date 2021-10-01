@@ -4,6 +4,6 @@ import thaumcraft.api.aspects.Aspect
 
 interface AspectsTreePort {
 
-    fun areRelated(firstAspect: Aspect, secondAspect: Aspect): Boolean
+    fun areRelated(first: Aspect, second: Aspect): Boolean
     
 }

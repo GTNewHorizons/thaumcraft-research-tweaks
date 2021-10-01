@@ -1,7 +1,6 @@
 package elan.tweaks.thaumcraft.research.integration
 
 import cpw.mods.fml.common.network.IGuiHandler
-import elan.tweaks.thaumcraft.research.integration.adapters.AspectPalletFactory
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.integration.table.gui.ResearchTableGuiFactory
 import net.minecraft.client.multiplayer.WorldClient
@@ -25,19 +24,10 @@ class GuiHandler : IGuiHandler {
             ContainerResearchTable(player.inventory, world.getTileEntity(x, y, z) as TileResearchTable) // TODO: remove old GUI debug and coords in if
 
     override fun getClientGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any? =
-        if (world is WorldClient && id == IDs.RESEARCH_TABLE && x == -142 && y == 68 && z == 239) 
-            createResearchTableGui(player, world.getTableTileEntity(x, y, z)) 
-        else 
+        if (world is WorldClient && id == IDs.RESEARCH_TABLE && x == -142 && y == 68 && z == 239)
+            ResearchTableGuiFactory.create(player, world.getTableTileEntity(x, y, z))
+        else
             GuiResearchTable(player, world.getTileEntity(x, y, z) as TileResearchTable) // TODO: remove old GUI debug and coords in if
-
-    private fun createResearchTableGui(
-        player: EntityPlayer,
-        tableEntity: TileResearchTable
-    ) = ResearchTableGuiFactory.create(
-        player,
-        AspectPalletFactory.create(player, tableEntity),
-        tableEntity
-    )
 
     private fun World.getTableTileEntity(x: Int, y: Int, z: Int) =
         getTileEntity(x, y, z) as TileResearchTable

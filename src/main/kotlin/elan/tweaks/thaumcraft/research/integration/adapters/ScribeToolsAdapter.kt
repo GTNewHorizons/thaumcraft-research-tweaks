@@ -8,9 +8,9 @@ class ScribeToolsAdapter(
     private val table: TileResearchTable
 ) : ScribeTools {
 
-    override fun getNotEmptyAndPresent(): Boolean {
-        val tools = table.getStackInSlot(SCRIBE_TOOLS_SLOT_INDEX) ?: return false
-        return tools.itemDamage != tools.maxDamage
+    override fun areMissingOrEmpty(): Boolean {
+        val tools = table.getStackInSlot(SCRIBE_TOOLS_SLOT_INDEX) ?: return true
+        return tools.itemDamage == tools.maxDamage
     } 
 
 }

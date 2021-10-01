@@ -15,6 +15,5 @@ object PlayerInventoryTexture : ThaumcraftTextureInstance(
     val columnIndexes = 0..8
     val internalRowIndexes = 0..2 
     const val HOTBAR_ROW_INDEX = 3
-    
 }
 
