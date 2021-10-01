@@ -5,6 +5,7 @@ import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
+import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
 import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectsTreePort
 import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.lib.research.ResearchNoteData
@@ -17,6 +18,7 @@ class HexLayoutResearchNoteDataAdapter(
     private val hexSize: Int,
     private val centerUiOrigin: VectorXY,
     private val aspectTree: AspectsTreePort,
+    private val pallet: AspectPalletPort,
     private val notesDataProvider: () -> ResearchNoteData
 ) : HexLayout<AspectHex> {
     private val keyToAspectHex get() = keyToAspectHex()
@@ -108,11 +110,13 @@ class HexLayoutResearchNoteDataAdapter(
 
         keysToTraverse += rootHexes
 
+        val discoveredAspects = pallet.discoveredAspects().toSet()
+
         while (keysToTraverse.isNotEmpty()) {
             val key = keysToTraverse.pop()
             val entry = hexEntries[key] ?: continue
             val hex = hexes[key] ?: continue
-            if (key in traversedKeys) continue
+            if (key in traversedKeys || entry.aspect !in discoveredAspects) continue
 
             val newRelatedNeighbors =
                 (0..5)
@@ -120,7 +124,10 @@ class HexLayoutResearchNoteDataAdapter(
                     .filter(this::hexPresent)
                     .filter { neighbourKey ->
                         val neighborEntry = hexEntries[neighbourKey]!!
-                        neighborEntry.type != HexType.VACANT && aspectTree.areRelated(entry.aspect, neighborEntry.aspect)
+                        neighbourKey !in traversedKeys
+                                && neighborEntry.type != HexType.VACANT
+                                && neighborEntry.aspect in discoveredAspects
+                                && aspectTree.areRelated(entry.aspect, neighborEntry.aspect)
                     }.toSet()
 
             keysToTraverse += newRelatedNeighbors

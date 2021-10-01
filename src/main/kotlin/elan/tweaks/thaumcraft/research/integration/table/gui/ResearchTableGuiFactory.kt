@@ -61,7 +61,7 @@ object ResearchTableGuiFactory {
             container,
             components =
             tableAndInventoryBackgrounds()
-                    + researchArea(research, table)
+                    + researchArea(research, table, pallet)
                     + copyButton(research, pallet, knowledge)
                     + componentsOf(pallet)
                     + InkNotificationUIComponent(research, scribeTools, ResearchArea.centerOrigin)
@@ -135,7 +135,7 @@ object ResearchTableGuiFactory {
     }
 
     // TODO: move to factory
-    private fun researchArea(research: ResearchPort, table: TileResearchTable): Set<UIComponent> {
+    private fun researchArea(research: ResearchPort, table: TileResearchTable, pallet: AspectPalletPort): Set<UIComponent> {
         val hexSize = 9
 
         val notesDataProvider = {
@@ -149,6 +149,7 @@ object ResearchTableGuiFactory {
             centerUiOrigin = ResearchArea.centerOrigin,
             aspectTree = AspectsTree(),
             hexSize = hexSize, // TODO: move to hex texture constants
+            pallet = pallet,
             notesDataProvider = notesDataProvider
         )
 
