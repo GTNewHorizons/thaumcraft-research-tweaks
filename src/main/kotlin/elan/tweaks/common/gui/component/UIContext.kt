@@ -20,4 +20,5 @@ interface UIContext {
     fun toScreenOrigin(vectorXY: VectorXY): Vector3D
 
     fun nextRandomFloat(): Float
+    fun nextRandomInt(bound: Int): Int
 }

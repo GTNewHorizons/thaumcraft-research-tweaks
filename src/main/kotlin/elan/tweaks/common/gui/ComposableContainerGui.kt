@@ -28,6 +28,7 @@ class ComposableContainerGui(
     override val fontRenderer: FontRenderer get() = fontRendererObj
 
     private val backgrounds = components.filterIsInstance<BackgroundUIComponent>()
+    private val tickables = components.filterIsInstance<TickingUIComponent>()
     private val mouseOverables = components.filterIsInstance<MouseOverUIComponent>()
     private val clickables = components.filterIsInstance<ClickableUIComponent>()
     private val draggableSources = components.filterIsInstance<DraggableSourceUIComponent>()
@@ -55,6 +56,9 @@ class ComposableContainerGui(
 
     override fun nextRandomFloat(): Float =
         mc.renderViewEntity.worldObj.rand.nextFloat()
+
+    override fun nextRandomInt(bound: Int): Int =
+        mc.renderViewEntity.worldObj.rand.nextInt(bound)
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
@@ -89,7 +93,16 @@ class ComposableContainerGui(
 
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
         val mousePosition = uiMousePosition(mouseX, mouseY)
+        drawBackgrounds(mousePosition, partialTicks)
+        callTickables(partialTicks)
+    }
+
+    private fun drawBackgrounds(mousePosition: Vector3D, partialTicks: Float) {
         backgrounds.forEach { it.onDrawBackground(mousePosition, partialTicks, context = this) }
+    }
+
+    private fun callTickables(partialTicks: Float) {
+        tickables.forEach { it.onTick(partialTicks, context = this) }
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, buttonIndex: Int) {

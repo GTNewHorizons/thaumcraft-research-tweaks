@@ -1,6 +1,8 @@
 package elan.tweaks.common.gui.geometry
 
+import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 data class UV(val u: Int, val v: Int)
 data class Scale(val width: Int, val height: Int)
@@ -79,4 +81,53 @@ data class Rectangle(
 
     operator fun plus(offset: VectorXY) = Rectangle(origin + offset, scale)
 
+}
+
+data class HexVector(
+    val q: Int,
+    val r: Int,
+) {
+
+    val key: String = "$q:$r"
+
+    fun toVector(hexSize: Int): Vector2D = Vector2D(
+        x = (hexSize * (1.5 * q)).roundToInt(),
+        y = (hexSize * sqrt(3.0) * (r + q / 2.0)).roundToInt()
+    )
+
+    companion object {
+        // Pixel to hex is from https://www.redblobgames.com/grids/hexagons/#pixel-to-hex
+        // Hex rounding is from https://www.redblobgames.com/grids/hexagons/#rounding
+        fun roundedFrom(vector: VectorXY, hexSize: Int): HexVector {
+            val (roundQ, roundR) = findRoundedCoordinates(vector, hexSize)
+
+            return HexVector(roundQ, roundR)
+        }        
+        
+        fun keyFrom(vector: VectorXY, hexSize: Int): HexVector {
+            val (roundQ, roundR) = findRoundedCoordinates(vector, hexSize)
+
+            return HexVector(roundQ, roundR)
+        }
+
+        private fun findRoundedCoordinates(vector: VectorXY, hexSize: Int): Pair<Int, Int> {
+            val q = 0.6666666666666666 * vector.x / hexSize.toDouble()
+            val r = 0.3333333333333333 * (sqrt(3.0) * -vector.y - vector.x) / hexSize.toDouble()
+            val s = -q - r
+            
+            var roundQ = q.roundToInt()
+            val roundR = r.roundToInt()
+            var roundS = s.roundToInt()
+            val deltaQ = abs(roundQ - q)
+            val deltaR = abs(roundR - r)
+            val deltaS = abs(roundS - s)
+            if (deltaQ > deltaR && deltaQ > deltaS) {
+                roundQ = -roundR - roundS
+            } else if (deltaR <= deltaS) {
+                roundS = -roundQ - roundR
+            }
+            
+            return roundQ to roundS
+        }
+    }
 }

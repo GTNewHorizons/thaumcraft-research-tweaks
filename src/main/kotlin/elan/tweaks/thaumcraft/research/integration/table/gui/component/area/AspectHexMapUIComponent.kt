@@ -1,54 +1,62 @@
-package elan.tweaks.thaumcraft.research.integration.table.gui.component
+package elan.tweaks.thaumcraft.research.integration.table.gui.component.area
 
 import elan.tweaks.common.ext.drawQuads
 import elan.tweaks.common.gui.component.BackgroundUIComponent
-import elan.tweaks.common.gui.component.ClickableUIComponent
 import elan.tweaks.common.gui.component.UIContext
-import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
-import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.drawing.AspectDrawer
 import elan.tweaks.common.gui.fx.LineParticle
 import elan.tweaks.common.gui.fx.OrbParticle
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.domain.ports.provided.ResearchPort
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.AspectHex
-import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ParchmentTexture
 import net.minecraft.client.renderer.Tessellator
 import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.lib.UtilsFX
 
-class ResearchAreaUIComponent(
+class AspectHexMapUIComponent(
     private val research: ResearchPort,
     private val hexLayout: HexLayout<AspectHex>,
-    private val uiOrigin: VectorXY
-) : BackgroundUIComponent,
-    ClickableUIComponent,
-    DragClickableDestinationUIComponent,
-    DropDestinationUIComponent {
+) : BackgroundUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (research.missingNotes()) return
 
-        drawBackgroundParchment(context)
         // with current highlight texture best effect us achieved when drawing it under border, TODO: combined texture to draw over with
         drawMouseOverHighlight(uiMousePosition, context)
         drawHexes(context)
     }
 
     private fun drawMouseOverHighlight(uiMousePosition: VectorXY, context: UIContext) {
-        whenHexAt(uiMousePosition) { hex ->
-            if (hex is AspectHex.Occupied.Root) return
-            drawHexHighlight(hex.uiCenterOrigin, context)
-        }
+        if (research.notEditable()) return
+        val hex = hexLayout[uiMousePosition] ?: return
+        if (hex is AspectHex.Occupied.Root) return
+
+        drawHexHighlight(hex.uiCenterOrigin, context)
     }
 
-    private fun drawBackgroundParchment(context: UIContext) {
-        ParchmentTexture.draw(
-            origin = context.toScreenOrigin(uiOrigin)
-        )
+    // TODO: Extract to hex texture
+    private fun drawHexHighlight(uiOrigin: VectorXY, context: UIContext) {
+        val screenOrigin = context.toScreenOrigin(uiOrigin)
+        GL11.glPushMatrix()
+        GL11.glAlphaFunc(516, 0.003921569f)
+        GL11.glEnable(GL11.GL_BLEND)
+        GL11.glBlendFunc(770, 1)
+        UtilsFX.bindTexture("textures/gui/hex2.png")
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
+        GL11.glTranslated(screenOrigin.x.toDouble(), screenOrigin.y.toDouble(), 0.0)
+        Tessellator.instance.drawQuads {
+            setBrightness(240)
+            setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f)
+            addVertexWithUV(-8.0, 8.0, screenOrigin.z, 0.0, 1.0)
+            addVertexWithUV(8.0, 8.0, screenOrigin.z, 1.0, 1.0)
+            addVertexWithUV(8.0, -8.0, screenOrigin.z, 1.0, 0.0)
+            addVertexWithUV(-8.0, -8.0, screenOrigin.z, 0.0, 0.0)
+        }
+        GL11.glBlendFunc(770, 771)
+        GL11.glAlphaFunc(516, 0.1f)
+        GL11.glPopMatrix()
     }
 
     private fun drawHexes(context: UIContext) {
@@ -141,102 +149,6 @@ class ResearchAreaUIComponent(
         }
         GL11.glAlphaFunc(516, 0.1f)
         GL11.glPopMatrix()
-    }
-
-    // TODO: Extract to hex texture
-    private fun drawHexHighlight(uiOrigin: VectorXY, context: UIContext) {
-        val screenOrigin = context.toScreenOrigin(uiOrigin)
-        GL11.glPushMatrix()
-        GL11.glAlphaFunc(516, 0.003921569f)
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(770, 1)
-        UtilsFX.bindTexture("textures/gui/hex2.png")
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
-        GL11.glTranslated(screenOrigin.x.toDouble(), screenOrigin.y.toDouble(), 0.0)
-        Tessellator.instance.drawQuads {
-            setBrightness(240)
-            setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f)
-            addVertexWithUV(-8.0, 8.0, screenOrigin.z, 0.0, 1.0)
-            addVertexWithUV(8.0, 8.0, screenOrigin.z, 1.0, 1.0)
-            addVertexWithUV(8.0, -8.0, screenOrigin.z, 1.0, 0.0)
-            addVertexWithUV(-8.0, -8.0, screenOrigin.z, 0.0, 0.0)
-        }
-        GL11.glBlendFunc(770, 771)
-        GL11.glAlphaFunc(516, 0.1f)
-        GL11.glPopMatrix()
-    }
-    
-    override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
-        whenHexAt(uiMousePosition) { hex ->
-            if(hex !is AspectHex.Occupied.Node) return // TODO: this check should be a part of domain
-
-            research.erase(hex.key).onSuccess {
-                context
-                    .playCombine()
-                    .playErase()
-            }
-        }
-    }
-
-    override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (draggable !is Aspect) return
-
-        writeToHexWhenPresent(uiMousePosition, draggable, context)
-    }
-
-    override fun onDragClick(draggable: Any, uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
-        if (draggable !is Aspect) return
-        if (button !is MouseButton.Right) return
-
-        writeToHexWhenPresent(uiMousePosition, draggable, context)
-    }
-
-    private fun writeToHexWhenPresent(
-        uiMousePosition: VectorXY,
-        draggable: Aspect,
-        context: UIContext
-    ) {
-        whenHexAt(uiMousePosition) { hex ->
-            if (hex !is AspectHex.Vacant) return // TODO: this check should be a part of domain
-
-            research.write(hex.key, draggable).onSuccess {
-                context
-                    .playCombine()
-                    .playWrite()
-            }
-        }
-    }
-
-    private inline fun whenHexAt(uiMousePosition: VectorXY, action: (AspectHex) -> Unit) {
-        if (research.notEditable()) return
-        hexLayout[uiMousePosition]?.run(action)
-    }
-
-    private fun UIContext.playCombine() = apply {
-        playSoundOnEntity(
-            soundName = "thaumcraft:hhon",
-            volume = 0.3f,
-            pitch = 1.0f,
-            distanceDelay = false
-        )
-    }
-
-    private fun UIContext.playWrite() = apply {
-        playSoundOnEntity(
-            soundName = "thaumcraft:write",
-            volume = 0.2f,
-            pitch = 1.0f,
-            distanceDelay = false
-        )
-    }
-
-    private fun UIContext.playErase() = apply {
-        playSoundOnEntity(
-            soundName = "thaumcraft:erase",
-            volume = 0.2f,
-            pitch = 1.0f + nextRandomFloat() * 0.1f,
-            distanceDelay = false
-        )
     }
 
 }

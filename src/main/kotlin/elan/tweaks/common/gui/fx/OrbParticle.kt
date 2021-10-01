@@ -30,7 +30,6 @@ object OrbParticle {
 
         val seconds = nextValueOfSlowlyGrowingFunction()
         val ticks = FMLClientHandler.instance().client.thePlayer.ticksExisted
-        println("s/t: $seconds/$ticks")
         val c = Color(color)
         var red = c.red.toFloat() / 255.0f
         var green = c.green.toFloat() / 255.0f

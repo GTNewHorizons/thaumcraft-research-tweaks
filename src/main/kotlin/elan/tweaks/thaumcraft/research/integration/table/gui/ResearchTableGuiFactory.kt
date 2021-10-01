@@ -18,7 +18,10 @@ import elan.tweaks.thaumcraft.research.integration.adapters.layout.HexLayoutRese
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectDragAndDropUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectPalletUIComponent
-import elan.tweaks.thaumcraft.research.integration.table.gui.component.ResearchAreaUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapEditorUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.ParchmentUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ParchmentTexture
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTableInventoryTexture
 import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTableInventoryTexture.AspectPools
@@ -106,7 +109,7 @@ object ResearchTableGuiFactory {
     }
 
     // TODO: move to factory
-    private fun researchArea(player: EntityPlayer, table: TileResearchTable): UIComponent {
+    private fun researchArea(player: EntityPlayer, table: TileResearchTable): Set<UIComponent> {
         val notesDataProvider = {
             ResearchManager.getData(
                 table.getStackInSlot(ResearchTableContainerFactory.RESEARCH_NOTES_SLOT_INDEX)
@@ -117,18 +120,29 @@ object ResearchTableGuiFactory {
             pool = AspectPoolAdapter(player, table)
         )
 
+        val hexSize = 9
+
         val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
             bounds = ResearchArea.bounds,
             centerUiOrigin = ResearchArea.centerOrigin,
             aspectTree = AspectsTree(),
-            hexSize = 9, // TODO: move to hex texture constants
+            hexSize = hexSize, // TODO: move to hex texture constants
             notesDataProvider = notesDataProvider
         )
 
-        return ResearchAreaUIComponent(
-            area,
-            hexLayout,
-            uiOrigin = ResearchArea.bounds.origin
+        return setOf(
+            ParchmentUIComponent(
+                area,
+                hexLayout,
+                
+                uiOrigin = ResearchArea.bounds.origin,
+                runeLimit = 15,
+                
+                hexSize = hexSize,
+                centerOffset = ParchmentTexture.HexGrid.centerOrigin
+            ), 
+            AspectHexMapUIComponent(area, hexLayout),
+            AspectHexMapEditorUIComponent(area, hexLayout)
         )
     }
 
