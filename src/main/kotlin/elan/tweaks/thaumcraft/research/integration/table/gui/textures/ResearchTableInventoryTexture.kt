@@ -48,7 +48,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
             origin = Vector2D(75, 40),
             scale = Scale(ParchmentTexture.width, ParchmentTexture.height)
         )
-        val centerOrigin = bounds.origin + ParchmentTexture.HexGrid.centerOrigin 
+        val centerOrigin = bounds.origin + ParchmentTexture.centerOrigin 
     }
 
     val inventoryOrigin = Vector2D(x = 62, y = 198)

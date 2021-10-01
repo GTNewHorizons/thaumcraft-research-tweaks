@@ -1,60 +1,85 @@
 package elan.tweaks.common.gui.drawing
 
 import elan.tweaks.common.gui.component.UIContext
+import elan.tweaks.common.gui.geometry.Scale
+import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.UtilsFX
 
 object TooltipDrawer {
+
+    fun drawCentered(context: UIContext, lines: List<String>, center: VectorXY, subTipColor: Int) {
+        val textScale = lines.textScale(context)
+        val xOffset = Vector2D(textScale.width / 2, y = textScale.height / 2)
+        draw(context, lines, textScale, origin = center - xOffset, subTipColor)
+    }
+
+    fun draw(context: UIContext, lines: List<String>, origin: VectorXY, subTipColor: Int) {
+        draw(context, lines, lines.textScale(context), origin, subTipColor)
+    }
+
+    private fun List<String>.textScale(
+        context: UIContext
+    ) = Scale(
+        width = maxOfPixelWidth(context),
+        height = textHeight()
+    )
+
+    private fun List<String>.maxOfPixelWidth(context: UIContext) = map { line ->
+        context.fontRenderer.getStringWidth(line)
+    }.maxOrNull() ?: 0
+
+    private fun List<String>.textHeight() =
+        8 + (size - 1) * 10 + if (size > 1) 2 else 0
+
+
     // TODO: Rewrite, fix rect shading
-    fun drawCustomTooltip(context: UIContext, lines: List<*>, mousePosition: VectorXY, subTipColor: Int) {
-        GL11.glDisable(32826)
-        GL11.glDisable(2929)
+    fun draw(context: UIContext, lines: List<String>, textScale: Scale, origin: VectorXY, subTipColor: Int) {
+        GL11.glPushMatrix()
+        GL11.glDisable(32826) // GL12.GL_RESCALE_NORMAL ?
+        GL11.glDisable(GL11.GL_DEPTH_TEST)
         if (lines.isNotEmpty()) {
-            var var5 = 0
-            val var6 = lines.iterator()
-            var var16: Int
-            while (var6.hasNext()) {
-                val var7 = var6.next() as String
-                var16 = context.fontRenderer.getStringWidth(var7)
-                if (var16 > var5) {
-                    var5 = var16
-                }
-            }
-            val var15 = mousePosition.x + 12
-            var16 = mousePosition.y - 12
-            var var9 = 8
-            if (lines.size > 1) {
-                var9 += 2 + (lines.size - 1) * 10
-            }
+            val xOffset = origin.x
+            var yOffset = origin.y
+
             context.setItemRenderZLevel(300.0f)
             val var10 = -267386864
-            UtilsFX.drawGradientRect(var15 - 3, var16 - 4, var15 + var5 + 3, var16 - 3, var10, var10)
-            UtilsFX.drawGradientRect(var15 - 3, var16 + var9 + 3, var15 + var5 + 3, var16 + var9 + 4, var10, var10)
-            UtilsFX.drawGradientRect(var15 - 3, var16 - 3, var15 + var5 + 3, var16 + var9 + 3, var10, var10)
-            UtilsFX.drawGradientRect(var15 - 4, var16 - 3, var15 - 3, var16 + var9 + 3, var10, var10)
-            UtilsFX.drawGradientRect(var15 + var5 + 3, var16 - 3, var15 + var5 + 4, var16 + var9 + 3, var10, var10)
+            UtilsFX.drawGradientRect(xOffset - 3, yOffset - 4, xOffset + textScale.width + 3, yOffset - 3, var10, var10)
+            UtilsFX.drawGradientRect(xOffset - 3, yOffset + textScale.height + 3, xOffset + textScale.width + 3, yOffset + textScale.height + 4, var10, var10)
+            UtilsFX.drawGradientRect(xOffset - 3, yOffset - 3, xOffset + textScale.width + 3, yOffset + textScale.height + 3, var10, var10)
+            UtilsFX.drawGradientRect(xOffset - 4, yOffset - 3, xOffset - 3, yOffset + textScale.height + 3, var10, var10)
+            UtilsFX.drawGradientRect(xOffset + textScale.width + 3, yOffset - 3, xOffset + textScale.width + 4, yOffset + textScale.height + 3, var10, var10)
             val var11 = 1347420415
             val var12 = var11 and 16711422 shr 1 or var11 and -16777216
-            UtilsFX.drawGradientRect(var15 - 3, var16 - 3 + 1, var15 - 3 + 1, var16 + var9 + 3 - 1, var11, var12)
-            UtilsFX.drawGradientRect(var15 + var5 + 2, var16 - 3 + 1, var15 + var5 + 3, var16 + var9 + 3 - 1, var11, var12)
-            UtilsFX.drawGradientRect(var15 - 3, var16 - 3, var15 + var5 + 3, var16 - 3 + 1, var11, var11)
-            UtilsFX.drawGradientRect(var15 - 3, var16 + var9 + 2, var15 + var5 + 3, var16 + var9 + 3, var12, var12)
+            UtilsFX.drawGradientRect(xOffset - 3, yOffset - 3 + 1, xOffset - 3 + 1, yOffset + textScale.height + 3 - 1, var11, var12)
+            UtilsFX.drawGradientRect(
+                xOffset + textScale.width + 2,
+                yOffset - 3 + 1,
+                xOffset + textScale.width + 3,
+                yOffset + textScale.height + 3 - 1,
+                var11,
+                var12
+            )
+            UtilsFX.drawGradientRect(xOffset - 3, yOffset - 3, xOffset + textScale.width + 3, yOffset - 3 + 1, var11, var11)
+            UtilsFX.drawGradientRect(xOffset - 3, yOffset + textScale.height + 2, xOffset + textScale.width + 3, yOffset + textScale.height + 3, var12, var12)
             for (var13 in lines.indices) {
-                var var14 = lines[var13] as String
+                var var14 = lines[var13]
                 var14 = if (var13 == 0) {
                     "§" + Integer.toHexString(subTipColor) + var14
                 } else {
                     "§7$var14"
                 }
-                context.fontRenderer.drawStringWithShadow(var14, var15, var16, -1)
+                context.fontRenderer.drawStringWithShadow(var14, xOffset, yOffset, -1)
                 if (var13 == 0) {
-                    var16 += 2
+                    yOffset += 2
                 }
-                var16 += 10
+                yOffset += 10
             }
         }
         context.setItemRenderZLevel(0.0f)
         GL11.glEnable(GL11.GL_DEPTH_TEST)
+        GL11.glPopMatrix()
     }
+
 }

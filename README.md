@@ -9,7 +9,7 @@
   - [x] Put aspect multiple times on notes when hovering (RMB)
   - [x] Make sure expertise and mastery rules about aspect conservation apply correctly
   - [x] Draw random runes on parchment when researching
-  - [ ] Missing ink message
+  - [x] Missing ink message
   - [ ] Research duplication
   - [ ] Fix aspect combination notification rendering
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components

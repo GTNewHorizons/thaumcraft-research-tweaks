@@ -9,7 +9,5 @@ object ParchmentTexture : ThaumcraftTextureInstance(
     u = 0, v = 0,
     width = 150, height = 150
 ) {
-    object HexGrid {
-        val centerOrigin = Vector2D(width/2, height/2)
-    }
+    val centerOrigin = Vector2D(width / 2, height / 2)
 }

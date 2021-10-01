@@ -11,13 +11,16 @@ import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.domain.model.AspectsTree
 import elan.tweaks.thaumcraft.research.domain.model.Research
 import elan.tweaks.thaumcraft.research.domain.ports.provided.AspectPalletPort
+import elan.tweaks.thaumcraft.research.domain.ports.provided.ResearchPort
 import elan.tweaks.thaumcraft.research.integration.adapters.AspectPoolAdapter
 import elan.tweaks.thaumcraft.research.integration.adapters.ResearchNotesAdapter
+import elan.tweaks.thaumcraft.research.integration.adapters.ScribeToolsAdapter
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectDragAndDropUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.AspectPalletUIComponent
+import elan.tweaks.thaumcraft.research.integration.table.gui.component.InkNotificationUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.AspectHexMapUIComponent
 import elan.tweaks.thaumcraft.research.integration.table.gui.component.area.ParchmentUIComponent
@@ -46,13 +49,19 @@ object ResearchTableGuiFactory {
             inventorySlotOrigin = ResearchTableInventoryTexture.inventoryOrigin,
         )
 
+        val research = Research(
+            notes = ResearchNotesAdapter(player, table),
+            pool = AspectPoolAdapter(player, table)
+        )
+
         return ComposableContainerGui(
             container,
-            components = 
-                    tableAndInventoryBackgrounds() 
-                            + componentsOf(pallet) 
-                            + researchArea(player, table)
-                            + aspectDragAndDrop(pallet),
+            components =
+            tableAndInventoryBackgrounds()
+                    + componentsOf(pallet)
+                    + researchArea(research, table)
+                    + InkNotificationUIComponent(research, ScribeToolsAdapter(table),  ResearchArea.centerOrigin)
+                    + aspectDragAndDrop(pallet),
             xSize = ResearchTableInventoryTexture.width,
             ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
         )
@@ -109,18 +118,14 @@ object ResearchTableGuiFactory {
     }
 
     // TODO: move to factory
-    private fun researchArea(player: EntityPlayer, table: TileResearchTable): Set<UIComponent> {
+    private fun researchArea(research: ResearchPort, table: TileResearchTable): Set<UIComponent> {
+        val hexSize = 9
+
         val notesDataProvider = {
             ResearchManager.getData(
                 table.getStackInSlot(ResearchTableContainerFactory.RESEARCH_NOTES_SLOT_INDEX)
             )
         }
-        val area = Research(
-            notes = ResearchNotesAdapter(player, table, notesDataProvider),
-            pool = AspectPoolAdapter(player, table)
-        )
-
-        val hexSize = 9
 
         val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
             bounds = ResearchArea.bounds,
@@ -132,17 +137,17 @@ object ResearchTableGuiFactory {
 
         return setOf(
             ParchmentUIComponent(
-                area,
+                research,
                 hexLayout,
-                
+
                 uiOrigin = ResearchArea.bounds.origin,
                 runeLimit = 15,
-                
+
                 hexSize = hexSize,
-                centerOffset = ParchmentTexture.HexGrid.centerOrigin
-            ), 
-            AspectHexMapUIComponent(area, hexLayout),
-            AspectHexMapEditorUIComponent(area, hexLayout)
+                centerOffset = ParchmentTexture.centerOrigin
+            ),
+            AspectHexMapUIComponent(research, hexLayout),
+            AspectHexMapEditorUIComponent(research, hexLayout)
         )
     }
 

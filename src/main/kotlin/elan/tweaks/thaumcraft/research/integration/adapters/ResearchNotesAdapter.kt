@@ -5,24 +5,24 @@ import elan.tweaks.thaumcraft.research.domain.ports.required.ResearchNotes
 import elan.tweaks.thaumcraft.research.integration.failures.HexNotFoundFailure.Companion.screenHexNotFound
 import elan.tweaks.thaumcraft.research.integration.table.container.ResearchTableContainerFactory.RESEARCH_NOTES_SLOT_INDEX
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.lib.network.PacketHandler
 import thaumcraft.common.lib.network.playerdata.PacketAspectPlaceToServer
-import thaumcraft.common.lib.research.ResearchNoteData
+import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.tiles.TileResearchTable
 
 class ResearchNotesAdapter(
     private val player: EntityPlayer,
     private val table: TileResearchTable,
-    private val notesProvider: () -> ResearchNoteData
 ) : ResearchNotes {
     override val present: Boolean
         get() = notes != null
 
     override val complete: Boolean
-        get() = notes.stackTagCompound.getBoolean("complete")
+        get() = notes?.stackTagCompound?.getBoolean("complete") ?: false
 
-    private val notes
+    private val notes: ItemStack?
         get() =
             table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
 
@@ -33,7 +33,7 @@ class ResearchNotesAdapter(
         sendAspectPlacePacket(hexKey, aspect)
 
     private fun sendAspectPlacePacket(hexKey: String, aspect: Aspect?): Result<Unit> {
-        val screenHex = notesProvider().hexes[hexKey] ?: return screenHexNotFound(hexKey)
+        val screenHex = getResearchData().hexes[hexKey] ?: return screenHexNotFound(hexKey)
 
         PacketHandler.INSTANCE.sendToServer(
             PacketAspectPlaceToServer(
@@ -46,4 +46,9 @@ class ResearchNotesAdapter(
 
         return success()
     }
+
+    private fun getResearchData() =
+        ResearchManager.getData(
+            table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
+        )
 }

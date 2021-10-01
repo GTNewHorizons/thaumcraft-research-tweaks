@@ -49,8 +49,9 @@ class AspectPalletUIComponent(
     // TODO: Move to texture rendering object
     private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
         val screenOrigin = context.toScreenOrigin(uiOrigin)
-        TooltipDrawer.drawCustomTooltip(
-            context, listOf(aspect.name, aspect.localizedDescription), Vector2D(0, y = -8) + screenOrigin, 11
+        val textOrigin = screenOrigin + Vector2D(12, -20)
+        TooltipDrawer.draw(
+            context, listOf(aspect.name, aspect.localizedDescription), textOrigin, 11
         )
         // TODO: Add research check, this should be somehow passed via Domain
         if (!aspect.isPrimal) {
