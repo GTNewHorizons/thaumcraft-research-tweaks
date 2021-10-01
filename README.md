@@ -13,15 +13,20 @@
   - [x] Research duplication
   - [x] Fix aspect combination notification rendering
   - [ ] UI textures
-  - [ ] Update lang file
-  - [ ] Clean up TODOs
+  - [ ] Clean up TODOs:
+        Basically I've mistaken client for whole piece, it's actually a "front-end" I am changing and domain logic is hidden behind domain. 
+        This means I need to squash domain and adapters in to client (ApiConsumers?)
+        Front-end complexity also comes from need to perform some validations. 
+        It would be more straight forward if backend was sending according commands back to client (e.g. aspect combination success - play some sound, etc)
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
+  - [ ] Ensure all sounds are played accordingly
+  - [ ] Include checking inventory when deciding on duplicate button activity
+  - [ ] Update lang file
   - [ ] Optimize memory consumption (caches)
-  
 
 2. Nice to have:
   - [ ] Testing
-  - [ ] Batch aspect combination as one in one packet (see PacketAspectCombinationToServer)
+  - [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
   - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
 
 ### Non-Functional
