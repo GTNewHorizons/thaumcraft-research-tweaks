@@ -7,15 +7,15 @@ import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "research/table/research-table.png",
-    textureWidth = 300, textureHeight = 256,
+    textureWidth = 300, textureHeight = 240,
     u = 0, v = 0,
-    width = 300, height = 222
+    width = 300, height = 217
 ) {
-    val inventoryOrigin = Vector2D(x = 62, y = 198)
+    val inventoryOrigin = Vector2D(x = 62, y = 190)
     
     object Slots {
         val scribeToolsOrigin = Vector2D(x = 70, y = 9)
-        val notesOrigin = Vector2D(x = 94, y = 9)
+        val notesOrigin = Vector2D(x = 214, y = 9)
     }
 
     object AspectPools {
@@ -26,19 +26,19 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
         private val scale = Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
 
         val leftBound = Rectangle(
-            origin = Vector2D(x = 7, y = 24),
+            origin = Vector2D(x = 7, y = 17),
             scale
         )
         
         val rightBound = Rectangle(
-            origin = Vector2D(x = 245, y = 24),
+            origin = Vector2D(x = 245, y = 17),
             scale
         )
     }
 
     object ResearchArea {
         val bounds = Rectangle(
-            origin = Vector2D(75, 40),
+            origin = Vector2D(75, 33),
             scale = Scale(width, height)
         )
         val centerOrigin = bounds.origin + ParchmentTexture.centerOrigin 
@@ -46,7 +46,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
 
     object CopyButton {
         const val SIZE_PIXELS = 18
-        private val uiOrigin = Vector2D(x = 117, y = 8)
+        private val uiOrigin = Vector2D(x = 189, y = 8)
         val bounds = Rectangle(
             origin = uiOrigin,
             scale = Scale(SIZE_PIXELS, SIZE_PIXELS)

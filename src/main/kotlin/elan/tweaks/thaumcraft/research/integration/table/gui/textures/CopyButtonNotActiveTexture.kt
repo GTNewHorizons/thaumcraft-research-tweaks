@@ -5,7 +5,7 @@ import elan.tweaks.thaumcraft.research.integration.table.gui.textures.ResearchTa
 
 object CopyButtonNotActiveTexture : ThaumcraftTextureInstance(
     "research/table/research-table.png",
-    textureWidth = 300, textureHeight = 256,
-    u = 2, v = 227,
+    textureWidth = 300, textureHeight = 240,
+    u = 2, v = 220,
     width = SIZE_PIXELS, height =  SIZE_PIXELS
 )
