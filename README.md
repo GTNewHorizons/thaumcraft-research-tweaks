@@ -69,7 +69,7 @@ To run client with specific username set it in `PLAYER_USER_NAME` environment va
 ## Notes
 When drawing background he uses:
 ```
-    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);e
     ...
     draw backgrounds
     draw aspects
@@ -101,3 +101,10 @@ ResearchManager.HexEntry types:
 ```
 
 Should I allow replacing aspect when hex already occupied?
+
+## Gratitude
+
+Thanks go to: 
+- Think for texturing my rough ui sketch
+- TimeConqueror and GTNH dev's for helping out on technical part
+- Azanor for his amazing mod
