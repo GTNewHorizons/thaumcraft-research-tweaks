@@ -4,18 +4,18 @@ import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinatio
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinationFailure.Companion.missingComponents
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.MissingResearchFailure.Companion.missingResearchMastery
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.AspectCombiner
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.AspectPool
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.KnowledgeBase
 import thaumcraft.api.aspects.Aspect
 
 
-class AspectPallet(
-    private val knowledge: KnowledgeBase,
+class AspectPallet constructor(
+    private val base: KnowledgeBase,
     private val pool: AspectPool,
     private val combiner: AspectCombiner,
-
-    private val batchSize: Int = 10 // TODO: Extract to config
+    private val batchSize: Int
 ) : AspectPalletPort {
 
     override fun isDrainedOf(aspect: Aspect): Boolean =
@@ -23,9 +23,6 @@ class AspectPallet(
 
     override fun amountAndBonusOf(aspect: Aspect): Pair<Int, Int> =
         pool.amountOf(aspect) to pool.bonusAmountOf(aspect)
-
-    override fun discoveredAspects(): Array<Aspect> =
-        pool.allDiscovered()
 
     override fun missing(aspectAmounts: Map<Aspect, Int>): Boolean =
         pool.missing(aspectAmounts)
@@ -37,17 +34,15 @@ class AspectPallet(
 
     override fun derive(desiredAspect: Aspect): Result<Unit> =
         when {
-            knowledge.notDiscoveredResearchMastery() -> missingResearchMastery()
+            base.hasNotDiscovered(Knowledge.ResearchMastery) -> missingResearchMastery()
             desiredAspect.isPrimal -> cannotCombinePrimalAspect()
             pool.anyComponentMissingFor(desiredAspect) -> missingComponents()
             else -> combiner.combine(desiredAspect.components[0], desiredAspect.components[1])
         }
 
     override fun combineBatch(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> =
-        if(knowledge.notDiscoveredResearchExpertise()) combine(firstAspect, secondAspect)
-        else batch {
-            combine(firstAspect, secondAspect)
-        }
+        if (base.hasNotDiscovered(Knowledge.ResearchExpertise)) combine(firstAspect, secondAspect)
+        else batch { combine(firstAspect, secondAspect) }
 
     override fun combine(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> =
         when {

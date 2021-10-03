@@ -15,15 +15,14 @@ import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.inventory.Container
 
 class ComposableContainerGui(
+    scale: Scale,
     container: Container,
-    components: List<UIComponent>,
-    xSize: Int,
-    ySize: Int
+    components: List<UIComponent>
 ) : GuiContainer(container), UIContext {
 
     init {
-        super.xSize = xSize
-        super.ySize = ySize
+        super.xSize = scale.width
+        super.ySize = scale.height
     }
     override val fontRenderer: FontRenderer get() = fontRendererObj
 
@@ -60,9 +59,6 @@ class ComposableContainerGui(
 
     override fun nextRandomInt(bound: Int): Int =
         mc.renderViewEntity.worldObj.rand.nextInt(bound)
-
-    override fun sendEnchantPacket(actionId: Int) =
-        mc.playerController.sendEnchantPacket(this.inventorySlots.windowId, actionId);
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
@@ -125,7 +121,7 @@ class ComposableContainerGui(
     }
 
     private fun handleDraggables(button: MouseButton, uiMousePosition: Vector3D) {
-        if (button is MouseButton.Left) handleDragAttempt(uiMousePosition, button) 
+        if (button is MouseButton.Left) handleDragAttempt(uiMousePosition) 
         else handleDragClickables(uiMousePosition, button)
     }
 
@@ -138,7 +134,7 @@ class ComposableContainerGui(
         }
     }
 
-    private fun handleDragAttempt(uiMousePosition: Vector3D, button: MouseButton) {
+    private fun handleDragAttempt(uiMousePosition: Vector3D) {
         val draggables = draggableSources.mapNotNull { it.onDrag(uiMousePosition, context = this) }
         dragAndDrops.forEach { dragAndDrop ->
             dragAndDrop.onAttemptDrag(draggables, uiMousePosition, context = this)
@@ -149,7 +145,14 @@ class ComposableContainerGui(
         clickables.forEach { it.onMouseClicked(uiMousePosition, button, context = this) }
     }
 
-
-    private fun uiMousePosition(mouseX: Int, mouseY: Int) = 
+    private fun uiMousePosition(mouseX: Int, mouseY: Int) =
         Vector2D(mouseX, mouseY) - uiScreenOrigin
+
+    companion object {
+        fun gui(
+            scale: Scale,
+            container: Container,
+            components: List<UIComponent>
+        ) = ComposableContainerGui(scale, container = container, components = components)
+    }
 }

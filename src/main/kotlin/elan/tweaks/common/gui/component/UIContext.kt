@@ -21,5 +21,4 @@ interface UIContext {
 
     fun nextRandomFloat(): Float
     fun nextRandomInt(bound: Int): Int
-    fun sendEnchantPacket(actionId: Int)
 }

@@ -3,19 +3,24 @@ package elan.tweaks.thaumcraft.research.frontend.integration.adapters
 import elan.tweaks.common.ext.ResultExt.success
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.ResearchNotes
 import elan.tweaks.thaumcraft.research.frontend.integration.failures.HexNotFoundFailure.Companion.screenHexNotFound
+import elan.tweaks.thaumcraft.research.frontend.integration.table.container.ResearchTableContainerFactory.DUPLICATE_ACTION_ID
 import elan.tweaks.thaumcraft.research.frontend.integration.table.container.ResearchTableContainerFactory.RESEARCH_NOTES_SLOT_INDEX
+import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.api.research.ResearchCategories
 import thaumcraft.common.lib.network.PacketHandler
 import thaumcraft.common.lib.network.playerdata.PacketAspectPlaceToServer
 import thaumcraft.common.lib.research.ResearchManager
+import thaumcraft.common.lib.research.ResearchNoteData
 import thaumcraft.common.tiles.TileResearchTable
 
 class ResearchNotesAdapter(
     private val player: EntityPlayer,
     private val table: TileResearchTable,
+    private val container: Container
 ) : ResearchNotes {
     override val present: Boolean
         get() = notes != null
@@ -23,15 +28,24 @@ class ResearchNotesAdapter(
     override val complete: Boolean
         get() = notes?.stackTagCompound?.getBoolean("complete") ?: false
 
+    override val data: ResearchNoteData?
+        get() = notes?.let(ResearchManager::getData)
+
     private val notes: ItemStack?
         get() =
             table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
 
-    override fun erase(hexKey: String): Result<Unit> = 
+    override fun erase(hexKey: String): Result<Unit> =
         sendAspectPlacePacket(hexKey, aspect = null)
 
-    override fun write(hexKey: String, aspect: Aspect): Result<Unit> = 
+    override fun write(hexKey: String, aspect: Aspect): Result<Unit> =
         sendAspectPlacePacket(hexKey, aspect)
+
+    override fun duplicate(): Result<Unit> {
+        Minecraft.getMinecraft().playerController.sendEnchantPacket(container.windowId, DUPLICATE_ACTION_ID)
+        //tileEntity.duplicate(player)???
+        return success()
+    }
 
     private fun sendAspectPlacePacket(hexKey: String, aspect: Aspect?): Result<Unit> {
         val screenHex = getResearchData().hexes[hexKey] ?: return screenHexNotFound(hexKey)

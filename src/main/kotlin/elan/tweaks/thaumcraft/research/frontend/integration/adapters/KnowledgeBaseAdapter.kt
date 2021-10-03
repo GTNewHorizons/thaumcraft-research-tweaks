@@ -1,27 +1,25 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.adapters
 
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.KnowledgeBase
+import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.common.lib.research.ResearchManager
 
 class KnowledgeBaseAdapter(
-    private val playerCommandSenderName: String
+    private val player: EntityPlayer
 ) : KnowledgeBase {
     companion object {
-        private const val RESEARCH_EXPERTISE = "RESEARCHER1"
-        private const val RESEARCH_MASTERY = "RESEARCHER2"
-        private const val RESEARCH_DUPLICATION = "RESEARCHDUPE"
+        private val knowledgeToResearchKey = mapOf(
+            Knowledge.ResearchDuplication to "RESEARCHDUPE",
+            Knowledge.ResearchExpertise to "RESEARCHER1",
+            Knowledge.ResearchMastery to "RESEARCHER2",
+        )
     }
 
-    override fun notDiscoveredResearchExpertise(): Boolean =
-        !hasDiscovered(RESEARCH_EXPERTISE)
-
-    override fun notDiscoveredResearchMastery(): Boolean =
-        !hasDiscovered(RESEARCH_MASTERY)
-
-    override fun notDiscoveredResearchDuplication(): Boolean =
-        !hasDiscovered(RESEARCH_DUPLICATION)
-
-    private fun hasDiscovered(researchName: String) = 
-        ResearchManager.isResearchComplete(playerCommandSenderName, researchName)
+    override fun hasDiscovered(knowledge: Knowledge): Boolean =
+        knowledgeToResearchKey.containsKey(knowledge) && hasDiscovered(knowledgeToResearchKey[knowledge]!!)
+    
+    private fun hasDiscovered(researchName: String) =
+        ResearchManager.isResearchComplete(player.commandSenderName, researchName)
 
 }

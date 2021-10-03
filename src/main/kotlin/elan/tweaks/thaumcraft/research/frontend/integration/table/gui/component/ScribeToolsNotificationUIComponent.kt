@@ -4,19 +4,16 @@ import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.drawing.TooltipDrawer
 import elan.tweaks.common.gui.geometry.VectorXY
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.ScribeTools
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import net.minecraft.util.StatCollector
 
-class InkNotificationUIComponent(
-    private val research: ResearchPort,
-    private val scribeTools: ScribeTools,
+class ScribeToolsNotificationUIComponent(
+    private val research: ResearchProcessPort,
     private val uiCenter: VectorXY,
 ) : BackgroundUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (research.missingNotes() || scribeTools.arePresentAndNotEmpty()) return
-        drawNoInkTooltip(context)
+        if (research.requiresInkToContinue && research.notesPresent()) drawNoInkTooltip(context)
     }
 
     private fun drawNoInkTooltip(context: UIContext) {

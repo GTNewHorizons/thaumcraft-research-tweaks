@@ -28,8 +28,8 @@ class AspectPoolAdapter(
     }
     private val Aspect.isCompound get() = !isPrimal
 
-    override fun missing(usedAspectAmounts: Map<Aspect, Int>): Boolean =
-        usedAspectAmounts.any { (aspect, requiredAmount) -> totalAmountOf(aspect) < requiredAmount }
+    override fun contains(aspectAmounts: Map<Aspect, Int>): Boolean =
+        aspectAmounts.any { (aspect, requiredAmount) -> totalAmountOf(aspect) >= requiredAmount }
 
     override fun totalAmountOf(aspect: Aspect): Int =
         amountOf(aspect) + bonusAmountOf(aspect)

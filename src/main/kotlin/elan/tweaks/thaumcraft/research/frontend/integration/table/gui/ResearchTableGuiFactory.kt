@@ -1,23 +1,20 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.table.gui
 
-import elan.tweaks.common.gui.ComposableContainerGui
+import elan.tweaks.common.gui.ComposableContainerGui.Companion.gui
 import elan.tweaks.common.gui.component.UIComponent
 import elan.tweaks.common.gui.component.texture.TextureBackgroundUIComponent.Companion.background
 import elan.tweaks.common.gui.geometry.Rectangle
+import elan.tweaks.common.gui.geometry.Scale
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.thaumcraft.research.frontend.domain.model.AspectPallet
-import elan.tweaks.thaumcraft.research.frontend.domain.model.AspectsTree
-import elan.tweaks.thaumcraft.research.frontend.domain.model.Research
+import elan.tweaks.thaumcraft.research.frontend.domain.model.AspectTree
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.KnowledgeBase
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.*
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
-import elan.tweaks.thaumcraft.research.frontend.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.*
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapUIComponent
@@ -30,64 +27,31 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.R
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture.ResearchArea
 import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.api.aspects.Aspect
-import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.tiles.TileResearchTable
 
 object ResearchTableGuiFactory {
+    private val guiScale = Scale(
+        width = ResearchTableInventoryTexture.width,
+        height = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
+    )
 
     fun create(
         player: EntityPlayer,
         table: TileResearchTable
-    ): ComposableContainerGui {
-        val container = ResearchTableContainerFactory.create(
-            player.inventory,
-            table,
-            scribeToolsSlotOrigin = ResearchTableInventoryTexture.Slots.scribeToolsOrigin,
-            notesSlotOrigin = ResearchTableInventoryTexture.Slots.notesOrigin,
-            inventoryUiOrigin = ResearchTableInventoryTexture.inventoryOrigin,
-        )
-
-        val research = Research(
-            notes = ResearchNotesAdapter(player, table),
-            pool = AspectPoolAdapter(player, table)
-        )
-        val knowledge = KnowledgeBaseAdapter(playerCommandSenderName = player.commandSenderName)
-
-        val pallet = createPallet(player, table, knowledge)
-
-        val scribeTools = ScribeToolsAdapter(table)
-
-        return ComposableContainerGui(
-            container,
+    ) = PortContainer(player, table).run {
+        gui(
+            scale = guiScale,
+            container = inventory,
             components =
             tableAndInventoryBackgrounds()
-                    + researchArea(research, table, pallet)
-                    + copyButton(research, pallet, knowledge)
-                    + componentsOf(pallet)
-                    + InkNotificationUIComponent(research, scribeTools, ResearchArea.centerOrigin)
+                    + researchArea(research, researcher)
+                    + copyButton(research, researcher)
+                    + palletComponents(pallet, researcher)
+                    + ScribeToolsNotificationUIComponent(research, ResearchArea.centerOrigin)
                     + aspectDragAndDrop(pallet)
-                    + KnowledgeNotificationUIComponent(),
-            xSize = ResearchTableInventoryTexture.width,
-            ySize = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
+                    + KnowledgeNotificationUIComponent()
         )
     }
-
-    private fun copyButton(
-        research: Research,
-        pallet: AspectPallet,
-        knowledge: KnowledgeBaseAdapter
-    ) = CopyButtonUIComponent(
-        bounds = CopyButton.bounds,
-        requirementsUiOrigin = CopyButton.requirementsUiOrigin,
-        research = research,
-        aspectPallet = pallet,
-        knowledge = knowledge
-    )
-
-    private fun aspectDragAndDrop(pallet: AspectPalletPort) = 
-        AspectDragAndDropUIComponent(
-            pallet,
-        )
 
     private fun tableAndInventoryBackgrounds() = listOf(
         background(
@@ -100,21 +64,63 @@ object ResearchTableGuiFactory {
         )
     )
 
-    private fun componentsOf(pallet: AspectPalletPort): List<UIComponent> {
-        val leftAspectPallet = componentOf(
+    private fun researchArea(research: ResearchProcessPort, researcher: ResearcherKnowledgePort): Set<UIComponent> {
+        val hexSize = 9 // TODO: move to hex texture constants
+
+        val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
+            bounds = ResearchArea.bounds,
+            centerUiOrigin = ResearchArea.centerOrigin,
+            aspectTree = AspectTree(),
+            hexSize = hexSize,
+            researcher = researcher,
+            researchProcess = research
+        )
+
+        return setOf(
+            ParchmentUIComponent(
+                research = research,
+                uiOrigin = ResearchArea.bounds.origin,
+
+                runeLimit = 15,
+
+                hexSize = hexSize,
+                centerOffset = ParchmentTexture.centerOrigin,
+                hexLayout = hexLayout,
+            ),
+            AspectHexMapUIComponent(research, hexLayout),
+            AspectHexMapEditorUIComponent(research, hexLayout)
+        )
+    }
+
+    private fun copyButton(research: ResearchProcessPort, researcher: ResearcherKnowledgePort) = CopyButtonUIComponent(
+        bounds = CopyButton.bounds,
+        requirementsUiOrigin = CopyButton.requirementsUiOrigin,
+        research = research,
+        researcher = researcher
+    )
+
+    private fun aspectDragAndDrop(pallet: AspectPalletPort) =
+        AspectDragAndDropUIComponent(pallet)
+
+
+    private fun palletComponents(pallet: AspectPalletPort, researcher: ResearcherKnowledgePort): List<UIComponent> {
+        val leftAspectPallet = palletComponent(
             pallet = pallet,
+            researcher = researcher,
             bounds = AspectPools.leftBound
         ) { index, _ -> index % 2 == 0 } // TODO: split based on affinity
 
-        val rightAspectPallet = componentOf(
+        val rightAspectPallet = palletComponent(
             pallet = pallet,
+            researcher = researcher,
             bounds = AspectPools.rightBound
         ) { index, _ -> index % 2 != 0 } // TODO: split based on affinity
 
         return listOf(leftAspectPallet, rightAspectPallet)
     }
 
-    private fun componentOf(
+    private fun palletComponent(
+        researcher: ResearcherKnowledgePort,
         pallet: AspectPalletPort,
         bounds: Rectangle,
         aspectSelector: (Int, Aspect) -> Boolean
@@ -123,7 +129,7 @@ object ResearchTableGuiFactory {
             bounds = bounds,
             cellSize = AspectPools.ASPECT_CELL_SIZE_PIXEL
         ) {
-            pallet.discoveredAspects()
+            researcher.allDiscoveredAspects()
                 // TODO: add sorting
                 .filterIndexed(aspectSelector)
         }
@@ -133,47 +139,5 @@ object ResearchTableGuiFactory {
             pallet,
         )
     }
-
-    // TODO: move to factory
-    private fun researchArea(research: ResearchPort, table: TileResearchTable, pallet: AspectPalletPort): Set<UIComponent> {
-        val hexSize = 9
-
-        val notesDataProvider = {
-            ResearchManager.getData(
-                table.getStackInSlot(ResearchTableContainerFactory.RESEARCH_NOTES_SLOT_INDEX)
-            )
-        }
-
-        val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
-            bounds = ResearchArea.bounds,
-            centerUiOrigin = ResearchArea.centerOrigin,
-            aspectTree = AspectsTree(),
-            hexSize = hexSize, // TODO: move to hex texture constants
-            pallet = pallet,
-            notesDataProvider = notesDataProvider
-        )
-
-        return setOf(
-            ParchmentUIComponent(
-                research,
-                hexLayout,
-
-                uiOrigin = ResearchArea.bounds.origin,
-                runeLimit = 15,
-
-                hexSize = hexSize,
-                centerOffset = ParchmentTexture.centerOrigin
-            ),
-            AspectHexMapUIComponent(research, hexLayout),
-            AspectHexMapEditorUIComponent(research, hexLayout)
-        )
-    }
-
-    private fun createPallet(player: EntityPlayer, table: TileResearchTable, knowledge: KnowledgeBase) =
-        AspectPallet(
-            pool = AspectPoolAdapter(player, table),
-            knowledge = knowledge,
-            combiner = AspectCombinerAdapter(player, table)
-        )
 
 }

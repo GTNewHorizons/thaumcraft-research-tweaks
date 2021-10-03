@@ -5,10 +5,10 @@ import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import thaumcraft.common.lib.research.ResearchManager
-import thaumcraft.common.lib.research.ResearchNoteData
 import thaumcraft.common.lib.utils.HexUtils
 import java.util.*
 import kotlin.math.roundToInt
@@ -18,8 +18,8 @@ class HexLayoutResearchNoteDataAdapter(
     private val hexSize: Int,
     private val centerUiOrigin: VectorXY,
     private val aspectTree: AspectsTreePort,
-    private val pallet: AspectPalletPort,
-    private val notesDataProvider: () -> ResearchNoteData
+    private val researcher: ResearcherKnowledgePort,
+    private val researchProcess: ResearchProcessPort
 ) : HexLayout<AspectHex> {
     private val keyToAspectHex get() = keyToAspectHex()
 
@@ -60,9 +60,9 @@ class HexLayoutResearchNoteDataAdapter(
 
     private fun ResearchManager.HexEntry.convertToAspectHex(
         key: String,
-        hexes: HashMap<String, HexUtils.Hex>,
-        keyToNeighbourKeys: MutableMap<String, Set<String>>,
-        traversedKeys: MutableSet<String>
+        hexes: Map<String, HexUtils.Hex>,
+        keyToNeighbourKeys: Map<String, Set<String>>,
+        traversedKeys: Set<String>
     ): AspectHex {
         val uiCenter = hexes.getUiCenterBy(key)
         val uiOrigin = uiCenter - hexSize + 1 // TODO: move to hex texture object? or is it an issue of rounding when getting origin?
@@ -94,14 +94,14 @@ class HexLayoutResearchNoteDataAdapter(
         }
     }
 
-    private fun HashMap<String, HexUtils.Hex>.getUiCenterBy(key: String) =
+    private fun Map<String, HexUtils.Hex>.getUiCenterBy(key: String) =
         getValue(key).origin + centerUiOrigin
 
 
     private fun traversRootPathsAndBuildConnectionMap(
-        hexEntries: HashMap<String, ResearchManager.HexEntry>,
-        hexes: HashMap<String, HexUtils.Hex>
-    ): Pair<MutableSet<String>, MutableMap<String, Set<String>>> {
+        hexEntries: Map<String, ResearchManager.HexEntry>,
+        hexes: Map<String, HexUtils.Hex>
+    ): Pair<Set<String>, Map<String, Set<String>>> {
         val rootHexes = hexEntries.filterValues { entry -> entry.type == HexType.ROOT }.keys
 
         val traversedKeys = mutableSetOf<String>()
@@ -110,7 +110,7 @@ class HexLayoutResearchNoteDataAdapter(
 
         keysToTraverse += rootHexes
 
-        val discoveredAspects = pallet.discoveredAspects().toSet()
+        val discoveredAspects = researcher.allDiscoveredAspects().toSet()
 
         while (keysToTraverse.isNotEmpty()) {
             val key = keysToTraverse.pop()
@@ -140,8 +140,8 @@ class HexLayoutResearchNoteDataAdapter(
     private fun hexPresent(hexKey: String) =
         getHexEntries().containsKey(hexKey) && getHexes().containsKey(hexKey)
 
-    private fun getHexEntries() = notesDataProvider().hexEntries
-    private fun getHexes() = notesDataProvider().hexes
+    private fun getHexEntries() = researchProcess.data?.hexEntries ?: emptyMap()
+    private fun getHexes() = researchProcess.data?.hexes ?: emptyMap()
 
     private fun HexUtils.Hex.neighborKey(index: Int) = getNeighbour(index).toString()
 

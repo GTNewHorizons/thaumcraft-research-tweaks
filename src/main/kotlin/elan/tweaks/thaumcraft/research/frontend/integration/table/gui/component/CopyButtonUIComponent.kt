@@ -4,13 +4,11 @@ import elan.tweaks.common.gui.component.*
 import elan.tweaks.common.gui.drawing.AspectDrawer
 import elan.tweaks.common.gui.geometry.Rectangle
 import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.peripheral.MouseButton
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.KnowledgeBase
-import elan.tweaks.thaumcraft.research.frontend.integration.table.container.ResearchTableContainerFactory.ENCHANT_ACTION_ID
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.CopyButtonActiveTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.CopyButtonNotActiveTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.CopyRequirementsTexture
@@ -21,47 +19,43 @@ import thaumcraft.api.aspects.Aspect
 class CopyButtonUIComponent(
     private val bounds: Rectangle,
     private val requirementsUiOrigin: VectorXY,
-    private val research: ResearchPort,
-    private val aspectPallet: AspectPalletPort,
-    private val knowledge: KnowledgeBase,
+    private val research: ResearchProcessPort,
+    private val researcher: ResearcherKnowledgePort,
 ) : BackgroundUIComponent, MouseOverUIComponent, ClickableUIComponent, TickingUIComponent {
 
     private val clickDelayTicks = 10f
     private var clickedCoolDown = 0f
+    private val notOnCoolDown get() = !onCoolDown
     private val onCoolDown get() = clickedCoolDown > 0
-    
-    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (knowledge.notDiscoveredResearchDuplication()) return
 
+    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
+        if (researcher.hasDiscovered(Knowledge.ResearchDuplication)) drawButton(context)
+    }
+
+    private fun drawButton(context: UIContext) {
         val screenOrigin = context.toScreenOrigin(bounds.origin)
 
-        if (
-            research.notReadyForDuplication() 
-            // TODO: would be nice to also check for ink and paper in player's inventory
-            || aspectPallet.missing(research.usedAspectAmounts)
-            || onCoolDown
-        ) drawNotActiveTexture(screenOrigin)
-        else drawActiveTexture(screenOrigin)
-
-    }
-
-    private fun drawNotActiveTexture(screenOrigin: Vector3D) {
-        CopyButtonNotActiveTexture.draw(screenOrigin)
-    }
-    
-    private fun drawActiveTexture(screenOrigin: Vector3D) {
-        CopyButtonActiveTexture.draw(screenOrigin)
+        if (research.readyToDuplicate() && notOnCoolDown) CopyButtonActiveTexture.draw(screenOrigin)
+        else CopyButtonNotActiveTexture.draw(screenOrigin)
     }
 
     override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
-        if (uiMousePosition !in bounds || knowledge.notDiscoveredResearchDuplication() || research.notReadyForDuplication() || onCoolDown) return
-        
+        if (uiMousePosition !in bounds || onCoolDown) return
+
         clickedCoolDown = clickDelayTicks
-        context.sendEnchantPacket(actionId = ENCHANT_ACTION_ID)
-        context.playWrite()
+
+        duplicate(context)
     }
 
-    private fun UIContext.playWrite() = apply {
+    private fun duplicate(context: UIContext) {
+        research
+            .duplicate()
+            .onSuccess {
+                context.playButtonClicked()
+            }
+    }
+
+    private fun UIContext.playButtonClicked() = apply {
         playSoundOnEntity(
             soundName = "thaumcraft:cameraclack",
             volume = 0.4f,
@@ -76,16 +70,16 @@ class CopyButtonUIComponent(
     }
 
     override fun onMouseOver(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (uiMousePosition !in bounds || knowledge.notDiscoveredResearchDuplication() || research.notReadyForDuplication()) return
-
-        drawRequirements(research.usedAspectAmounts, context)
+        if (uiMousePosition in bounds && shouldShowRequirements()) drawRequirements(research.usedAspectAmounts, context)
     }
+
+    private fun shouldShowRequirements() =
+        researcher.hasDiscovered(Knowledge.ResearchDuplication) && research.readyToDuplicate()
 
     private fun drawRequirements(usedAspectAmounts: Map<Aspect, Int>, context: UIContext) {
         val screenOrigin = context.toScreenOrigin(requirementsUiOrigin)
 
         val header = StatCollector.translateToLocal("tc.research.copy")
-        
 
         GL11.glPushMatrix()
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)

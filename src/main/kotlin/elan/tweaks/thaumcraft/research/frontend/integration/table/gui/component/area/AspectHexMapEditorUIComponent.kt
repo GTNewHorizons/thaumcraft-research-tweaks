@@ -7,12 +7,12 @@ import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.common.gui.peripheral.MouseButton
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
 import thaumcraft.api.aspects.Aspect
 
 class AspectHexMapEditorUIComponent(
-    private val research: ResearchPort,
+    private val research: ResearchProcessPort,
     private val hexLayout: HexLayout<AspectHex>,
 ) : ClickableUIComponent,
     DragClickableDestinationUIComponent,

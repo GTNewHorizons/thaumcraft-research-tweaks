@@ -9,7 +9,7 @@ import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.Vector3D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ParchmentTexture
 import net.minecraft.client.renderer.Tessellator
@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.UtilsFX
 
 class ParchmentUIComponent(
-    private val research: ResearchPort,
+    private val research: ResearchProcessPort,
     private val hexLayout: HexLayout<AspectHex>,
     private val uiOrigin: VectorXY,
     private val runeLimit: Int,

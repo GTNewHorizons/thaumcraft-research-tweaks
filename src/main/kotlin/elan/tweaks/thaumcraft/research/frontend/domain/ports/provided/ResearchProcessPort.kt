@@ -1,15 +1,20 @@
 package elan.tweaks.thaumcraft.research.frontend.domain.ports.provided
 
 import thaumcraft.api.aspects.Aspect
+import thaumcraft.common.lib.research.ResearchNoteData
 
-interface ResearchPort {
+interface ResearchProcessPort {
     
     val usedAspectAmounts: Map<Aspect, Int>
+    val requiresInkToContinue: Boolean
+    val data: ResearchNoteData?
     
-    fun readyForDuplication(): Boolean = !notReadyForDuplication()
-    fun notReadyForDuplication(): Boolean = missingNotes() || incomplete()
-
-    fun missingNotes(): Boolean
+    fun notReadyToDuplicate() : Boolean = !readyToDuplicate()
+    fun readyToDuplicate() : Boolean
+    fun duplicate() : Result<Unit>
+    
+    fun missingNotes(): Boolean = !notesPresent()
+    fun notesPresent(): Boolean
     fun incomplete(): Boolean
     fun notEditable(): Boolean
     fun shouldObfuscate(aspect: Aspect): Boolean
