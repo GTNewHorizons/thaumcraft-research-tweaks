@@ -44,7 +44,7 @@ object ResearchTableGuiFactory {
             table,
             scribeToolsSlotOrigin = ResearchTableInventoryTexture.Slots.scribeToolsOrigin,
             notesSlotOrigin = ResearchTableInventoryTexture.Slots.notesOrigin,
-            inventorySlotOrigin = ResearchTableInventoryTexture.inventoryOrigin,
+            inventoryUiOrigin = ResearchTableInventoryTexture.inventoryOrigin,
         )
 
         val research = Research(

@@ -75,13 +75,23 @@ repositories {
     mavenLocal()
 }
 
+// Kotlin
+
 dependencies {
     compile "net.shadowfacts:Forgelin:1.9.0-GTNH-1.7.10-Edition"
+}
 
+
+// Thaumcraft
+
+dependencies {
     compile "com.azanor:Thaumcraft:1.7.10-4.2.3.5:deobf"
     compile "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
-    compile "com.github.GTNewHorizons:SpongeMixins:1.3.3:dev"
+}
 
+// Mixins
+
+dependencies {
     kapt("org.spongepowered:mixin:0.8-SNAPSHOT") // using 0.8 to workaround a issue in 0.7 which fails mixin application
     compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         // Mixin includes a lot of dependencies that are too up-to-date
@@ -92,39 +102,9 @@ dependencies {
         exclude module: "log4j-core"
     }
 
+    compile "com.github.GTNewHorizons:SpongeMixins:1.3.3:dev"
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand "mcversion": project.minecraft.version,
-                "version": modVersion,
-                "modid": modId,
-                "modName": modName
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
-}
-
-task devJar(type: Jar) {
-    from sourceSets.main.output
-    archiveClassifier.set("dev")
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier.set("sources")
-}
-
-artifacts {
-    archives devJar
-    archives sourcesJar
-}
-
-// MIXINS
 
 def mixinConfigJson = "mixins.thaumcraftresearchtweaks.json"
 def mixingConfigRefMap = "mixins.thaumcraftresearchtweaks.refmap.json"
@@ -181,7 +161,15 @@ runClient {
 
 }
 
-// TESTING
+// Dependency injection
+
+dependencies {
+    def daggerVersion = "2.39.1"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+}
+
+// Testing
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
@@ -190,4 +178,36 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Minecraft
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "mcversion": project.minecraft.version,
+                "version": modVersion,
+                "modid": modId,
+                "modName": modName
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}
+
+task devJar(type: Jar) {
+    from sourceSets.main.output
+    archiveClassifier.set("dev")
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier.set("sources")
+}
+
+artifacts {
+    archives devJar
+    archives sourcesJar
 }

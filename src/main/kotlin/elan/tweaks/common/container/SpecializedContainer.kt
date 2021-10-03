@@ -1,5 +1,6 @@
 package elan.tweaks.common.container
 
+import elan.tweaks.common.gui.geometry.Vector2D
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
@@ -120,8 +121,8 @@ open class SpecializedContainer constructor(
     class SpecializedSlot(
         private val targetClass: Class<*>,
         inventory: IInventory, slotIndex: Int,
-        xDisplayPosition: Int, yDisplayPosition: Int
-    ) : Slot(inventory, slotIndex, xDisplayPosition, yDisplayPosition) {
+        displayPosition: Vector2D
+    ) : Slot(inventory, slotIndex, displayPosition.x, displayPosition.y) {
 
         override fun isItemValid(stack: ItemStack): Boolean {
             return stack.item != null && targetClass.isAssignableFrom(stack.item.javaClass)
@@ -130,9 +131,9 @@ open class SpecializedContainer constructor(
         companion object {
             inline fun <reified TargetClassT> specializedOn(
                 inventory: IInventory, slotIndex: Int,
-                xDisplayPosition: Int, yDisplayPosition: Int
+                displayPosition: Vector2D
             ) =
-                SpecializedSlot(TargetClassT::class.java, inventory, slotIndex, xDisplayPosition, yDisplayPosition)
+                SpecializedSlot(TargetClassT::class.java, inventory, slotIndex, displayPosition)
         }
 
     }
