@@ -24,7 +24,7 @@ abstract class ThaumcraftTextureInstance(
 
     override fun draw(origin: Vector3D) {
         GL11.glPushMatrix()
-       
+
         GL11.glEnable(GL11.GL_BLEND)
         textureManager.bindTexture(resourceLocation)
         TextureDrawer.drawTexturedRectByParts(

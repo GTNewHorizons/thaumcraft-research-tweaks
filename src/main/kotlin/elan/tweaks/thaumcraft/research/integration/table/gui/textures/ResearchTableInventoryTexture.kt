@@ -7,15 +7,15 @@ import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "research/table/research-table.png",
-    textureWidth = 300, textureHeight = 240,
+    textureWidth = 310, textureHeight = 245,
     u = 0, v = 0,
-    width = 300, height = 217
+    width = 307, height = 219
 ) {
-    val inventoryOrigin = Vector2D(x = 62, y = 190)
+    val inventoryOrigin = Vector2D(x = 67, y = 191)
     
     object Slots {
-        val scribeToolsOrigin = Vector2D(x = 70, y = 9)
-        val notesOrigin = Vector2D(x = 214, y = 9)
+        val scribeToolsOrigin = Vector2D(x = 75, y = 10)
+        val notesOrigin = Vector2D(x = 219, y = 10)
     }
 
     object AspectPools {
@@ -26,30 +26,32 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
         private val scale = Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
 
         val leftBound = Rectangle(
-            origin = Vector2D(x = 7, y = 17),
+            origin = Vector2D(x = 12, y = 12),
             scale
         )
         
         val rightBound = Rectangle(
-            origin = Vector2D(x = 245, y = 17),
+            origin = Vector2D(x = 250, y = 12),
             scale
         )
     }
 
     object ResearchArea {
         val bounds = Rectangle(
-            origin = Vector2D(75, 33),
+            origin = Vector2D(80, 35),
             scale = Scale(width, height)
         )
         val centerOrigin = bounds.origin + ParchmentTexture.centerOrigin 
     }
 
     object CopyButton {
-        const val SIZE_PIXELS = 18
-        private val uiOrigin = Vector2D(x = 189, y = 8)
+        private const val SHADOW_PIXELS = 6
+        private const val SIZE_PIXEL = 18
+        const val SIZE_WITH_SHADOW_PIXELS = SIZE_PIXEL + SHADOW_PIXELS
+        private val uiOrigin = Vector2D(x = 191, y = 6)
         val bounds = Rectangle(
             origin = uiOrigin,
-            scale = Scale(SIZE_PIXELS, SIZE_PIXELS)
+            scale = Scale(SIZE_PIXEL, SIZE_PIXEL)
         )
         val requirementsUiOrigin = ResearchArea.bounds.origin + Vector2D(x = 6, y = 4)
     }
