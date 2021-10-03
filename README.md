@@ -12,7 +12,7 @@
   - [x] Missing ink message
   - [x] Research duplication
   - [x] Fix aspect combination notification rendering
-  - [ ] UI textures
+  - [x] UI textures
   - [ ] Clean-up DI with kodein
   - [ ] Clean up TODOs:
         Basically I've mistaken client for whole piece, it's actually a "front-end" I am changing and domain logic is hidden behind domain. 
