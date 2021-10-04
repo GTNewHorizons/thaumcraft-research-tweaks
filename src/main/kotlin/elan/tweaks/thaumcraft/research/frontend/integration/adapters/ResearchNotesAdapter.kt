@@ -43,7 +43,7 @@ class ResearchNotesAdapter(
 
     override fun duplicate(): Result<Unit> {
         Minecraft.getMinecraft().playerController.sendEnchantPacket(container.windowId, DUPLICATE_ACTION_ID)
-        //tileEntity.duplicate(player)???
+
         return success()
     }
 
