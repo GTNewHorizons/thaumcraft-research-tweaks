@@ -8,6 +8,7 @@ import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTw
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.MOD_LANGUAGE_ADAPTER
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.NAME
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.VERSION
+import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftResearchGuiHandler
 
 @Mod(
     modid = MOD_ID,
@@ -28,6 +29,6 @@ object ThaumcraftResearchTweaks {
 
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(ThaumcraftResearchTweaks, GuiHandler())
+        NetworkRegistry.INSTANCE.registerGuiHandler(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())
     }
 }

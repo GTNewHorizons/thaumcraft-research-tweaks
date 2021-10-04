@@ -1,11 +1,12 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.table.mixin
 
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks
-import elan.tweaks.thaumcraft.research.frontend.integration.GuiHandler
+import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftResearchGuiHandler
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import org.spongepowered.asm.mixin.Mixin
-import org.spongepowered.asm.mixin.injection.*
+import org.spongepowered.asm.mixin.injection.At
+import org.spongepowered.asm.mixin.injection.Redirect
 import thaumcraft.common.blocks.BlockTable
 
 @Mixin(BlockTable::class)
@@ -25,7 +26,7 @@ abstract class TableBlockMixin {
     private fun correctGuiCallFor(entityPlayer: EntityPlayer, mod: Any, modGuiId: Int, world: World, x: Int, y: Int, z: Int) {
         return if (modGuiId == THAUMCRAFT_RESEARCH_TABLE_GUI_ID) {
             println("Calling new gui for guiId: $modGuiId")
-            entityPlayer.openGui(ThaumcraftResearchTweaks, GuiHandler.IDs.RESEARCH_TABLE, world, x, y, z)
+            entityPlayer.openGui(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler.IDs.RESEARCH_TABLE, world, x, y, z)
         } else {
             println("Calling original gui for guiId: $modGuiId")
             entityPlayer.openGui(mod, modGuiId, world, x, y, z)
