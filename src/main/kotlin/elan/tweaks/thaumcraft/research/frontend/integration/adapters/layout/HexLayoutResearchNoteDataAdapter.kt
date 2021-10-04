@@ -44,7 +44,7 @@ class HexLayoutResearchNoteDataAdapter(
         keyToAspectHex.values
             .map { aspectHex -> aspectHex.uiOrigin to aspectHex }
 
-    // TODO extract this to separate component, which would probably also handle note data provision
+    // TODO extract this to separate component, which would probably also handle note data provision and computation caching
     private fun keyToAspectHex(): Map<String, AspectHex> {
         val hexEntries = getHexEntries()
         val hexes = getHexes()
@@ -147,7 +147,7 @@ class HexLayoutResearchNoteDataAdapter(
 
     private val HexUtils.Hex.origin
         get() = toPixel(HexTexture.SIZE_PIXELS)
-            .run { Vector2D(x.roundToInt(), y.roundToInt()) } // TODO: This will probably backfire, if so - should consider using floats/doubles in  vectors
+            .run { Vector2D(x.roundToInt(), y.roundToInt()) }
 
     private object HexType {
         const val VACANT = 0

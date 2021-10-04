@@ -44,13 +44,12 @@ class AspectPalletUIComponent(
             drawTooltip(aspect, uiOrigin = uiMousePosition, context)
         }
 
-    // TODO: Move to texture rendering object
+    // TODO: hide all these magic numbers in some layout object
     private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
         val tooltipOrigin = uiOrigin + Vector2D(12, -20)
         context.drawTooltip(tooltipOrigin, aspect.name, aspect.localizedDescription)
 
-        // TODO: Add research check, this should be somehow passed via Domain
-        if (!aspect.isPrimal && researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+        if (aspect.hasComponents() && researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
             val firstBackgroundOrigin =  uiOrigin + Vector2D(6, 6)
             val secondBackgroundOrigin =  uiOrigin + Vector2D(24, 6)
             val backgroundOffset = Vector2D(2,2)
@@ -60,26 +59,11 @@ class AspectPalletUIComponent(
             
             context.drawBlending(AspectBackgroundTexture, secondBackgroundOrigin)
             context.drawTag(aspect.components[1], uiPosition = secondBackgroundOrigin + backgroundOffset)
-              
-//            GL11.glPushMatrix()
-//            GL11.glEnable(GL11.GL_BLEND)
-//            GL11.glBlendFunc(770, 771)
-//            UtilsFX.bindTexture("textures/aspects/_back.png")
-//            GL11.glPushMatrix()
-//            GL11.glTranslated((screenOrigin.x + 6).toDouble(), (screenOrigin.y + 6).toDouble(), 0.0)
-//            GL11.glScaled(1.25, 1.25, 0.0)
-//            UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
-//            GL11.glPopMatrix()
-//            GL11.glPushMatrix()
-//            GL11.glTranslated((screenOrigin.x + 24).toDouble(), (screenOrigin.y + 6).toDouble(), 0.0)
-//            GL11.glScaled(1.25, 1.25, 0.0)
-//            UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
-//            GL11.glPopMatrix()
-            
-//            GL11.glDisable(GL11.GL_BLEND)
-//            GL11.glPopMatrix()
         }
     }
+
+    private fun Aspect.hasComponents() = 
+        !isPrimal && components != null && components.isNotEmpty()
 
     override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
         whenAspectAt(uiMousePosition) { aspect ->

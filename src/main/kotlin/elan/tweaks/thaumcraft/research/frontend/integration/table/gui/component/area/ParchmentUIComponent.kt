@@ -83,7 +83,7 @@ class ParchmentUIComponent(
         keysToRunes -= decayedRunes.keys
     }
 
-    // TODO: Hide rune lifecycle to some kind of container
+    // TODO: wrap lifecycle in container
     data class Rune(
         val uiOrigin: VectorXY,
         var totalLifetime: Float

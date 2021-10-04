@@ -3,7 +3,7 @@ package elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout
 import elan.tweaks.common.gui.dto.VectorXY
 import thaumcraft.api.aspects.Aspect
 
-// TODO: probably something similar (without coordinates && UI stuff) must lend in domain
+// TODO: consider something similar (without coordinates && UI stuff) for domain in case of backend part rewrite
 sealed class AspectHex {
     abstract val uiOrigin: VectorXY
 

@@ -18,7 +18,7 @@ class AspectHexMapUIComponent(
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (research.missingNotes()) return
 
-        // with current highlight texture best effect us achieved when drawing it under border, TODO: combined texture to draw over with
+        // with current highlight texture best effect us achieved when drawing it under border
         drawMouseOverHighlight(uiMousePosition, context)
         drawHexes(context)
     }

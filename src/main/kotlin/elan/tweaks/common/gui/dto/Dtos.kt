@@ -4,6 +4,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+// TODO: consider moving everything to float/double instead of ints (all is convert to them in the end anyway...)
 data class Rgba(
     val r: Float,
     val g: Float,
