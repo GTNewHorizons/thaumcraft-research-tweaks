@@ -2,8 +2,7 @@ package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component
 
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
-import elan.tweaks.common.gui.fx.OrbParticle
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
 import thaumcraft.api.aspects.Aspect
 
@@ -34,8 +33,8 @@ class AspectDragAndDropUIComponent(
             draggable = null
             return
         }
-
-        OrbParticle.draw(context.toScreenOrigin(uiMousePosition), draggedAspect.color)
+        
+        context.drawOrb(uiMousePosition, draggedAspect.color)
     }
 
 

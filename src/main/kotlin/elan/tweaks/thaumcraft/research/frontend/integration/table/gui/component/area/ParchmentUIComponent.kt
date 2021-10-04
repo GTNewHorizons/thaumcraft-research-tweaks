@@ -1,27 +1,24 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area
 
-import elan.tweaks.common.ext.drawQuads
 import elan.tweaks.common.gui.component.BackgroundUIComponent
 import elan.tweaks.common.gui.component.TickingUIComponent
 import elan.tweaks.common.gui.component.UIContext
-import elan.tweaks.common.gui.geometry.HexVector
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.Vector3D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.HexVector
+import elan.tweaks.common.gui.dto.Rgba
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ParchmentTexture
-import net.minecraft.client.renderer.Tessellator
-import org.lwjgl.opengl.GL11
-import thaumcraft.client.lib.UtilsFX
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.RuneTexture
 
 class ParchmentUIComponent(
     private val research: ResearchProcessPort,
     private val hexLayout: HexLayout<AspectHex>,
     private val uiOrigin: VectorXY,
     private val runeLimit: Int,
-    private val hexSize: Int,
     private val centerOffset: VectorXY,
 ) : BackgroundUIComponent, TickingUIComponent {
 
@@ -35,26 +32,14 @@ class ParchmentUIComponent(
     }
 
     private fun drawParchment(context: UIContext) {
-        ParchmentTexture.draw(
-            origin = context.toScreenOrigin(uiOrigin)
-        )
+        context.drawBlending(ParchmentTexture, uiOrigin)
     }
 
     private fun drawRunes(context: UIContext) {
-        GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
         keysToRunes.values.forEach { rune ->
-            val screenOrigin = context.toScreenOrigin(rune.uiOrigin)
-            var alpha = 0.5f
-            if (rune.decayProgress < 0.25f) {
-                alpha = rune.decayProgress * 2.0f
-            } else if (rune.decayProgress > 0.5f) {
-                alpha = 1.0f - rune.decayProgress
-            }
-
-            drawRune(screenOrigin, rune.index, alpha * 0.66f)
+            val colorMask = Rgba(0f, 0f, 0f, rune.alpha )
+            context.drawBlending(rune.texture, rune.uiOrigin, colorMask)
         }
-        GL11.glPopMatrix()
     }
 
     override fun onTick(partialTicks: Float, context: UIContext) {
@@ -66,15 +51,15 @@ class ParchmentUIComponent(
     }
 
     private fun introduceRunes(context: UIContext) {
-        if (research.missingNotes() || keysToRunes.size > runeLimit) return
+        if (research.missingNotes() || keysToRunes.size >= runeLimit) return
 
         val vector = Vector2D(
             x = (20..130).random(),
             y = (15..130).random()
         ) - centerOffset
-        val hex = HexVector.roundedFrom(vector, hexSize)
+        val hex = HexVector.roundedFrom(vector, HexTexture.SIZE_PIXELS)
 
-        val runeUiOrigin = hex.toVector(hexSize) + uiOrigin + centerOffset
+        val runeUiOrigin = hex.toVector(HexTexture.SIZE_PIXELS) + uiOrigin + centerOffset - HexTexture.SIZE_PIXELS + 1
 
         val aspectHex = hexLayout[runeUiOrigin]
         if (
@@ -83,9 +68,8 @@ class ParchmentUIComponent(
             || keysToRunes.containsKey(hex.key)) return
 
         val rune = Rune(
-            index = (0..16).random(), // TODO: move range to texture object?
             uiOrigin = runeUiOrigin,
-            totalLifetime = (200 + context.nextRandomInt(600)).toFloat()
+            totalLifetime = 200f + context.random.nextInt(700)
         )
         keysToRunes += hex.key to rune
     }
@@ -99,34 +83,22 @@ class ParchmentUIComponent(
         keysToRunes -= decayedRunes.keys
     }
 
-    private fun drawRune(screenOrigin: Vector3D, index: Int, alpha: Float) {
-        GL11.glPushMatrix()
-        UtilsFX.bindTexture("textures/misc/script.png")
-        GL11.glColor4f(0.0f, 0.0f, 0.0f, alpha)
-        GL11.glTranslated(screenOrigin.x.toDouble(), screenOrigin.y.toDouble(), 0.0)
-        if (index < 16) {
-            GL11.glRotatef(90.0f, 0.0f, 0.0f, -1.0f)
-        }
-        val var8 = 0.0625f * index.toFloat()
-        val var9 = var8 + 0.0625f
-        val var10 = 0.0f
-        val var11 = 1.0f
-        Tessellator.instance.drawQuads {
-            setColorRGBA_F(0.0f, 0.0f, 0.0f, alpha)
-            addVertexWithUV(-5.0, 5.0, screenOrigin.z, var9.toDouble(), var11.toDouble())
-            addVertexWithUV(5.0, 5.0, screenOrigin.z, var9.toDouble(), var10.toDouble())
-            addVertexWithUV(5.0, -5.0, screenOrigin.z, var8.toDouble(), var10.toDouble())
-            addVertexWithUV(-5.0, -5.0, screenOrigin.z, var8.toDouble(), var11.toDouble())
-        }
-        GL11.glPopMatrix()
-    }
-
+    // TODO: Hide rune lifecycle to some kind of container
     data class Rune(
-        val index: Int,
         val uiOrigin: VectorXY,
         var totalLifetime: Float
     ) {
-        val decayProgress get() = timeToDecayTicks / totalLifetime
+        val texture: RuneTexture = RuneTexture.random()
+
+        val alpha
+            get() = 0.66f * when {
+                decayProgress < 0.25f -> decayProgress * 2.0f
+                decayProgress > 0.5f -> 1.0f - decayProgress
+                else -> 0.5f
+            }
+
+        private val decayProgress get() = timeToDecayTicks / totalLifetime
+        
         val decayed get() = timeToDecayTicks <= 0
         var timeToDecayTicks: Float = totalLifetime
     }

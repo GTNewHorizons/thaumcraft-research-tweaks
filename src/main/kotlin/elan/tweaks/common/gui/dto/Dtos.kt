@@ -1,11 +1,22 @@
-package elan.tweaks.common.gui.geometry
+package elan.tweaks.common.gui.dto
 
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+data class Rgba(
+    val r: Float,
+    val g: Float,
+    val b: Float,
+    val a: Float,
+)
+
 data class UV(val u: Int, val v: Int)
-data class Scale(val width: Int, val height: Int)
+data class Scale(val width: Int, val height: Int) {
+    companion object {
+        fun cube(side: Int) = Scale(side, side)
+    }
+}
 
 interface VectorXY {
     val x: Int

@@ -2,13 +2,13 @@ package elan.tweaks.common.gui.fx
 
 import cpw.mods.fml.client.FMLClientHandler
 import elan.tweaks.common.ext.draw
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.VectorXY
 import net.minecraft.client.renderer.Tessellator
 import org.lwjgl.opengl.GL11
 import kotlin.math.sin
 
 object LineParticle {
-    fun draw(start: VectorXY, end: VectorXY) {
+    fun draw(from: VectorXY, to: VectorXY) {
         val count = nextValueOfSlowlyGrowingFunction()
         
         val alpha = 0.3 + sin(count.toDouble()) * 0.3 + 0.3
@@ -18,8 +18,8 @@ object LineParticle {
         GL11.glBlendFunc(770, 1)
         Tessellator.instance.draw(3) {
             setColorRGBA_F(0.0f, 0.6f, 0.8f, alpha.toFloat())
-            addVertex(start.x.toDouble(), start.y.toDouble(), 0.0)
-            addVertex(end.x.toDouble(), end.y.toDouble(), 0.0)
+            addVertex(from.x.toDouble(), from.y.toDouble(), 0.0)
+            addVertex(to.x.toDouble(), to.y.toDouble(), 0.0)
         }
         GL11.glBlendFunc(770, 771)
         GL11.glDisable(32826)

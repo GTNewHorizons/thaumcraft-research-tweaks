@@ -1,8 +1,7 @@
 package elan.tweaks.thaumcraft.research.client.gui
 
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.Vector3D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.VectorXY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

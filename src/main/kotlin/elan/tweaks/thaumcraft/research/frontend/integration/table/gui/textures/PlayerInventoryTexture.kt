@@ -1,13 +1,15 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures
 
-import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.dto.Scale
+import elan.tweaks.common.gui.dto.UV
+import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object PlayerInventoryTexture : ThaumcraftTextureInstance(
-    "gui/guiresearchtable2.png", 
-    textureWidth = 256,
-    u = 0, v = 167,
-    width = 176, height = 88
+    "gui/guiresearchtable2.png",
+    textureScale = Scale.cube(256),
+    uv = UV(0, 167),
+    uvScale = Scale(width = 176, height = 88)
 ) {
     const val SLOT_SIZE_PIXELS = 18
     val internalRowIndexes = 0..2

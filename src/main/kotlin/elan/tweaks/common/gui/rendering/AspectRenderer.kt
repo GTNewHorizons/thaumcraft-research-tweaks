@@ -1,17 +1,17 @@
-package elan.tweaks.common.gui.drawing
+package elan.tweaks.common.gui.rendering
 
-import elan.tweaks.common.gui.geometry.Vector3D
+import elan.tweaks.common.gui.dto.Vector3D
 import net.minecraft.client.renderer.RenderHelper
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.client.lib.UtilsFX
 
-object AspectDrawer {
-    fun drawTag(screenOrigin: Vector3D, aspect: Aspect?, amount: Float = 0f, bonus: Int = 0, blend: Int = 771, alpha: Float = 1f) {
-        UtilsFX.drawTag(screenOrigin.x, screenOrigin.y, aspect, amount, bonus, screenOrigin.z, blend, alpha, false)
+object AspectRenderer {
+    fun drawTag(screenOrigin: Vector3D, aspect: Aspect?, amount: Int = 0, bonus: Int = 0, blend: Int = 771, alpha: Float = 1f) {
+        UtilsFX.drawTag(screenOrigin.x, screenOrigin.y, aspect, amount.toFloat(), bonus, screenOrigin.z, blend, alpha, false)
         RenderHelper.disableStandardItemLighting()
     }
 
-    fun drawMonochromeTag(screenOrigin: Vector3D, aspect: Aspect?, alpha: Float) {
+    fun drawTagMonochrome(screenOrigin: Vector3D, aspect: Aspect?, alpha: Float) {
         UtilsFX.drawTag(screenOrigin.x.toDouble(), screenOrigin.y.toDouble(), aspect, ZERO_AMOUNT, ZERO_BONUS, screenOrigin.z, BLEND, alpha, true)
         RenderHelper.disableStandardItemLighting()
     }

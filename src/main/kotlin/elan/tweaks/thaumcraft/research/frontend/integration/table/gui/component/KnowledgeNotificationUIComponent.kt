@@ -2,8 +2,8 @@ package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component
 
 import elan.tweaks.common.gui.component.ForegroundUIComponent
 import elan.tweaks.common.gui.component.UIContext
-import elan.tweaks.common.gui.geometry.Scale
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.Scale
+import elan.tweaks.common.gui.dto.VectorXY
 import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.PlayerNotifications
 import thaumcraft.common.Thaumcraft

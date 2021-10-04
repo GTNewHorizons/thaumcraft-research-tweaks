@@ -4,7 +4,7 @@ import elan.tweaks.common.gui.component.ClickableUIComponent
 import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
@@ -65,7 +65,7 @@ class AspectHexMapEditorUIComponent(
     }
 
     private fun UIContext.playCombine() = apply {
-        playSoundOnEntity(
+        playSound(
             soundName = "thaumcraft:hhon",
             volume = 0.3f,
             pitch = 1.0f,
@@ -74,7 +74,7 @@ class AspectHexMapEditorUIComponent(
     }
 
     private fun UIContext.playWrite() = apply {
-        playSoundOnEntity(
+        playSound(
             soundName = "thaumcraft:write",
             volume = 0.2f,
             pitch = 1.0f,
@@ -83,10 +83,10 @@ class AspectHexMapEditorUIComponent(
     }
 
     private fun UIContext.playErase() = apply {
-        playSoundOnEntity(
+        playSound(
             soundName = "thaumcraft:erase",
             volume = 0.2f,
-            pitch = 1.0f + nextRandomFloat() * 0.1f,
+            pitch = 1.0f + random.nextFloat() * 0.1f,
             distanceDelay = false
         )
     }

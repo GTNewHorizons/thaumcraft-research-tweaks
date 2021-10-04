@@ -1,15 +1,14 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures
 
-import elan.tweaks.common.gui.geometry.Rectangle
-import elan.tweaks.common.gui.geometry.Scale
-import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.dto.Rectangle
+import elan.tweaks.common.gui.dto.Scale
+import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 
 object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "research/table/research-table.png",
-    textureWidth = 310, textureHeight = 245,
-    u = 0, v = 0,
-    width = 310, height = 219
+    textureScale = Scale(width = 310, height =  245),
+    uvScale = Scale(width = 310, height =  219)
 ) {
     val inventoryOrigin = Vector2D(x = 67, y = 191)
     
@@ -39,7 +38,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     object ResearchArea {
         val bounds = Rectangle(
             origin = Vector2D(80, 35),
-            scale = Scale(width, height)
+            scale = ParchmentTexture.scale
         )
         val centerOrigin = bounds.origin + ParchmentTexture.centerOrigin 
     }

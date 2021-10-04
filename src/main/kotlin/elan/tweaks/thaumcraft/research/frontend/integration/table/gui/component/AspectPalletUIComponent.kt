@@ -7,23 +7,22 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
-import elan.tweaks.common.gui.drawing.AspectDrawer
-import elan.tweaks.common.gui.drawing.TooltipDrawer
-import elan.tweaks.common.gui.drawing.TooltipDrawer.TextColors
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.AspectBackgroundTexture
 import net.minecraft.client.gui.inventory.GuiContainer.isCtrlKeyDown
 import net.minecraft.client.gui.inventory.GuiContainer.isShiftKeyDown
-import org.lwjgl.opengl.GL11
 import thaumcraft.api.aspects.Aspect
-import thaumcraft.client.lib.UtilsFX
 
 class AspectPalletUIComponent(
     private val aspectGrid: GridLayout<Aspect>,
-    private val pallet: AspectPalletPort
+    private val pallet: AspectPalletPort,
+    private val researcher: ResearcherKnowledgePort
 ) : BackgroundUIComponent, MouseOverUIComponent, ClickableUIComponent,
     DraggableSourceUIComponent, DropDestinationUIComponent, DragClickableDestinationUIComponent {
 
@@ -32,13 +31,11 @@ class AspectPalletUIComponent(
             .asOriginList()
             .forEach { (uiOrigin, aspect) ->
                 val (amount, bonusAmount) = pallet.amountAndBonusOf(aspect)
-                val screenOrigin = context.toScreenOrigin(uiOrigin)
 
-                // TODO: Hide this behind some aspect drawing component
-                AspectDrawer.drawTag(
-                    screenOrigin,
-                    aspect, amount.toFloat(), bonusAmount,
-                    alpha = if (pallet.isDrainedOf(aspect)) 0.33f else 1.0f
+                context.drawTag(
+                    aspect, amount, bonusAmount,
+                    alpha = if (pallet.isDrainedOf(aspect)) 0.33f else 1.0f,
+                    uiPosition = uiOrigin
                 )
             }
 
@@ -49,33 +46,38 @@ class AspectPalletUIComponent(
 
     // TODO: Move to texture rendering object
     private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
-        val screenOrigin = context.toScreenOrigin(uiOrigin)
-        val textOrigin = screenOrigin + Vector2D(12, -20)
-        TooltipDrawer.draw(
-            context, listOf(aspect.name, aspect.localizedDescription), textOrigin, TextColors.LIGHT_BLUE
-        )
+        val tooltipOrigin = uiOrigin + Vector2D(12, -20)
+        context.drawTooltip(tooltipOrigin, aspect.name, aspect.localizedDescription)
+
         // TODO: Add research check, this should be somehow passed via Domain
-        if (!aspect.isPrimal) {
-            GL11.glPushMatrix()
-            GL11.glEnable(GL11.GL_BLEND)
-            GL11.glBlendFunc(770, 771)
-            UtilsFX.bindTexture("textures/aspects/_back.png")
-            GL11.glPushMatrix()
-            GL11.glTranslated((screenOrigin.x + 6).toDouble(), (screenOrigin.y + 6).toDouble(), 0.0)
-            GL11.glScaled(1.25, 1.25, 0.0)
-            UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
-            GL11.glPopMatrix()
-            GL11.glPushMatrix()
-            GL11.glTranslated((screenOrigin.x + 24).toDouble(), (screenOrigin.y + 6).toDouble(), 0.0)
-            GL11.glScaled(1.25, 1.25, 0.0)
-            UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
-            GL11.glPopMatrix()
-
-            AspectDrawer.drawTag(screenOrigin + Vector2D(8,8), aspect.components[0], 0.0f, 0)
-            AspectDrawer.drawTag(screenOrigin + Vector2D(26,8), aspect.components[1], 0.0f, 0)
-
-            GL11.glDisable(GL11.GL_BLEND)
-            GL11.glPopMatrix()
+        if (!aspect.isPrimal && researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+            val firstBackgroundOrigin =  uiOrigin + Vector2D(6, 6)
+            val secondBackgroundOrigin =  uiOrigin + Vector2D(24, 6)
+            val backgroundOffset = Vector2D(2,2)
+            
+            context.drawBlending(AspectBackgroundTexture, firstBackgroundOrigin)
+            context.drawTag(aspect.components[0], uiPosition = firstBackgroundOrigin + backgroundOffset)
+            
+            context.drawBlending(AspectBackgroundTexture, secondBackgroundOrigin)
+            context.drawTag(aspect.components[1], uiPosition = secondBackgroundOrigin + backgroundOffset)
+              
+//            GL11.glPushMatrix()
+//            GL11.glEnable(GL11.GL_BLEND)
+//            GL11.glBlendFunc(770, 771)
+//            UtilsFX.bindTexture("textures/aspects/_back.png")
+//            GL11.glPushMatrix()
+//            GL11.glTranslated((screenOrigin.x + 6).toDouble(), (screenOrigin.y + 6).toDouble(), 0.0)
+//            GL11.glScaled(1.25, 1.25, 0.0)
+//            UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
+//            GL11.glPopMatrix()
+//            GL11.glPushMatrix()
+//            GL11.glTranslated((screenOrigin.x + 24).toDouble(), (screenOrigin.y + 6).toDouble(), 0.0)
+//            GL11.glScaled(1.25, 1.25, 0.0)
+//            UtilsFX.drawTexturedQuadFull(0, 0, 0.0)
+//            GL11.glPopMatrix()
+            
+//            GL11.glDisable(GL11.GL_BLEND)
+//            GL11.glPopMatrix()
         }
     }
 
@@ -103,10 +105,10 @@ class AspectPalletUIComponent(
         isShiftKeyDown()
 
     private fun UIContext.playButtonAspect() {
-        playSoundOnEntity(
+        playSound(
             "thaumcraft:hhoff",
             0.2f,
-            1.0f + nextRandomFloat() * 0.1f,
+            1.0f + random.nextFloat() * 0.1f,
             false
         )
     }
@@ -141,7 +143,7 @@ class AspectPalletUIComponent(
     }
 
     private fun UIContext.playCombine() = apply {
-        playSoundOnEntity(
+        playSound(
             soundName = "thaumcraft:hhon",
             volume = 0.3f,
             pitch = 1.0f,

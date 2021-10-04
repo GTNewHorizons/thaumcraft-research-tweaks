@@ -2,7 +2,7 @@ package elan.tweaks.common.gui.fx
 
 import cpw.mods.fml.client.FMLClientHandler
 import elan.tweaks.common.ext.drawQuads
-import elan.tweaks.common.gui.geometry.Vector3D
+import elan.tweaks.common.gui.dto.Vector3D
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.MathHelper
@@ -28,8 +28,7 @@ object OrbParticle {
         RenderHelper.disableStandardItemLighting()
         GL11.glEnable(GL11.GL_BLEND)
 
-        val seconds = nextValueOfSlowlyGrowingFunction()
-        val ticks = FMLClientHandler.instance().client.thePlayer.ticksExisted
+        val growingFunctionValue = nextValueOfSlowlyGrowingFunction()
         val c = Color(color)
         var red = c.red.toFloat() / 255.0f
         var green = c.green.toFloat() / 255.0f
@@ -42,7 +41,7 @@ object OrbParticle {
         UtilsFX.bindTexture(ParticleEngine.particleTexture)
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
         GL11.glTranslated(screenOrigin.x - 8.0, screenOrigin.y - 8.0, 0.0)
-        val part = seconds % 8
+        val part = growingFunctionValue % 8
         val var8 = 0.5f + part.toFloat() / 8.0f
         val var9 = var8 + 0.0624375f
         val var10 = 0.5f

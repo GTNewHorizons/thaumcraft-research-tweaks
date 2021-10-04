@@ -1,6 +1,6 @@
 package elan.tweaks.common.container
 
-import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.dto.Vector2D
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory

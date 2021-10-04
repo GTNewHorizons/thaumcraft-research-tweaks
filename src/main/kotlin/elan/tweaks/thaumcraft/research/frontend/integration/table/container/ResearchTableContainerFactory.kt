@@ -2,7 +2,7 @@ package elan.tweaks.thaumcraft.research.frontend.integration.table.container
 
 import elan.tweaks.common.container.SpecializedContainer
 import elan.tweaks.common.container.SpecializedContainer.SpecializedSlot.Companion.specializedOn
-import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.PlayerInventoryTexture
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.InventoryPlayer

@@ -1,6 +1,6 @@
 package elan.tweaks.common.gui.layout
 
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.VectorXY
 
 interface Layout<ElementT> {
     operator fun contains(uiPoint: VectorXY): Boolean

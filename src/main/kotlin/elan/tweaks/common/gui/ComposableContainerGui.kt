@@ -5,10 +5,9 @@ import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
-import elan.tweaks.common.gui.geometry.Scale
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.Vector3D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.Scale
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.Vector3D
 import elan.tweaks.common.gui.peripheral.MouseButton
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -17,15 +16,14 @@ import net.minecraft.inventory.Container
 class ComposableContainerGui(
     scale: Scale,
     container: Container,
-    components: List<UIComponent>
-) : GuiContainer(container), UIContext {
+    components: List<UIComponent>,
+    private val contextProvider: (Vector3D, FontRenderer) -> UIContext
+) : GuiContainer(container) {
 
     init {
         super.xSize = scale.width
         super.ySize = scale.height
     }
-    override val fontRenderer: FontRenderer get() = fontRendererObj
-
     private val backgrounds = components.filterIsInstance<BackgroundUIComponent>()
     private val foregrounds = components.filterIsInstance<ForegroundUIComponent>()
     private val tickables = components.filterIsInstance<TickingUIComponent>()
@@ -37,28 +35,7 @@ class ComposableContainerGui(
     private val dragAndDrops = components.filterIsInstance<DragAndDropUIComponent>()
 
     private val uiScreenOrigin get() = Vector3D(x = guiLeft, y = guiTop, z = zLevel.toDouble())
-
-    override fun toScreenOrigin(vectorXY: VectorXY): Vector3D =
-        uiScreenOrigin + vectorXY
-
-    override fun setItemRenderZLevel(z: Float) {
-        itemRender.zLevel = z
-    }
-
-    override fun playSoundOnEntity(soundName: String, volume: Float, pitch: Float, distanceDelay: Boolean) {
-        val entity = mc.renderViewEntity
-        entity.worldObj.playSound(
-            entity.posX, entity.posY, entity.posZ,
-            soundName,
-            volume, pitch, distanceDelay
-        )
-    }
-
-    override fun nextRandomFloat(): Float =
-        mc.renderViewEntity.worldObj.rand.nextFloat()
-
-    override fun nextRandomInt(bound: Int): Int =
-        mc.renderViewEntity.worldObj.rand.nextInt(bound)
+    private val context get() = contextProvider(uiScreenOrigin, fontRendererObj)
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
@@ -74,21 +51,21 @@ class ComposableContainerGui(
 
     private fun handleDragging(uiMousePosition: Vector3D) {
         dragAndDrops.forEach { dragAndDrop ->
-            dragAndDrop.onDragging(uiMousePosition, context = this)
+            dragAndDrop.onDragging(uiMousePosition, context)
         }
     }
 
     private fun handleDropping(uiMousePosition: Vector3D, partialTicks: Float) {
-        val draggables = dragAndDrops.mapNotNull { it.onDropping(context = this) }
+        val draggables = dragAndDrops.mapNotNull { it.onDropping(context) }
         dropDestinations.forEach { destination ->
             draggables.forEach { draggable ->
-                destination.onDropped(draggable, uiMousePosition, partialTicks, context = this)
+                destination.onDropped(draggable, uiMousePosition, partialTicks, context)
             }
         }
     }
 
     private fun handleMouseOver(uiMousePosition: Vector3D, partialTicks: Float) {
-        mouseOverables.forEach { it.onMouseOver(uiMousePosition, partialTicks, context = this) }
+        mouseOverables.forEach { it.onMouseOver(uiMousePosition, partialTicks, context) }
     }
 
     override fun drawGuiContainerBackgroundLayer(partialTicks: Float, mouseX: Int, mouseY: Int) {
@@ -98,17 +75,17 @@ class ComposableContainerGui(
     }
 
     private fun drawBackgrounds(mousePosition: Vector3D, partialTicks: Float) {
-        backgrounds.forEach { it.onDrawBackground(mousePosition, partialTicks, context = this) }
+        backgrounds.forEach { it.onDrawBackground(mousePosition, partialTicks, context) }
     }
 
     override fun drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int) {
         val mousePosition = uiMousePosition(mouseX, mouseY)
         val scale = Scale(width = width, height = height)
-        foregrounds.forEach { it.onDrawForeground(mousePosition, scale, context = this) }
+        foregrounds.forEach { it.onDrawForeground(mousePosition, scale, context) }
     }
 
     private fun callTickables(partialTicks: Float) {
-        tickables.forEach { it.onTick(partialTicks, context = this) }
+        tickables.forEach { it.onTick(partialTicks, context) }
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, buttonIndex: Int) {
@@ -126,23 +103,23 @@ class ComposableContainerGui(
     }
 
     private fun handleDragClickables(uiMousePosition: Vector3D, button: MouseButton) {
-        val draggables = dragAndDrops.mapNotNull { it.onDragClick(context = this) }
+        val draggables = dragAndDrops.mapNotNull { it.onDragClick(context) }
         dragClickables.forEach { destination ->
             draggables.forEach { draggable ->
-                destination.onDragClick(draggable, uiMousePosition, button, context = this)
+                destination.onDragClick(draggable, uiMousePosition, button, context)
             }
         }
     }
 
     private fun handleDragAttempt(uiMousePosition: Vector3D) {
-        val draggables = draggableSources.mapNotNull { it.onDrag(uiMousePosition, context = this) }
+        val draggables = draggableSources.mapNotNull { it.onDrag(uiMousePosition, context) }
         dragAndDrops.forEach { dragAndDrop ->
-            dragAndDrop.onAttemptDrag(draggables, uiMousePosition, context = this)
+            dragAndDrop.onAttemptDrag(draggables, uiMousePosition, context)
         }
     }
 
     private fun handleClickables(uiMousePosition: Vector3D, button: MouseButton) {
-        clickables.forEach { it.onMouseClicked(uiMousePosition, button, context = this) }
+        clickables.forEach { it.onMouseClicked(uiMousePosition, button, context) }
     }
 
     private fun uiMousePosition(mouseX: Int, mouseY: Int) =
@@ -152,7 +129,8 @@ class ComposableContainerGui(
         fun gui(
             scale: Scale,
             container: Container,
-            components: List<UIComponent>
-        ) = ComposableContainerGui(scale, container = container, components = components)
+            components: List<UIComponent>,
+            contextProvider: (Vector3D, FontRenderer) -> UIContext
+        ) = ComposableContainerGui(scale, container = container, components = components, contextProvider)
     }
 }

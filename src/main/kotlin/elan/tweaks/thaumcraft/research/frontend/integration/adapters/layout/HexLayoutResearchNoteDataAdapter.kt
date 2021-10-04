@@ -1,13 +1,14 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout
 
-import elan.tweaks.common.gui.geometry.HexVector
-import elan.tweaks.common.gui.geometry.Rectangle
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.HexVector
+import elan.tweaks.common.gui.dto.Rectangle
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.lib.utils.HexUtils
 import java.util.*
@@ -15,7 +16,6 @@ import kotlin.math.roundToInt
 
 class HexLayoutResearchNoteDataAdapter(
     private val bounds: Rectangle, // TODO: generalize bounds to origin and contains operator and use circular bounds here
-    private val hexSize: Int,
     private val centerUiOrigin: VectorXY,
     private val aspectTree: AspectsTreePort,
     private val researcher: ResearcherKnowledgePort,
@@ -37,12 +37,12 @@ class HexLayoutResearchNoteDataAdapter(
         return keyToAspectHex[hexKey]
     }
 
-    private fun VectorXY.toHexKey(): String = 
-        HexVector.roundedFrom(this - centerUiOrigin, hexSize).key
+    private fun VectorXY.toHexKey(): String =
+        HexVector.roundedFrom(this - centerUiOrigin, HexTexture.SIZE_PIXELS).key
 
     override fun asOriginList(): List<Pair<VectorXY, AspectHex>> =
         keyToAspectHex.values
-            .map { aspectHex -> aspectHex.uiCenterOrigin to aspectHex }
+            .map { aspectHex -> aspectHex.uiOrigin to aspectHex }
 
     // TODO extract this to separate component, which would probably also handle note data provision
     private fun keyToAspectHex(): Map<String, AspectHex> {
@@ -64,37 +64,37 @@ class HexLayoutResearchNoteDataAdapter(
         keyToNeighbourKeys: Map<String, Set<String>>,
         traversedKeys: Set<String>
     ): AspectHex {
-        val uiCenter = hexes.getUiCenterBy(key)
-        val uiOrigin = uiCenter - hexSize + 1 // TODO: move to hex texture object? or is it an issue of rounding when getting origin?
+        val uiCenter = hexes.getUiCenter(key)
+        val uiOrigin = HexTexture.toOrigin(uiCenter)
         val connections =
             keyToNeighbourKeys
                 .getOrDefault(key, emptySet())
-                .map { neighbourKey -> hexes.getUiCenterBy(neighbourKey) }
+                .map { neighbourKey -> hexes.getUiCenter(neighbourKey) }
                 .toSet()
 
         return when (type) {
             HexType.ROOT -> AspectHex.Occupied.Root(
                 uiOrigin = uiOrigin,
-                uiCenterOrigin = uiCenter,
+                uiCenter = uiCenter,
                 aspect = aspect,
                 connectionTargetsCenters = connections
             )
             HexType.NODE -> AspectHex.Occupied.Node(
                 key = key,
                 uiOrigin = uiOrigin,
-                uiCenterOrigin = uiCenter,
+                uiCenter = uiCenter,
                 aspect = aspect,
                 onRootPath = key in traversedKeys,
                 connectionTargetsCenters = connections
             )
             else -> AspectHex.Vacant(
                 key = key,
-                uiCenterOrigin = uiCenter,
+                uiOrigin = uiOrigin,
             )
         }
     }
 
-    private fun Map<String, HexUtils.Hex>.getUiCenterBy(key: String) =
+    private fun Map<String, HexUtils.Hex>.getUiCenter(key: String) =
         getValue(key).origin + centerUiOrigin
 
 
@@ -146,7 +146,7 @@ class HexLayoutResearchNoteDataAdapter(
     private fun HexUtils.Hex.neighborKey(index: Int) = getNeighbour(index).toString()
 
     private val HexUtils.Hex.origin
-        get() = toPixel(hexSize)
+        get() = toPixel(HexTexture.SIZE_PIXELS)
             .run { Vector2D(x.roundToInt(), y.roundToInt()) } // TODO: This will probably backfire, if so - should consider using floats/doubles in  vectors
 
     private object HexType {

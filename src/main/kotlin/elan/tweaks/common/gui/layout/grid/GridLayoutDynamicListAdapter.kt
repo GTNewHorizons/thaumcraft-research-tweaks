@@ -1,8 +1,8 @@
 package elan.tweaks.common.gui.layout.grid
 
-import elan.tweaks.common.gui.geometry.Rectangle
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.Rectangle
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.VectorXY
 
 class GridLayoutDynamicListAdapter<ElementT>(
     private val bounds: Rectangle,

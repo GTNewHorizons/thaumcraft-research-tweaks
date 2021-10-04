@@ -3,9 +3,9 @@ package elan.tweaks.thaumcraft.research.frontend.integration.table.gui
 import elan.tweaks.common.gui.ComposableContainerGui.Companion.gui
 import elan.tweaks.common.gui.component.UIComponent
 import elan.tweaks.common.gui.component.texture.TextureBackgroundUIComponent.Companion.background
-import elan.tweaks.common.gui.geometry.Rectangle
-import elan.tweaks.common.gui.geometry.Scale
-import elan.tweaks.common.gui.geometry.Vector2D
+import elan.tweaks.common.gui.dto.Rectangle
+import elan.tweaks.common.gui.dto.Scale
+import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
@@ -15,6 +15,7 @@ import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPr
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.table.TableUIContext
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.*
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapUIComponent
@@ -32,8 +33,8 @@ import thaumcraft.common.tiles.TileResearchTable
 object ResearchTableGuiFactory {
 
     private val guiScale = Scale(
-        width = ResearchTableInventoryTexture.width,
-        height = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
+        width = ResearchTableInventoryTexture.scale.width,
+        height = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.scale.height
     )
 
     fun create(
@@ -51,7 +52,9 @@ object ResearchTableGuiFactory {
                     + ScribeToolsNotificationUIComponent(research, ResearchArea.centerOrigin)
                     + AspectDragAndDropUIComponent(pallet)
                     + KnowledgeNotificationUIComponent()
-        )
+        ) { screenOrigin, fontRenderer ->
+            TableUIContext(screenOrigin, fontRenderer)
+        }
     }
 
     private fun tableAndInventoryBackgrounds() = listOf(
@@ -66,13 +69,11 @@ object ResearchTableGuiFactory {
     )
 
     private fun researchArea(research: ResearchProcessPort, researcher: ResearcherKnowledgePort): Set<UIComponent> {
-        val hexSize = 9 // TODO: move to hex texture constants
 
         val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
             bounds = ResearchArea.bounds,
             centerUiOrigin = ResearchArea.centerOrigin,
             aspectTree = AspectTree(),
-            hexSize = hexSize,
             researcher = researcher,
             researchProcess = research
         )
@@ -82,9 +83,8 @@ object ResearchTableGuiFactory {
                 research = research,
                 uiOrigin = ResearchArea.bounds.origin,
 
-                runeLimit = 15,
+                runeLimit = 16,
 
-                hexSize = hexSize,
                 centerOffset = ParchmentTexture.centerOrigin,
                 hexLayout = hexLayout,
             ),
@@ -132,6 +132,7 @@ object ResearchTableGuiFactory {
         return AspectPalletUIComponent(
             aspectPalletGrid,
             pallet,
+            researcher
         )
     }
 

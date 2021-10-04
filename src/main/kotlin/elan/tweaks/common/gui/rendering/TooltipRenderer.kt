@@ -1,52 +1,51 @@
-package elan.tweaks.common.gui.drawing
+package elan.tweaks.common.gui.rendering
 
-import elan.tweaks.common.gui.component.UIContext
-import elan.tweaks.common.gui.drawing.TooltipDrawer.ColorsHexValues.BLACK
-import elan.tweaks.common.gui.drawing.TooltipDrawer.ColorsHexValues.PURPLE
-import elan.tweaks.common.gui.drawing.TooltipDrawer.Distances.BORDER_HEIGHT
-import elan.tweaks.common.gui.drawing.TooltipDrawer.Distances.HEADER_SPACING
-import elan.tweaks.common.gui.drawing.TooltipDrawer.Distances.LINE_HEIGHT
-import elan.tweaks.common.gui.drawing.TooltipDrawer.TextColors.GRAY
-import elan.tweaks.common.gui.geometry.Scale
-import elan.tweaks.common.gui.geometry.Vector2D
-import elan.tweaks.common.gui.geometry.VectorXY
+import elan.tweaks.common.gui.dto.Scale
+import elan.tweaks.common.gui.dto.Vector2D
+import elan.tweaks.common.gui.dto.VectorXY
+import elan.tweaks.common.gui.rendering.TooltipRenderer.ColorsHexValues.BLACK
+import elan.tweaks.common.gui.rendering.TooltipRenderer.ColorsHexValues.PURPLE
+import elan.tweaks.common.gui.rendering.TooltipRenderer.Distances.BORDER_HEIGHT
+import elan.tweaks.common.gui.rendering.TooltipRenderer.Distances.HEADER_SPACING
+import elan.tweaks.common.gui.rendering.TooltipRenderer.Distances.LINE_HEIGHT
+import elan.tweaks.common.gui.rendering.TooltipRenderer.TextColors.GRAY
 import net.minecraft.client.gui.FontRenderer
 import org.lwjgl.opengl.GL11
 import thaumcraft.client.lib.UtilsFX
 
-object TooltipDrawer {
+object TooltipRenderer {
 
-    fun drawCentered(context: UIContext, lines: List<String>, center: VectorXY, subTipColorColorHex: String) {
-        val textScale = lines.textScale(context)
+    fun drawCentered(lines: Array<out String>, center: VectorXY, subTipColorColorHex: String, fontRenderer: FontRenderer) {
+        val textScale = lines.textScale(fontRenderer)
         val xOffset = Vector2D(textScale.width / 2, y = textScale.height / 2)
-        draw(context, lines, textScale, origin = center - xOffset, subTipColorColorHex)
+        fontRenderer.draw(lines, textScale, origin = center - xOffset, subTipColorColorHex)
     }
 
-    fun draw(context: UIContext, lines: List<String>, origin: VectorXY, subTipColorColorHex: String) {
-        draw(context, lines, lines.textScale(context), origin, subTipColorColorHex)
+    fun draw(lines: Array<out String>, origin: VectorXY, subTipColorColorHex: String, fontRenderer: FontRenderer) {
+        fontRenderer.draw(lines, lines.textScale(fontRenderer), origin, subTipColorColorHex)
     }
 
-    private fun List<String>.textScale(
-        context: UIContext
+    private fun Array<out String>.textScale(
+        fontRenderer: FontRenderer
     ) = Scale(
-        width = maxOfPixelWidth(context),
+        width = maxOfPixelWidth(fontRenderer),
         height = textHeight()
     )
 
-    private fun List<String>.maxOfPixelWidth(context: UIContext) = map { line ->
-        context.fontRenderer.getStringWidth(line)
+    private fun Array<out String>.maxOfPixelWidth(fontRenderer: FontRenderer) = map { line ->
+        fontRenderer.getStringWidth(line)
     }.maxOrNull() ?: 0
 
-    private fun List<String>.textHeight() =
+    private fun Array<out String>.textHeight() =
         BORDER_HEIGHT + headerHeight() + bodyHeight() + BORDER_HEIGHT
 
-    private fun List<String>.headerHeight() =
+    private fun Array<out String>.headerHeight() =
         if (size > 1) HEADER_SPACING + LINE_HEIGHT else LINE_HEIGHT
 
-    private fun List<String>.bodyHeight() = 
+    private fun Array<out String>.bodyHeight() = 
         (size - 2) * LINE_HEIGHT
 
-    fun draw(context: UIContext, lines: List<String>, textScale: Scale, origin: VectorXY, subTipColorColorHex: String) {
+    fun FontRenderer.draw(lines: Array<out String>, textScale: Scale, origin: VectorXY, subTipColorColorHex: String) {
         if (lines.isEmpty()) return
 
         GL11.glPushMatrix()
@@ -55,31 +54,29 @@ object TooltipDrawer {
         drawBackground(origin, textScale)
         drawBorders(origin, textScale)
 
-        drawHeader(lines.first(), subTipColorColorHex, origin, context.fontRenderer)
-        drawBody(lines.drop(1), origin, context)
+        drawHeader(lines.first(), subTipColorColorHex, origin)
+        drawBody(lines.drop(1), origin)
 
         GL11.glEnable(GL11.GL_DEPTH_TEST)
         GL11.glPopMatrix()
     }
 
-    private fun drawBody(
+    private fun FontRenderer.drawBody(
         lines: List<String>,
-        origin: VectorXY,
-        context: UIContext
+        origin: VectorXY
     ) {
         lines.forEachIndexed { index, line ->
             val yOffset = HEADER_SPACING + LINE_HEIGHT * (index + 1)
-            context.fontRenderer.drawStringWithShadow("§$GRAY$line", origin.x, origin.y + yOffset, -1)
+            drawStringWithShadow("§$GRAY$line", origin.x, origin.y + yOffset, -1)
         }
     }
 
-    private fun drawHeader(
+    private fun FontRenderer.drawHeader(
         line: String,
         colorHex: String,
-        origin: VectorXY,
-        renderer: FontRenderer
+        origin: VectorXY
     ) {
-        renderer.drawStringWithShadow("§$colorHex$line", origin.x, origin.y, -1)
+        drawStringWithShadow("§$colorHex$line", origin.x, origin.y, -1)
     }
 
     private fun drawBorders(origin: VectorXY, scale: Scale) {
