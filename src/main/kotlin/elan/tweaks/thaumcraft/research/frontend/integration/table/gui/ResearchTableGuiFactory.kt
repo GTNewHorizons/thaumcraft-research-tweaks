@@ -30,6 +30,7 @@ import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.tiles.TileResearchTable
 
 object ResearchTableGuiFactory {
+
     private val guiScale = Scale(
         width = ResearchTableInventoryTexture.width,
         height = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.height
@@ -48,7 +49,7 @@ object ResearchTableGuiFactory {
                     + copyButton(research, researcher)
                     + palletComponents(pallet, researcher)
                     + ScribeToolsNotificationUIComponent(research, ResearchArea.centerOrigin)
-                    + aspectDragAndDrop(pallet)
+                    + AspectDragAndDropUIComponent(pallet)
                     + KnowledgeNotificationUIComponent()
         )
     }
@@ -93,15 +94,9 @@ object ResearchTableGuiFactory {
     }
 
     private fun copyButton(research: ResearchProcessPort, researcher: ResearcherKnowledgePort) = CopyButtonUIComponent(
-        bounds = CopyButton.bounds,
-        requirementsUiOrigin = CopyButton.requirementsUiOrigin,
-        research = research,
-        researcher = researcher
+        bounds = CopyButton.bounds, requirementsUiOrigin = CopyButton.requirementsUiOrigin,
+        research = research, researcher = researcher
     )
-
-    private fun aspectDragAndDrop(pallet: AspectPalletPort) =
-        AspectDragAndDropUIComponent(pallet)
-
 
     private fun palletComponents(pallet: AspectPalletPort, researcher: ResearcherKnowledgePort): List<UIComponent> {
         val leftAspectPallet = palletComponent(

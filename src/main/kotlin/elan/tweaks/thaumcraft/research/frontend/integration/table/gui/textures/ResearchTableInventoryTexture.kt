@@ -9,7 +9,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     "research/table/research-table.png",
     textureWidth = 310, textureHeight = 245,
     u = 0, v = 0,
-    width = 307, height = 219
+    width = 310, height = 219
 ) {
     val inventoryOrigin = Vector2D(x = 67, y = 191)
     

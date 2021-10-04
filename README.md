@@ -13,7 +13,7 @@
   - [x] Research duplication
   - [x] Fix aspect combination notification rendering
   - [x] UI textures
-  - [ ] Clean-up DI with kodein
+  - [ ] Clean-up dependency code
   - [ ] Clean up TODOs:
         Basically I've mistaken client for whole piece, it's actually a "front-end" I am changing and domain logic is hidden behind domain. 
         This means I need to squash domain and adapters in to client (ApiConsumers?)
