@@ -9,6 +9,7 @@ import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
 import elan.tweaks.common.gui.drawing.AspectDrawer
 import elan.tweaks.common.gui.drawing.TooltipDrawer
+import elan.tweaks.common.gui.drawing.TooltipDrawer.TextColors
 import elan.tweaks.common.gui.geometry.Vector2D
 import elan.tweaks.common.gui.geometry.VectorXY
 import elan.tweaks.common.gui.layout.grid.GridLayout
@@ -51,7 +52,7 @@ class AspectPalletUIComponent(
         val screenOrigin = context.toScreenOrigin(uiOrigin)
         val textOrigin = screenOrigin + Vector2D(12, -20)
         TooltipDrawer.draw(
-            context, listOf(aspect.name, aspect.localizedDescription), textOrigin, 11
+            context, listOf(aspect.name, aspect.localizedDescription), textOrigin, TextColors.LIGHT_BLUE
         )
         // TODO: Add research check, this should be somehow passed via Domain
         if (!aspect.isPrimal) {
