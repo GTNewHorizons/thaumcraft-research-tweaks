@@ -12,7 +12,6 @@ import thaumcraft.common.items.ItemResearchNotes
 import thaumcraft.common.tiles.TileResearchTable
 
 object ResearchTableContainerFactory {
-    // TODO: is this a layout constants too?
     const val SCRIBE_TOOLS_SLOT_INDEX = 0
     const val RESEARCH_NOTES_SLOT_INDEX = 1
 

@@ -11,7 +11,6 @@ import thaumcraft.client.gui.GuiResearchTable
 import thaumcraft.common.container.ContainerResearchTable
 import thaumcraft.common.tiles.TileResearchTable
 
-// TODO make this a research table gui specific handler which always provides table components and reference it instead of mod when creating gui
 class ThaumcraftResearchGuiHandler : IGuiHandler {
 
     object IDs {

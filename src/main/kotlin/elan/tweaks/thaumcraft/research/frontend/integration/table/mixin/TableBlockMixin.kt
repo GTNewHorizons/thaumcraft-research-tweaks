@@ -12,8 +12,6 @@ import thaumcraft.common.blocks.BlockTable
 @Mixin(BlockTable::class)
 abstract class TableBlockMixin {
 
-    // TODO: Proper logging?
-    
     private companion object {
         private const val THAUMCRAFT_RESEARCH_TABLE_GUI_ID = 10
     }
@@ -25,10 +23,8 @@ abstract class TableBlockMixin {
     )
     private fun correctGuiCallFor(entityPlayer: EntityPlayer, mod: Any, modGuiId: Int, world: World, x: Int, y: Int, z: Int) {
         return if (modGuiId == THAUMCRAFT_RESEARCH_TABLE_GUI_ID) {
-            println("Calling new gui for guiId: $modGuiId")
             entityPlayer.openGui(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler.IDs.RESEARCH_TABLE, world, x, y, z)
         } else {
-            println("Calling original gui for guiId: $modGuiId")
             entityPlayer.openGui(mod, modGuiId, world, x, y, z)
         }
     }
