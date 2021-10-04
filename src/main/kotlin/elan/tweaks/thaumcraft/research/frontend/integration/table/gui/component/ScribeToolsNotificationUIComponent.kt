@@ -23,7 +23,7 @@ class ScribeToolsNotificationUIComponent(
         val screenOrigin = context.toScreenOrigin(uiCenter)
         
         TooltipDrawer.drawCentered(
-            context, listOf(noInkFirstLine, noInkSecondLine, "Test","Test","Test",), center = screenOrigin, TextColors.LIGHT_BLUE
+            context, listOf(noInkFirstLine, noInkSecondLine), center = screenOrigin, TextColors.LIGHT_BLUE
         )
     }
 
