@@ -26,28 +26,6 @@ class HexLayoutResearchNoteDataAdapter(
 
     private var cache: Cache = generateCache()
 
-    private inner class Cache(
-        val keyToAspectHex: Map<String, AspectHex>,
-        val hexes: Map<String, HexUtils.Hex>,
-        val hexEntries: Map<String, ResearchManager.HexEntry>,
-    ) {
-        fun hasExpired(): Boolean {
-            val data = researchProcess.data
-            return data == null 
-                    || hexes.size != data.hexes.size 
-                    || hexEntries.size != data.hexEntries.size
-                    || hexes.any { (key, hex) -> hex.notEqual(data.hexes[key]) }
-                    || hexEntries.any { (key, entry) -> entry.notEqual(data.hexEntries[key]) }
-        }
-
-        private fun HexUtils.Hex.notEqual(other: HexUtils.Hex?) =
-            other == null || !equals(other)
-
-        private fun ResearchManager.HexEntry.notEqual(other: ResearchManager.HexEntry?) =
-            other == null || type != other.type || aspect?.tag != other.aspect?.tag
-
-    }
-
     override fun contains(uiPoint: VectorXY): Boolean {
         if (uiPoint !in bounds) return false
 
@@ -140,7 +118,6 @@ class HexLayoutResearchNoteDataAdapter(
     private fun getHexEntries() = researchProcess.data?.hexEntries ?: emptyMap()
     private fun getHexes() = researchProcess.data?.hexes ?: emptyMap()
 
-
     private fun ResearchManager.HexEntry.convertToAspectHex(
         key: String,
         hexes: Map<String, HexUtils.Hex>,
@@ -184,5 +161,27 @@ class HexLayoutResearchNoteDataAdapter(
         const val VACANT = 0
         const val ROOT = 1
         const val NODE = 2
+    }
+
+    private inner class Cache(
+        val keyToAspectHex: Map<String, AspectHex>,
+        val hexes: Map<String, HexUtils.Hex>,
+        val hexEntries: Map<String, ResearchManager.HexEntry>,
+    ) {
+        fun hasExpired(): Boolean {
+            val data = researchProcess.data
+            return data == null
+                    || hexes.size != data.hexes.size
+                    || hexEntries.size != data.hexEntries.size
+                    || hexes.any { (key, hex) -> hex.notEqual(data.hexes[key]) }
+                    || hexEntries.any { (key, entry) -> entry.notEqual(data.hexEntries[key]) }
+        }
+
+        private fun HexUtils.Hex.notEqual(other: HexUtils.Hex?) =
+            other == null || !equals(other)
+
+        private fun ResearchManager.HexEntry.notEqual(other: ResearchManager.HexEntry?) =
+            other == null || type != other.type || aspect?.tag != other.aspect?.tag
+
     }
 }
