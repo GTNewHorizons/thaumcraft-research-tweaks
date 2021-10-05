@@ -1,5 +1,6 @@
 package elan.tweaks.common.gui.dto
 
+import elan.tweaks.common.ext.HexMath
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -101,11 +102,9 @@ data class HexVector(
 ) {
 
     val key: String = "$q:$r"
-
-    fun toVector(hexSize: Int): Vector2D = Vector2D(
-        x = (hexSize * (1.5 * q)).roundToInt(),
-        y = (hexSize * sqrt(3.0) * (r + q / 2.0)).roundToInt()
-    )
+    
+    fun toOrigin(hexSize: Int): VectorXY =
+        HexMath.toOrigin(q, r, hexSize)
 
     companion object {
         // Pixel to hex is from https://www.redblobgames.com/grids/hexagons/#pixel-to-hex
@@ -114,14 +113,8 @@ data class HexVector(
             val (roundQ, roundR) = findRoundedCoordinates(vector, hexSize)
 
             return HexVector(roundQ, roundR)
-        }        
-        
-        fun keyFrom(vector: VectorXY, hexSize: Int): HexVector {
-            val (roundQ, roundR) = findRoundedCoordinates(vector, hexSize)
-
-            return HexVector(roundQ, roundR)
         }
-
+        
         private fun findRoundedCoordinates(vector: VectorXY, hexSize: Int): Pair<Int, Int> {
             val q = 0.6666666666666666 * vector.x / hexSize.toDouble()
             val r = 0.3333333333333333 * (sqrt(3.0) * -vector.y - vector.x) / hexSize.toDouble()

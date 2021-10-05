@@ -20,7 +20,8 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.ParchmentUIComponent
-import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ParchmentTexture
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.Runes
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture.AspectPools
@@ -73,20 +74,26 @@ object ResearchTableGuiFactory {
         val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
             bounds = ResearchArea.bounds,
             centerUiOrigin = ResearchArea.centerOrigin,
+            hexSize = HexTexture.SIZE_PIXELS,
             aspectTree = AspectTree(),
             researcher = researcher,
             researchProcess = research
+        )
+
+        val runes = Runes(
+            uiOrigin = ResearchArea.bounds.origin,
+            
+            runeLimit = 16,
+
+            hexLayout = hexLayout,
+            research = research
         )
 
         return setOf(
             ParchmentUIComponent(
                 research = research,
                 uiOrigin = ResearchArea.bounds.origin,
-
-                runeLimit = 16,
-
-                centerOffset = ParchmentTexture.centerOrigin,
-                hexLayout = hexLayout,
+                runes = runes
             ),
             AspectHexMapUIComponent(research, hexLayout),
             AspectHexMapEditorUIComponent(research, hexLayout)

@@ -2,7 +2,6 @@ package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures
 
 import elan.tweaks.common.gui.dto.Rgba
 import elan.tweaks.common.gui.dto.Scale
-import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.textures.ThaumcraftTextureInstance
 import net.minecraft.client.renderer.Tessellator
 import org.lwjgl.opengl.GL11
@@ -27,5 +26,4 @@ object HexTexture : ThaumcraftTextureInstance(
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f)
     }
     
-    fun toOrigin(center: VectorXY) = center - SIZE_PIXELS + 1
 }
