@@ -16,7 +16,7 @@ import thaumcraft.common.lib.utils.HexUtils
 import java.util.*
 
 class HexLayoutResearchNoteDataAdapter(
-    private val bounds: Rectangle, // TODO: generalize bounds to origin and contains operator and use circular bounds here
+    private val bounds: Rectangle,
     private val centerUiOrigin: VectorXY,
     private val hexSize: Int,
     private val aspectTree: AspectsTreePort,
