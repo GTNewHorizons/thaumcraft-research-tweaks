@@ -13,25 +13,29 @@
   - [x] Research duplication
   - [x] Fix aspect combination notification rendering
   - [x] UI textures
-  - [x] Clean-up dependency code
-  - [ ] Clean up TODOs
-  - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
   - [x] Ensure all sounds are played accordingly
+  - [x] Clean-up dependency code
+  - [x] Stable aspect sorting and affinity-based splitting
+  - [ ] Clean up TODOs
   - [ ] Include checking inventory when deciding on duplicate button activity
   - [ ] Update lang file
-  - [ ] Optimize memory consumption (caches)
 
 2. Nice to have:
-  - [ ] Testing
   - [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
   - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
 
 ### Non-Functional
+1. Must:
+  - [ ] Optimize memory consumption (caches)
+  - [ ] Fix exceptions on console when running client
   - [ ] Add CI/CD
   - [ ] Migrate and clean-up this and Forgelin 1.9 gradle
   - [ ] Fix asm trying to parse Forgelin zips and failing
-  - [ ] Add proper logging
   - [ ] Check licensing
+  - [ ] Clean-up readme
+
+2. Nice to have:
+  - [ ] Testing
 
 ## Research table refactor
 

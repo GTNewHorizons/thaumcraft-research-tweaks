@@ -10,10 +10,13 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.P
 import thaumcraft.common.lib.utils.HexUtils
 import java.util.*
 
+// TODO: init this during mod init
 object ParchmentHexMap {
 
     private val keyToHex: Map<String, Hex> = findAllFittingHexes()
-    
+    override fun toString(): String = 
+        "ParchmentHexMap: $keyToHex"
+
     fun randomHex() = keyToHex.entries.random()
 
     private fun findAllFittingHexes(): Map<String, Hex> {

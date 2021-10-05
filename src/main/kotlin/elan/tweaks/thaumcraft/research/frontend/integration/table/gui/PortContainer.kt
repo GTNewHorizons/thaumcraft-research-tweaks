@@ -38,7 +38,7 @@ class PortContainer(
         batchSize = 10
     )
 
-    val tree: AspectsTreePort = AspectTree()
+    val tree: AspectsTreePort = AspectTree
 
     val researcher: ResearcherKnowledgePort = ResearcherKnowledge(
         base = base,

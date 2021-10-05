@@ -109,7 +109,6 @@ class AspectPalletUIComponent(
     override fun onDragClick(draggable: Any, uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
         if (draggable !is Aspect || button !is MouseButton.Right) return
         
-        
         whenAspectAt(uiMousePosition) { targetAspect ->
             combine(draggable, targetAspect).onSuccess { context.playCombine() }
         }

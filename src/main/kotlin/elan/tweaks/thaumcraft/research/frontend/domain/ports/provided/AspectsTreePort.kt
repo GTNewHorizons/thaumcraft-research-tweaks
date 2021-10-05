@@ -5,5 +5,7 @@ import thaumcraft.api.aspects.Aspect
 interface AspectsTreePort {
 
     fun areRelated(first: Aspect, second: Aspect): Boolean
+    fun allEntropyLeaning(): List<Aspect>
+    fun allOrderLeaning(): List<Aspect>
     
 }

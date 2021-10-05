@@ -9,10 +9,6 @@ import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.thaumcraft.research.frontend.domain.model.AspectTree
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
 import elan.tweaks.thaumcraft.research.frontend.integration.table.TableUIContext
@@ -47,9 +43,9 @@ object ResearchTableGuiFactory {
             container = inventory,
             components =
             tableAndInventoryBackgrounds()
-                    + researchArea(research, researcher)
-                    + copyButton(research, researcher)
-                    + palletComponents(pallet, researcher)
+                    + researchArea()
+                    + copyButton()
+                    + palletComponents()
                     + ScribeToolsNotificationUIComponent(research, ResearchArea.centerOrigin)
                     + AspectDragAndDropUIComponent(pallet)
                     + KnowledgeNotificationUIComponent()
@@ -69,13 +65,13 @@ object ResearchTableGuiFactory {
         )
     )
 
-    private fun researchArea(research: ResearchProcessPort, researcher: ResearcherKnowledgePort): Set<UIComponent> {
+    private fun PortContainer.researchArea(): Set<UIComponent> {
 
         val hexLayout: HexLayout<AspectHex> = HexLayoutResearchNoteDataAdapter(
             bounds = ResearchArea.bounds,
             centerUiOrigin = ResearchArea.centerOrigin,
             hexSize = HexTexture.SIZE_PIXELS,
-            aspectTree = AspectTree(),
+            aspectTree = tree,
             researcher = researcher,
             researchProcess = research
         )
@@ -100,40 +96,35 @@ object ResearchTableGuiFactory {
         )
     }
 
-    private fun copyButton(research: ResearchProcessPort, researcher: ResearcherKnowledgePort) = CopyButtonUIComponent(
+    private fun PortContainer.copyButton() = CopyButtonUIComponent(
         bounds = CopyButton.bounds, requirementsUiOrigin = CopyButton.requirementsUiOrigin,
         research = research, researcher = researcher
     )
 
-    private fun palletComponents(pallet: AspectPalletPort, researcher: ResearcherKnowledgePort): List<UIComponent> {
+    private fun PortContainer.palletComponents(): List<UIComponent> {
         val leftAspectPallet = palletComponent(
-            pallet = pallet,
-            researcher = researcher,
-            bounds = AspectPools.leftBound
-        ) { index, _ -> index % 2 == 0 } // TODO: split based on affinity
+            bounds = AspectPools.leftBound,
+            aspectProvider = tree::allOrderLeaning
+        ) 
 
         val rightAspectPallet = palletComponent(
-            pallet = pallet,
-            researcher = researcher,
-            bounds = AspectPools.rightBound
-        ) { index, _ -> index % 2 != 0 } // TODO: split based on affinity
+            bounds = AspectPools.rightBound,
+            aspectProvider = tree::allEntropyLeaning
+        )
 
         return listOf(leftAspectPallet, rightAspectPallet)
     }
 
-    private fun palletComponent(
-        researcher: ResearcherKnowledgePort,
-        pallet: AspectPalletPort,
+    private fun PortContainer.palletComponent(
         bounds: Rectangle,
-        aspectSelector: (Int, Aspect) -> Boolean
+        aspectProvider: () -> List<Aspect>
     ): AspectPalletUIComponent {
         val aspectPalletGrid: GridLayout<Aspect> = GridLayoutDynamicListAdapter(
             bounds = bounds,
-            cellSize = AspectPools.ASPECT_CELL_SIZE_PIXEL
+            cellSize = AspectPools.ASPECT_CELL_SIZE_PIXEL,
         ) {
-            researcher.allDiscoveredAspects()
-                // TODO: add sorting
-                .filterIndexed(aspectSelector)
+            val discoveredAspects = researcher.allDiscoveredAspects()
+            aspectProvider().filter { aspect -> aspect in discoveredAspects }
         }
 
         return AspectPalletUIComponent(
