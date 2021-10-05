@@ -23,7 +23,30 @@ class HexLayoutResearchNoteDataAdapter(
     private val researcher: ResearcherKnowledgePort,
     private val researchProcess: ResearchProcessPort
 ) : HexLayout<AspectHex> {
-    private val keyToAspectHex get() = keyToAspectHex()
+
+    private var cache: Cache = generateCache()
+
+    private inner class Cache(
+        val keyToAspectHex: Map<String, AspectHex>,
+        val hexes: Map<String, HexUtils.Hex>,
+        val hexEntries: Map<String, ResearchManager.HexEntry>,
+    ) {
+        fun hasExpired(): Boolean {
+            val data = researchProcess.data
+            return data == null 
+                    || hexes.size != data.hexes.size 
+                    || hexEntries.size != data.hexEntries.size
+                    || hexes.any { (key, hex) -> hex.notEqual(data.hexes[key]) }
+                    || hexEntries.any { (key, entry) -> entry.notEqual(data.hexEntries[key]) }
+        }
+
+        private fun HexUtils.Hex.notEqual(other: HexUtils.Hex?) =
+            other == null || !equals(other)
+
+        private fun ResearchManager.HexEntry.notEqual(other: ResearchManager.HexEntry?) =
+            other == null || type != other.type || aspect?.tag != other.aspect?.tag
+
+    }
 
     override fun contains(uiPoint: VectorXY): Boolean {
         if (uiPoint !in bounds) return false
@@ -36,28 +59,41 @@ class HexLayoutResearchNoteDataAdapter(
         if (uiPoint !in bounds) return null
 
         val hexKey = uiPoint.toHexKey()
-        return keyToAspectHex[hexKey]
+        return getValidKeyToAspectHexMap()[hexKey]
     }
 
     private fun VectorXY.toHexKey(): String =
         HexVector.roundedFrom(this - centerUiOrigin, hexSize).key
 
     override fun asOriginList(): List<Pair<VectorXY, AspectHex>> =
-        keyToAspectHex.values
+        getValidKeyToAspectHexMap().values
             .map { aspectHex -> aspectHex.uiOrigin to aspectHex }
 
+    private fun getValidKeyToAspectHexMap(): Map<String, AspectHex> {
+        if (cache.hasExpired()) {
+            cache = generateCache()
+        }
+        return cache.keyToAspectHex
+    }
+
     // TODO extract this to separate component, which would probably also handle note data provision and computation caching
-    private fun keyToAspectHex(): Map<String, AspectHex> {
+    private fun generateCache(): Cache {
         val hexEntries = getHexEntries()
         val hexes = getHexes()
 
         val (traversedKeys, keyToNeighbourKeys) = traversRootPathsAndBuildConnectionMap(hexEntries, hexes)
 
-        return hexEntries
+        val keyToAspectHex = hexEntries
             .mapValues { (key, entry) ->
                 entry.convertToAspectHex(key, hexes, keyToNeighbourKeys, traversedKeys)
             }
             .toMap()
+
+        return Cache(
+            keyToAspectHex,
+            hexes,
+            hexEntries
+        )
     }
 
     private fun traversRootPathsAndBuildConnectionMap(
