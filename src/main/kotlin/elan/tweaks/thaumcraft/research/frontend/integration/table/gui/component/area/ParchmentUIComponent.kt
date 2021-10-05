@@ -83,6 +83,7 @@ class ParchmentUIComponent(
         keysToRunes -= decayedRunes.keys
     }
 
+    // TODO: fix drawing at some wired offset incorrectly
     // TODO: wrap lifecycle in container
     data class Rune(
         val uiOrigin: VectorXY,

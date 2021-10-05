@@ -13,12 +13,8 @@
   - [x] Research duplication
   - [x] Fix aspect combination notification rendering
   - [x] UI textures
-  - [ ] Clean-up dependency code
-  - [ ] Clean up TODOs:
-        Basically I've mistaken client for whole piece, it's actually a "front-end" I am changing and domain logic is hidden behind domain. 
-        This means I need to squash domain and adapters in to client (ApiConsumers?)
-        Front-end complexity also comes from need to perform some validations. 
-        It would be more straight forward if backend was sending according commands back to client (e.g. aspect combination success - play some sound, etc)
+  - [x] Clean-up dependency code
+  - [ ] Clean up TODOs
   - [ ] Better aspect sorting (depth in tree + alphabetic order + side based on alignment to order,terra,water/perdition,ignis,air) - aspect product is always after it's components
   - [x] Ensure all sounds are played accordingly
   - [ ] Include checking inventory when deciding on duplicate button activity
@@ -40,19 +36,19 @@
 ## Research table refactor
 
 UI elements:
-  - [x] (I) Scribbling tools slot
-  - [x] (N) Research notes slot
-  - [ ] (C) Research duplication button? (check how it worked)
+  - [x] Scribbling tools slot
+  - [x] Research notes slot
+  - [x] Research duplication button? (check how it worked)
      - not present when not unlocked
      - not active till finished & have unlocked duplication
      - shows cost tooltip
-  - [x] (1,2) Aspect pallet 4 columns by 13 rows (104 aspect slots)
+  - [x] Aspect pallet 4 columns by 13 rows (104 aspect slots)
      - Allows drag & drop aspect combination:
        - Shift + Left click & having research = create this aspect
        - Drop = combine x1
        - Drag + Right click = combine x1
        - (Drop || Drag + Right click) + Ctrl = combine 10
-  - [ ] (6) Drawing paper
+  - [x] Drawing paper
      - hex grid
        - individual hexes
         - can connect as lines
@@ -66,44 +62,7 @@ New UI:
 ## Development
 To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
 
-## Notes
-When drawing background he uses:
-```
-    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);e
-    ...
-    draw backgrounds
-    draw aspects
-    ...
-    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    RenderHelper.disableStandardItemLighting();
-    draw research
-```
-find out what this changes
-
-notifications are not drawing on top of ui, this should fix it:
-```java
-    protected void drawGuiContainerForegroundLayer(final int mx, final int my) {
-        final Minecraft mc = Minecraft.getMinecraft();
-        final long time = System.nanoTime() / 1000000L;
-        if (PlayerNotifications.getListAndUpdate(time).size() > 0) {
-            GL11.glPushMatrix();
-            Thaumcraft.instance.renderEventHandler.notifyHandler.renderNotifyHUD(this.width, this.height, time);
-            GL11.glPopMatrix();
-        }
-    }
-```
-
-```
-ResearchManager.HexEntry types:
- - `0`: Empty
- - `1`: Root
- - `2`: Placed by user
-```
-
-Should I allow replacing aspect when hex already occupied?
-
 ## Gratitude
-
 Thanks go to: 
 - Think for texturing my rough ui sketch
 - TimeConqueror and GTNH dev's for helping out on technical part
