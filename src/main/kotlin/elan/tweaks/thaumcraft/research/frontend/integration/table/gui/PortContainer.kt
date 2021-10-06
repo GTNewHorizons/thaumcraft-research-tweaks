@@ -30,6 +30,7 @@ class PortContainer(
     private val combiner = AspectCombinerAdapter(player, table)
     private val notes = ResearchNotesAdapter(player, table, inventory)
     private val scribeTools = ScribeToolsAdapter(table)
+    private val playerInventory = PlayerInventoryAdapter(player)
 
     val pallet: AspectPalletPort = AspectPallet(
         base = base,
@@ -50,5 +51,6 @@ class PortContainer(
         notes = notes,
         scribeTools = scribeTools,
         knowledgeBase = base,
+        playerInventory = playerInventory
     )
 }

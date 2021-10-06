@@ -17,7 +17,7 @@
   - [x] Clean-up dependency code
   - [x] Stable aspect sorting and affinity-based splitting
   - [x] Clean up TODOs
-  - [ ] Include checking inventory when deciding on duplicate button activity
+  - [x] Include checking inventory when deciding on duplicate button activity
   - [ ] Update lang file
 
 2. Nice to have:
@@ -28,7 +28,7 @@
 1. Must:
   - [x] Optimize memory consumption (cache hex map structure)
   - [ ] Add CI/CD
-  - [ ] Migrate and clean-up this and Forgelin 1.9 gradle
+  - [x] Migrate and clean-up this and Forgelin 1.9 gradle
   - [ ] Fix asm trying to parse Forgelin zips and failing
   - [ ] Fix json parsing error (check console on start)
   - [ ] Check licensing

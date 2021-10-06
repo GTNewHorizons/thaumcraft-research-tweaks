@@ -4,10 +4,7 @@ import elan.tweaks.thaumcraft.research.frontend.domain.failures.DuplicationFailu
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.MissingResearchFailure.Companion.missingResearchDuplication
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.AspectPool
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.KnowledgeBase
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.ResearchNotes
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.ScribeTools
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.*
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.lib.research.ResearchNoteData
 
@@ -16,7 +13,8 @@ class ResearchProcess constructor(
     private val notes: ResearchNotes,
     private val pool: AspectPool,
     private val knowledgeBase: KnowledgeBase,
-    private val scribeTools: ScribeTools
+    private val scribeTools: ScribeTools,
+    private val playerInventory: PlayerInventory
 ) : ResearchProcessPort {
 
     override val usedAspectAmounts: Map<Aspect, Int>
@@ -36,7 +34,7 @@ class ResearchProcess constructor(
         }
 
     override fun readyToDuplicate(): Boolean =
-        notes.present && notes.complete && pool.contains(usedAspectAmounts)
+        notes.present && notes.complete && pool.contains(usedAspectAmounts) && playerInventory.containsPaper() && playerInventory.containsBlackDye()
 
     override fun notEditable(): Boolean =
         missingNotes() || notes.complete
