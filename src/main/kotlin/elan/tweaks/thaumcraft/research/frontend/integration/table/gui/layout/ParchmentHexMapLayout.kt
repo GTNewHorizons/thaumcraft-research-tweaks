@@ -18,6 +18,7 @@ object ParchmentHexMapLayout {
 
     fun randomHex() = keyToHex.entries.random()
 
+    // TODO: Consider doing this in O(n) time, where n is a number of hexes on the parchment by using math
     private fun findAllFittingHexes(): Map<String, Hex> {
         val hexSize = HexTexture.SIZE_PIXELS
 

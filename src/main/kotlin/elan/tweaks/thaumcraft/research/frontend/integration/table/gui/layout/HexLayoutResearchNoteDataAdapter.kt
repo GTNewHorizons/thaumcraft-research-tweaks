@@ -74,6 +74,7 @@ class HexLayoutResearchNoteDataAdapter(
         )
     }
 
+    // A better implementation would change the core data structure to contain current map connection state and would update it on any change
     private fun traversRootPathsAndBuildConnectionMap(
         hexEntries: Map<String, ResearchManager.HexEntry>,
         hexes: Map<String, HexUtils.Hex>
