@@ -1,6 +1,6 @@
 package elan.tweaks.thaumcraft.research.frontend.domain.model
 
-import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinationFailure.Companion.cannotCombinePrimalAspect
+import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinationFailure.Companion.cannotDerivePrimalAspect
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinationFailure.Companion.missingComponents
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.MissingResearchFailure.Companion.missingResearchMastery
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
@@ -18,9 +18,6 @@ class AspectPallet constructor(
     private val batchSize: Int
 ) : AspectPalletPort {
 
-    override fun isDrainedOf(aspect: Aspect): Boolean =
-        pool.totalAmountOf(aspect) <= 0
-
     override fun amountAndBonusOf(aspect: Aspect): Pair<Int, Int> =
         pool.amountOf(aspect) to pool.bonusAmountOf(aspect)
 
@@ -35,14 +32,14 @@ class AspectPallet constructor(
     override fun derive(desiredAspect: Aspect): Result<Unit> =
         when {
             base.hasNotDiscovered(Knowledge.ResearchMastery) -> missingResearchMastery()
-            desiredAspect.isPrimal -> cannotCombinePrimalAspect()
+            desiredAspect.isPrimal -> cannotDerivePrimalAspect()
             pool.anyComponentMissingFor(desiredAspect) -> missingComponents()
             else -> combiner.combine(desiredAspect.components[0], desiredAspect.components[1])
         }
 
     override fun combineBatch(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> =
-        if (base.hasNotDiscovered(Knowledge.ResearchExpertise)) combine(firstAspect, secondAspect)
-        else batch { combine(firstAspect, secondAspect) }
+        if (base.hasDiscovered(Knowledge.ResearchExpertise))  batch { combine(firstAspect, secondAspect) }
+        else combine(firstAspect, secondAspect)
 
     override fun combine(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> =
         when {
@@ -50,6 +47,9 @@ class AspectPallet constructor(
             else -> combiner.combine(firstAspect, secondAspect)
         }
 
+    override fun isDrainedOf(aspect: Aspect): Boolean =
+        pool.totalAmountOf(aspect) <= 0
+    
     private fun <ResultT> batch(function: () -> Result<ResultT>): Result<ResultT> {
         val batchResults = (1..batchSize).map { function() }
 
