@@ -41,7 +41,6 @@ class GridLayoutDynamicListAdapter<ElementT>(
         return columnIndex + rowIndex * dimensions.x
     }
 
-    // TODO: add cache
     override fun asOriginList(): List<Pair<Vector2D, ElementT>> =
         elements
             .mapIndexed { index: Int, element: ElementT ->

@@ -4,7 +4,6 @@ import elan.tweaks.common.gui.ComposableContainerGui.Companion.gui
 import elan.tweaks.common.gui.component.UIComponent
 import elan.tweaks.common.gui.component.texture.TextureBackgroundUIComponent.Companion.background
 import elan.tweaks.common.gui.dto.Rectangle
-import elan.tweaks.common.gui.dto.Scale
 import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
@@ -17,6 +16,7 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.Runes
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.HexLayoutResearchNoteDataAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.ResearchTableLayout
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture
@@ -29,17 +29,13 @@ import thaumcraft.common.tiles.TileResearchTable
 
 object ResearchTableGuiFactory {
 
-    private val guiScale = Scale(
-        width = ResearchTableInventoryTexture.scale.width,
-        height = ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.scale.height
-    )
 
     fun create(
         player: EntityPlayer,
         table: TileResearchTable
     ) = PortContainer(player, table).run {
         gui(
-            scale = guiScale,
+            scale = ResearchTableLayout.guiScale,
             container = inventory,
             components =
             tableAndInventoryBackgrounds()
@@ -98,7 +94,7 @@ object ResearchTableGuiFactory {
 
     private fun PortContainer.copyButton() = CopyButtonUIComponent(
         bounds = CopyButton.bounds, requirementsUiOrigin = CopyButton.requirementsUiOrigin,
-        research = research, researcher = researcher
+        research = research, researcher = researcher, tree = tree
     )
 
     private fun PortContainer.palletComponents(): List<UIComponent> {

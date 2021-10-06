@@ -5,6 +5,7 @@ import elan.tweaks.common.gui.dto.Rectangle
 import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.peripheral.MouseButton
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
@@ -20,6 +21,7 @@ class CopyButtonUIComponent(
     private val requirementsUiOrigin: VectorXY,
     private val research: ResearchProcessPort,
     private val researcher: ResearcherKnowledgePort,
+    private val tree: AspectsTreePort
 ) : BackgroundUIComponent, MouseOverUIComponent, ClickableUIComponent, TickingUIComponent {
 
     private val clickDelayTicks = 10f
@@ -85,8 +87,8 @@ class CopyButtonUIComponent(
         GL11.glPopMatrix()
 
         usedAspectAmounts
-            // TODO: add order
             .entries
+            .sortedBy { (aspect, _) -> tree.orderOf(aspect) }
             .forEachIndexed { index, (aspect, amount) ->
                 val tagOffset = Vector2D(
                     x = CopyRequirementsTexture.scale.width + index * 16,

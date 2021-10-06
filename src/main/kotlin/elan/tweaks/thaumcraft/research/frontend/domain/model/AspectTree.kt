@@ -15,6 +15,7 @@ object AspectTree : AspectsTreePort {
         val (definiteOrder, definiteEntropy) = balance(affinityToOrder, affinityToEntropy)
 
         return OrderedBalance(
+            aspectToOrder = aspectToOrder,
             orderLeaning = definiteOrder.sortedBy(aspectToOrder::getValue),
             entropyLeaning = definiteEntropy.sortedBy(aspectToOrder::getValue)
         )
@@ -105,6 +106,7 @@ object AspectTree : AspectsTreePort {
         return Pair(definiteOrder, definiteEntropy)
     }
 
+    override fun orderOf(aspect: Aspect): Int = orderedBalance.aspectToOrder[aspect] ?: Int.MAX_VALUE
     override fun allOrderLeaning(): List<Aspect> = orderedBalance.orderLeaning
     override fun allEntropyLeaning(): List<Aspect> = orderedBalance.entropyLeaning
 
@@ -116,11 +118,13 @@ object AspectTree : AspectsTreePort {
             else -> first in second.getComponentsOrEmpty() || second in first.getComponentsOrEmpty()
         }
 
+
     private fun Aspect.getComponentsOrEmpty() = components ?: emptyComponents
 
     private val emptyComponents = emptyArray<Aspect>()
 
     data class OrderedBalance(
+        val aspectToOrder: Map<Aspect, Int>,
         val orderLeaning: List<Aspect>,
         val entropyLeaning: List<Aspect>
     )
