@@ -5,7 +5,7 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexHighlightTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.UnknownAspectTagTexture

@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout
+package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout
 
 import elan.tweaks.common.ext.HexMath
 import elan.tweaks.common.ext.HexMath.toCenterVector
@@ -11,6 +11,7 @@ import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
 import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.lib.utils.HexUtils
 import java.util.*
@@ -54,7 +55,6 @@ class HexLayoutResearchNoteDataAdapter(
         return cache.keyToAspectHex
     }
 
-    // TODO extract this to separate component, which would probably also handle note data provision and computation caching
     private fun generateCache(): Cache {
         val hexEntries = getHexEntries()
         val hexes = getHexes()

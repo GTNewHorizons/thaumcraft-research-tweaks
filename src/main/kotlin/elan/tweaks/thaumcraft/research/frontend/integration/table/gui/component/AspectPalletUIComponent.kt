@@ -7,13 +7,15 @@ import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DropDestinationUIComponent
-import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPalletPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.AspectTooltipLayout
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.AspectTooltipLayout.firstTagOffset
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.AspectTooltipLayout.secondTagOffset
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.AspectBackgroundTexture
 import net.minecraft.client.gui.inventory.GuiContainer.isCtrlKeyDown
 import net.minecraft.client.gui.inventory.GuiContainer.isShiftKeyDown
@@ -44,21 +46,18 @@ class AspectPalletUIComponent(
             drawTooltip(aspect, uiOrigin = uiMousePosition, context)
         }
 
-    // TODO: hide all these magic numbers in some layout object
     private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
-        val tooltipOrigin = uiOrigin + Vector2D(12, -20)
+        val tooltipOrigin = uiOrigin + AspectTooltipLayout.textBoxOffset
         context.drawTooltip(tooltipOrigin, aspect.name, aspect.localizedDescription)
 
         if (aspect.hasComponents() && researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
-            val firstBackgroundOrigin =  uiOrigin + Vector2D(6, 6)
-            val secondBackgroundOrigin =  uiOrigin + Vector2D(24, 6)
-            val backgroundOffset = Vector2D(2,2)
-            
+            val firstBackgroundOrigin =  uiOrigin + AspectTooltipLayout.firstTagBackgroundOffset
             context.drawBlending(AspectBackgroundTexture, firstBackgroundOrigin)
-            context.drawTag(aspect.components[0], uiPosition = firstBackgroundOrigin + backgroundOffset)
-            
+            context.drawTag(aspect.components[0], uiPosition = uiOrigin + firstTagOffset)
+
+            val secondBackgroundOrigin =  uiOrigin + AspectTooltipLayout.secondTagBackgroundOffset
             context.drawBlending(AspectBackgroundTexture, secondBackgroundOrigin)
-            context.drawTag(aspect.components[1], uiPosition = secondBackgroundOrigin + backgroundOffset)
+            context.drawTag(aspect.components[1], uiPosition = uiOrigin + secondTagOffset)
         }
     }
 

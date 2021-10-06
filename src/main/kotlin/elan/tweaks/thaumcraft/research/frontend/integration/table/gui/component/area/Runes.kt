@@ -3,7 +3,8 @@ package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component
 import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.ParchmentHexMapLayout
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.RuneTexture
 import java.util.*
 
@@ -28,7 +29,7 @@ class Runes(
     private fun introduceRunes(random: Random) {
         if (research.missingNotes() || keysToRunes.size >= runeLimit) return
 
-        val (key, hex) = ParchmentHexMap.randomHex()
+        val (key, hex) = ParchmentHexMapLayout.randomHex()
         if (keysToRunes.containsKey(key)) return
 
         val aspectHex = hexLayout[hex.center + uiOrigin]

@@ -9,14 +9,14 @@ import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.HexLayoutResearchNoteDataAdapter
 import elan.tweaks.thaumcraft.research.frontend.integration.table.TableUIContext
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.*
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.ParchmentUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.Runes
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.HexLayoutResearchNoteDataAdapter
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.PlayerInventoryTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture

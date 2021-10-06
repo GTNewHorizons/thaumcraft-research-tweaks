@@ -10,7 +10,7 @@ import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTw
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.NAME
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.VERSION
 import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftResearchGuiHandler
-import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.ParchmentHexMap
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.ParchmentHexMapLayout
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -39,7 +39,7 @@ object ThaumcraftResearchTweaks {
         val logger: Logger = LogManager.getLogger(MOD_ID)
         val aspectTree = AspectTree
         logger.debug("Initialised $aspectTree")
-        val parchmentHexMap = ParchmentHexMap
+        val parchmentHexMap = ParchmentHexMapLayout
         logger.debug("Initialised $parchmentHexMap")
     }
 }

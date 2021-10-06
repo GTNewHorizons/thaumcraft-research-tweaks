@@ -8,7 +8,7 @@ import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.common.gui.peripheral.MouseButton
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout.AspectHex
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
 import thaumcraft.api.aspects.Aspect
 
 class AspectHexMapEditorUIComponent(

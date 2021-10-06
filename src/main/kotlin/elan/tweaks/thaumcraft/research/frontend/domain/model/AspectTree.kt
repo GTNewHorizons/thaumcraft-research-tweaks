@@ -4,7 +4,6 @@ import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTre
 import thaumcraft.api.aspects.Aspect
 import kotlin.math.absoluteValue
 
-// TODO: init this during mod init
 object AspectTree : AspectsTreePort {
 
     private val orderedBalance = findBalance()

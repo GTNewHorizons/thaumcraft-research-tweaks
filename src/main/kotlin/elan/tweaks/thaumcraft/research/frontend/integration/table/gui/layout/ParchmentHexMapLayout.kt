@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area
+package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout
 
 import elan.tweaks.common.ext.HexMath.toCenterVector
 import elan.tweaks.common.ext.HexMath.toOrigin
@@ -10,12 +10,11 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.P
 import thaumcraft.common.lib.utils.HexUtils
 import java.util.*
 
-// TODO: init this during mod init
-object ParchmentHexMap {
+object ParchmentHexMapLayout {
 
     private val keyToHex: Map<String, Hex> = findAllFittingHexes()
     override fun toString(): String = 
-        "ParchmentHexMap: $keyToHex"
+        "ParchmentHexMapLayout: $keyToHex"
 
     fun randomHex() = keyToHex.entries.random()
 

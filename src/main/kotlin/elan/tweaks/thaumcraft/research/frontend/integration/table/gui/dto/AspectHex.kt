@@ -1,4 +1,4 @@
-package elan.tweaks.thaumcraft.research.frontend.integration.adapters.layout
+package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto
 
 import elan.tweaks.common.gui.dto.VectorXY
 import thaumcraft.api.aspects.Aspect
