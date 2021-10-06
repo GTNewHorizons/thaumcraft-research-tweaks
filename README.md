@@ -16,7 +16,7 @@
   - [x] Ensure all sounds are played accordingly
   - [x] Clean-up dependency code
   - [x] Stable aspect sorting and affinity-based splitting
-  - [ ] Clean up TODOs
+  - [x] Clean up TODOs
   - [ ] Include checking inventory when deciding on duplicate button activity
   - [ ] Update lang file
 
@@ -26,11 +26,11 @@
 
 ### Non-Functional
 1. Must:
-  - [ ] Optimize memory consumption (caches)
-  - [ ] Fix exceptions on console when running client
+  - [x] Optimize memory consumption (cache hex map structure)
   - [ ] Add CI/CD
   - [ ] Migrate and clean-up this and Forgelin 1.9 gradle
   - [ ] Fix asm trying to parse Forgelin zips and failing
+  - [ ] Fix json parsing error (check console on start)
   - [ ] Check licensing
   - [ ] Clean-up readme
 
