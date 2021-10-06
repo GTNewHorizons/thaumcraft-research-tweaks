@@ -1,18 +1,16 @@
 package elan.tweaks.thaumcraft.research.frontend.integration
 
 import cpw.mods.fml.common.Mod
+import cpw.mods.fml.common.SidedProxy
 import cpw.mods.fml.common.event.FMLInitializationEvent
 import cpw.mods.fml.common.network.NetworkRegistry
-import elan.tweaks.thaumcraft.research.frontend.domain.model.AspectTree
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.DEPENDENCIES
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.MOD_ID
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.MOD_LANGUAGE_ADAPTER
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.NAME
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.VERSION
+import elan.tweaks.thaumcraft.research.frontend.integration.proxies.SingletonInitializer
 import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftResearchGuiHandler
-import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.ParchmentHexMapLayout
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 @Mod(
     modid = MOD_ID,
@@ -30,16 +28,18 @@ object ThaumcraftResearchTweaks {
     const val DEPENDENCIES = "required-after:forgelin;" +
             "required-after:spongemixins;" +
             "required-after:Thaumcraft;"
+
+    @SidedProxy(
+        clientSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer", 
+        serverSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ServerSingletonInitializer"
+    )
+    lateinit var singletonInitializer: SingletonInitializer
     
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
         NetworkRegistry.INSTANCE.registerGuiHandler(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())
 
-        // TODO: move client-side singleton init to client-side proxy
-        val logger: Logger = LogManager.getLogger(MOD_ID)
-        val aspectTree = AspectTree
-        logger.debug("Initialised $aspectTree")
-        val parchmentHexMap = ParchmentHexMapLayout
-        logger.debug("Initialised $parchmentHexMap")
+        singletonInitializer.initialize()
     }
+
 }
