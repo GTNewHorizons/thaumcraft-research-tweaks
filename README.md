@@ -30,7 +30,6 @@
   - [ ] Add CI/CD
   - [x] Migrate and clean-up this and Forgelin 1.9 gradle
   - [ ] Fix asm trying to parse Forgelin zips and failing
-  - [ ] Fix json parsing error (check console on start)
   - [ ] Check licensing
   - [ ] Clean-up readme
 
@@ -71,7 +70,7 @@ All added features are showcased in video format:
 - [part 1](https://youtu.be/Q0d8swslIv4)
 - [part 2](https://youtu.be/nMNMRcZpb9E)
 
-## Gratitude
+## Credits
 Thanks go to: 
 - Think for texturing my rough ui sketch
 - TimeConqueror and GTNH dev's for helping out on technical part
