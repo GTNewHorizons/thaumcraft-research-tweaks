@@ -66,6 +66,11 @@ New UI:
 ## Development
 To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
 
+## Showcase
+All added features are showcased in video format:
+- [part 1](https://youtu.be/Q0d8swslIv4)
+- [part 2](https://youtu.be/nMNMRcZpb9E)
+
 ## Gratitude
 Thanks go to: 
 - Think for texturing my rough ui sketch
