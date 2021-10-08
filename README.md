@@ -1,74 +1,49 @@
-## Roadmap
-### Functional
-1. Must:
-  - [x] Larger aspect pallet for research table
-  - [x] Combining aspects via drag & drop
-  - [x] Combining 10x aspects when CTRL pressed? (shift + alt + click on aspect in pallet)
-  - [x] Combining multiple times when hovering (RMB)
-  - [x] Research notes re-implementation
-  - [x] Put aspect multiple times on notes when hovering (RMB)
-  - [x] Make sure expertise and mastery rules about aspect conservation apply correctly
-  - [x] Draw random runes on parchment when researching
-  - [x] Missing ink message
-  - [x] Research duplication
-  - [x] Fix aspect combination notification rendering
-  - [x] UI textures
-  - [x] Ensure all sounds are played accordingly
-  - [x] Clean-up dependency code
-  - [x] Stable aspect sorting and affinity-based splitting
-  - [x] Clean up TODOs
-  - [x] Include checking inventory when deciding on duplicate button activity
-  - [x] Update lang file
+# Thaumcraft 4 research table tweaks
 
-2. Nice to have:
-  - [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
-  - [ ] Make aspect layout super stable (aspect is always in same position, even if this means having gaps)
+This mod brings a reworked research table GUI.
 
-### Non-Functional
-1. Must:
-  - [x] Optimize memory consumption (cache hex map structure)
-  - [ ] Add CI/CD
-  - [x] Migrate and clean-up this and Forgelin 1.9 gradle
-  - [ ] Fix asm trying to parse Forgelin zips and failing
-  - [ ] Check licensing
-  - [ ] Clean-up readme
+![new UI](doc/example-gui.png)
 
-2. Nice to have:
-  - [ ] Testing
+## Features
+Tutorial and research pages where expanded to include explanations on new features.
 
-## Research table refactor
-
-UI elements:
-  - [x] Scribbling tools slot
-  - [x] Research notes slot
-  - [x] Research duplication button? (check how it worked)
-     - not present when not unlocked
-     - not active till finished & have unlocked duplication
-     - shows cost tooltip
-  - [x] Aspect pallet 4 columns by 13 rows (104 aspect slots)
-     - Allows drag & drop aspect combination:
-       - Shift + Left click & having research = create this aspect
-       - Drop = combine x1
-       - Drag + Right click = combine x1
-       - (Drop || Drag + Right click) + Ctrl = combine 10
-  - [x] Drawing paper
-     - hex grid
-       - individual hexes
-        - can connect as lines
-     - random runes?
-  - [x] Player inventory
-
-New UI:
-
-![UI](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png)
-
-## Development
-To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
-
-## Showcase
 All added features are showcased in video format:
 - [part 1](https://youtu.be/Q0d8swslIv4)
 - [part 2](https://youtu.be/nMNMRcZpb9E)
+
+### Aspect pallets
+Aspects pallets are now placed on both sides of the research table. 
+They split between pallets based on their affinities to order and entropy.
+Sorting is based of aspect complexity (products are always below components).
+
+### Aspect combination
+Aspect combination area was replaced by drag & drop. 
+You can also combine aspects while dragging by right-clicking, this way you don't stop dragging.
+This also can be used when doing research to place same aspect in multiple hexes.
+
+### Aspect batch combination
+It is gated behind research expertise and allows combining aspects up to 10 at a time. 
+To perform it hold ctrl while combining aspects.
+You can also do the same with auto combination unlocked in research mastery.
+
+### Research duplication
+Copy button is active only when all required components present (aspects, paper, ink).
+
+## Nice to have
+- [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
+- [ ] Stable aspect layout (aspect is always in same position, even if this means having gaps)
+
+## Roadmap
+1. Must:
+  - Add CI/CD
+  - Fix asm trying to parse Forgelin zips and failing
+  - Check licensing
+
+2. Nice to have:
+  - Testing
+
+## Development
+To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
 
 ## Credits
 Thanks go to: 
