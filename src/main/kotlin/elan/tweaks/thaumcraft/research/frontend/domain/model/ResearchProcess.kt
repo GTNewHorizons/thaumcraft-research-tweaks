@@ -42,8 +42,8 @@ class ResearchProcess constructor(
     override fun notesPresent(): Boolean =
         notes.present
 
-    override fun incomplete(): Boolean =
-        notes.present && !notes.complete
+    override fun complete(): Boolean =
+        notes.present && notes.complete
 
     override fun shouldObfuscate(aspect: Aspect): Boolean =
         !pool.hasDiscovered(aspect)

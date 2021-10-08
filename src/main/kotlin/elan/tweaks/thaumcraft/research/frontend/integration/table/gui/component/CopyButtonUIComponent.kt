@@ -73,7 +73,7 @@ class CopyButtonUIComponent(
     }
 
     private fun shouldShowRequirements() =
-        researcher.hasDiscovered(Knowledge.ResearchDuplication) && research.readyToDuplicate()
+        researcher.hasDiscovered(Knowledge.ResearchDuplication) && research.complete()
 
     private fun drawRequirements(usedAspectAmounts: Map<Aspect, Int>, context: UIContext) {
 

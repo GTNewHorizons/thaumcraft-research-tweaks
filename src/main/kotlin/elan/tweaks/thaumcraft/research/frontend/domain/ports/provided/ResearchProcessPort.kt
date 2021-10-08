@@ -15,7 +15,8 @@ interface ResearchProcessPort {
     
     fun missingNotes(): Boolean = !notesPresent()
     fun notesPresent(): Boolean
-    fun incomplete(): Boolean
+    fun incomplete(): Boolean = !complete()
+    fun complete(): Boolean
     fun notEditable(): Boolean
     fun shouldObfuscate(aspect: Aspect): Boolean
 
