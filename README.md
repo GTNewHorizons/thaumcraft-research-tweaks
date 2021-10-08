@@ -33,6 +33,7 @@ Copy button is active only when all required components present (aspects, paper,
 - [ ] Configurable bonus aspect particle (change size/turn off)
 - [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
 - [ ] Stable aspect layout (aspect is always in same position, even if this means having gaps)
+- [ ] Old style combine section between scribbling tools and copy button
 
 ## Roadmap
 1. Must:
