@@ -18,7 +18,7 @@
   - [x] Stable aspect sorting and affinity-based splitting
   - [x] Clean up TODOs
   - [x] Include checking inventory when deciding on duplicate button activity
-  - [ ] Update lang file
+  - [x] Update lang file
 
 2. Nice to have:
   - [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
