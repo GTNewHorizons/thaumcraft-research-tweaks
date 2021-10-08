@@ -67,11 +67,14 @@ repositories {
 
 // Kotlin
 repositories {
-    mavenLocal() // TODO: remove after forgelin is updated in main repo
+    ivy {
+        name = "gtnh_jenkins"
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
+    }
 }
 
 dependencies {
-    compile "net.shadowfacts:Forgelin:1.9.0-GTNH-1.7.10-Edition"
+    compile "net.shadowfacts:Forgelin:1.9.1-GTNH-1.7.10-Edition"
 }
 
 // Thaumcraft
