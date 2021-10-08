@@ -50,14 +50,14 @@ class AspectHexMapUIComponent(
 
     private fun draw(hex: AspectHex.Occupied.Root, context: UIContext) {
         context.drawOrb(hex.uiCenter)
-        if (research.shouldObfuscate(hex.aspect)) context.drawBlending(UnknownAspectTagTexture, hex.uiOrigin)
+        if (research.shouldObfuscate(hex.aspect)) context.drawBlending(UnknownAspectTagTexture, hex.uiOrigin, UnknownAspectTagTexture.colorMask)
         else context.drawTag(hex.aspect, uiPosition = hex.uiOrigin)
 
     }
 
     private fun draw(hex: AspectHex.Occupied.Node, context: UIContext) {
         when {
-            research.shouldObfuscate(hex.aspect) -> context.drawBlending(UnknownAspectTagTexture, hex.uiOrigin)
+            research.shouldObfuscate(hex.aspect) -> context.drawBlending(UnknownAspectTagTexture, hex.uiOrigin, UnknownAspectTagTexture.colorMask)
             hex.notOnRootPath -> context.drawTagMonochrome(hex.aspect, uiPosition = hex.uiOrigin)
             else -> context.drawTag(hex.aspect, uiPosition = hex.uiOrigin)
         }
