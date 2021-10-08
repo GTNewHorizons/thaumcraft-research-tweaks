@@ -66,15 +66,9 @@ repositories {
 }
 
 // Kotlin
-repositories {
-    ivy {
-        name = "gtnh_jenkins"
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
-    }
-}
 
 dependencies {
-    compile "net.shadowfacts:Forgelin:1.9.1-GTNH-1.7.10-Edition"
+    compile "com.github.GTNewHorizons:Forgelin:1.9.1-GTNH-1.7.10-Edition"
 }
 
 // Thaumcraft
