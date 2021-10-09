@@ -38,6 +38,7 @@ Copy button is active only when all required components present (aspects, paper,
 
 ## Roadmap
 1. Nice to have:
+  - Migrate gradle to kts
   - Automatic Testing
 
 ## Development
