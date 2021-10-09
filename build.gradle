@@ -66,9 +66,8 @@ repositories {
 }
 
 // Kotlin
-
 dependencies {
-    compile "com.github.GTNewHorizons:Forgelin:1.9.1-GTNH-1.7.10-Edition"
+    compile "com.github.GTNewHorizons:Forgelin:1.9.2-GTNH-1.7.10-Edition"
 }
 
 // Thaumcraft
