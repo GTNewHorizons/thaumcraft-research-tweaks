@@ -29,20 +29,22 @@ You can also do the same with auto combination unlocked in research mastery.
 ### Research duplication
 Copy button is active only when all required components present (aspects, paper, ink).
 
-## Nice to have
-- [ ] Configurable bonus aspect particle (change size/turn off)
-- [ ] Batch aspect combination in one packet (see PacketAspectCombinationToServer)
-- [ ] Stable aspect layout (aspect is always in same position, even if this means having gaps)
-- [ ] Old style combine section between scribbling tools and copy button
+
 
 ## Roadmap
-1. Must:
-  - Add CI/CD
-  - Fix asm trying to parse Forgelin zips and failing
-  - Check licensing
 
-2. Nice to have:
-  - Testing
+### Functional
+Nice to have
+- Configurable bonus aspect particle (change size/turn off)
+- Batch aspect combination in one packet (see PacketAspectCombinationToServer)
+- Stable aspect layout (aspect is always in same position, even if this means having gaps)
+- "Info" element (question mark icon?) which explains how to use the table
+- Old style combine section between scribbling tools and copy button
+
+### Non functional
+Nice to have:
+- Migrate gradle to kts
+- Automatic Testing
 
 ## Development
 To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
