@@ -50,8 +50,19 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
         private val uiOrigin = Vector2D(x = 191, y = 6)
         val bounds = Rectangle(
             origin = uiOrigin,
-            scale = Scale(SIZE_PIXEL, SIZE_PIXEL)
+            scale = Scale.cube(SIZE_PIXEL)
         )
         val requirementsUiOrigin = ResearchArea.bounds.origin + Vector2D(x = 6, y = 4)
     }
+
+    object UsageHint {
+        private val uiOrigin = Vector2D(x = 98, y = 10)
+        private const val SIZE_PIXEL = 18
+        val bounds = Rectangle(
+            origin = uiOrigin,
+            scale = Scale.cube(SIZE_PIXEL)
+        )
+        val hintPosition = Vector2D(x = ResearchArea.centerOrigin.x, y = 42 /* hmm? */)
+    }
+
 }

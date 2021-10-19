@@ -17,8 +17,14 @@ object TooltipRenderer {
 
     fun drawCentered(lines: Array<out String>, center: VectorXY, subTipColorColorHex: String, fontRenderer: FontRenderer) {
         val textScale = lines.textScale(fontRenderer)
-        val xOffset = Vector2D(textScale.width / 2, y = textScale.height / 2)
-        fontRenderer.draw(lines, textScale, origin = center - xOffset, subTipColorColorHex)
+        val offset = Vector2D(textScale.width / 2, y = textScale.height / 2)
+        fontRenderer.draw(lines, textScale, origin = center - offset, subTipColorColorHex)
+    }
+
+    fun drawVerticallyCentered(lines: Array<out String>, center: VectorXY, subTipColorColorHex: String, fontRenderer: FontRenderer) {
+        val textScale = lines.textScale(fontRenderer)
+        val offset = Vector2D(x = 0, y = textScale.height / 2)
+        fontRenderer.draw(lines, textScale, origin = center - offset, subTipColorColorHex)
     }
 
     fun draw(lines: Array<out String>, origin: VectorXY, subTipColorColorHex: String, fontRenderer: FontRenderer) {

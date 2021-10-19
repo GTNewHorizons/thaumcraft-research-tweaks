@@ -23,6 +23,7 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.R
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture.AspectPools
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture.CopyButton
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture.ResearchArea
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture.UsageHint
 import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.tiles.TileResearchTable
@@ -42,6 +43,7 @@ object ResearchTableGuiFactory {
                     + researchArea()
                     + copyButton()
                     + palletComponents()
+                    + UsageHintUIComponent(UsageHint.bounds, UsageHint.hintPosition)
                     + ScribeToolsNotificationUIComponent(research, ResearchArea.centerOrigin)
                     + AspectDragAndDropUIComponent(pallet)
                     + KnowledgeNotificationUIComponent()

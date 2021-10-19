@@ -58,6 +58,12 @@ class TableUIContext(
         )
     }
 
+    override fun drawTooltipVerticallyCentered(uiCenterPosition: VectorXY, vararg text: String) {
+        TooltipRenderer.drawVerticallyCentered(
+            text, center = screenOrigin + uiCenterPosition, TooltipRenderer.TextColors.LIGHT_BLUE, fontRenderer
+        )
+    }
+
     override fun drawOrb(uiPosition: VectorXY, color: Int) {
        OrbParticle.draw(screenOrigin + uiPosition, color)
     }
