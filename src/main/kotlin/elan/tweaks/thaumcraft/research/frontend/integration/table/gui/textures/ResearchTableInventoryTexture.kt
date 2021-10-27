@@ -48,13 +48,19 @@ object ResearchTableInventoryTexture :
   }
 
   object UsageHint {
-      private val uiOrigin = Vector2D(x = 114, y = 10)
+      private const val SHADOW_PIXELS = 6
       private const val SIZE_PIXEL = 18
-      val bounds = Rectangle(
+      const val SIZE_WITH_SHADOW_PIXELS = SIZE_PIXEL + SHADOW_PIXELS
+      private val uiOrigin = Vector2D(x = 111, y = 6)
+      val uiBounds = Rectangle(
           origin = uiOrigin,
+          scale = Scale.cube(SIZE_WITH_SHADOW_PIXELS)
+      )
+      private val onMouseOverOrigin = Vector2D(x = 98, y = 10)
+      val onMouseOverBounds = Rectangle(
+          origin = onMouseOverOrigin,
           scale = Scale.cube(SIZE_PIXEL)
       )
-      val hintPosition = Vector2D(x = ResearchArea.centerOrigin.x, y = 42 /* hmm? */)
   }
 
 }
