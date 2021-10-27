@@ -43,7 +43,7 @@ object ResearchTableGuiFactory {
                     + researchArea()
                     + copyButton()
                     + palletComponents()
-                    + UsageHintUIComponent(UsageHint.bounds, UsageHint.hintPosition)
+                    + UsageHintUIComponent(UsageHint.uiBounds, UsageHint.onMouseOverBounds)
                     + ScribeToolsNotificationUIComponent(research, ResearchArea.centerOrigin)
                     + AspectDragAndDropUIComponent(pallet)
                     + KnowledgeNotificationUIComponent()
