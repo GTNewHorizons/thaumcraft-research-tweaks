@@ -27,7 +27,9 @@ class Runes(
     }
 
     private fun introduceRunes(random: Random) {
-        if (research.missingNotes() || research.notesCorrupted() || keysToRunes.size >= runeLimit) return
+        if (research.missingNotes() || research.notesCorrupted()) return
+
+        if (keysToRunes.size >= runeLimit) return
 
         val (key, hex) = ParchmentHexMapLayout.randomHex()
         if (keysToRunes.containsKey(key)) return
