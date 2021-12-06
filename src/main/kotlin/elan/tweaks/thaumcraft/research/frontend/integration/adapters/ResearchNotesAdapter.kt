@@ -28,12 +28,23 @@ class ResearchNotesAdapter(
     override val complete: Boolean
         get() = notes?.stackTagCompound?.getBoolean("complete") ?: false
 
+    override val valid: Boolean
+        get() = validateData()
+    
     override val data: ResearchNoteData?
         get() = notes?.let(ResearchManager::getData)
 
     private val notes: ItemStack?
         get() =
             table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
+
+    private fun validateData(): Boolean {
+        val hexes = data?.hexEntries?.values ?: return true
+        return hexes.all(this::nonVacantHexesHaveAspects)
+    }
+
+    private fun nonVacantHexesHaveAspects(hex: ResearchManager.HexEntry) =
+        hex.type == HexType.VACANT || hex.aspect != null
 
     override fun erase(hexKey: String): Result<Unit> =
         sendAspectPlacePacket(hexKey, aspect = null)
@@ -74,4 +85,10 @@ class ResearchNotesAdapter(
         ResearchManager.getData(
             table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
         )
+
+    object HexType {
+        const val VACANT = 0
+        const val ROOT = 1
+        const val NODE = 2
+    }
 }

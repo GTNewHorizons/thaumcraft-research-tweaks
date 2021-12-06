@@ -9,18 +9,27 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.Aspect
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexHighlightTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.UnknownAspectTagTexture
+import net.minecraft.util.StatCollector
 
 class AspectHexMapUIComponent(
+    private val centerUiOrigin: VectorXY,
     private val research: ResearchProcessPort,
     private val hexLayout: HexLayout<AspectHex>,
 ) : BackgroundUIComponent {
 
     override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (research.missingNotes()) return
-
-        // with current highlight texture best effect us achieved when drawing it under border
+        if(research.notesCorrupted()) return drawCorruptedNotes(context)
+        
+        // with current highlight texture best effect is achieved when drawing it under border
         drawMouseOverHighlight(uiMousePosition, context)
         drawHexes(context)
+    }
+
+    private fun drawCorruptedNotes(context: UIContext) {
+        val header = StatCollector.translateToLocal("tc.research.notes.corrupted.line.1")
+        val body = StatCollector.translateToLocal("tc.research.notes.corrupted.line.2")
+        context.drawTooltipCentered(centerUiOrigin, header, body)
     }
 
     private fun drawMouseOverHighlight(uiMousePosition: VectorXY, context: UIContext) {

@@ -87,7 +87,7 @@ object ResearchTableGuiFactory {
                 uiOrigin = ResearchArea.bounds.origin,
                 runes = runes
             ),
-            AspectHexMapUIComponent(research, hexLayout),
+            AspectHexMapUIComponent(centerUiOrigin = ResearchArea.centerOrigin, research, hexLayout),
             AspectHexMapEditorUIComponent(research, hexLayout)
         )
     }

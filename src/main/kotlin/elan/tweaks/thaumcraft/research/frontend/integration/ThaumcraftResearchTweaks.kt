@@ -22,7 +22,7 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftRese
 object ThaumcraftResearchTweaks {
 
     const val MOD_ID = "ThaumcraftResearchTweaks"
-    const val VERSION = "1.0.1"
+    const val VERSION = "1.0.2"
     const val NAME = "Thaumcraft Research Tweaks"
     const val MOD_LANGUAGE_ADAPTER = "net.shadowfacts.forgelin.KotlinAdapter"
     const val DEPENDENCIES = "required-after:forgelin;" +
