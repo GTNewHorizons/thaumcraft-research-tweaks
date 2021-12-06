@@ -6,7 +6,7 @@ buildscript {
         }
         maven {            
             name = "forge"
-            url = "https://files.minecraftforge.net/maven"
+            url = "https://maven.minecraftforge.net"
         }
         maven {
             name = "sonatype"
@@ -57,7 +57,7 @@ repositories {
     }
     maven {
         name = "forge"
-        url = "https://files.minecraftforge.net/maven"
+        url = "https://maven.minecraftforge.net"
     }
     maven {
         name = "jeknins-thirdparty"
