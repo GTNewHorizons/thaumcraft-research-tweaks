@@ -37,10 +37,13 @@ class ResearchProcess constructor(
         notes.present && notes.complete && pool.contains(usedAspectAmounts) && playerInventory.containsPaper() && playerInventory.containsBlackDye()
 
     override fun notEditable(): Boolean =
-        missingNotes() || notes.complete
+        missingNotes() || notes.complete || notesCorrupted()
 
     override fun notesPresent(): Boolean =
         notes.present
+
+    override fun notesCorrupted(): Boolean =
+        !notes.valid
 
     override fun complete(): Boolean =
         notes.present && notes.complete

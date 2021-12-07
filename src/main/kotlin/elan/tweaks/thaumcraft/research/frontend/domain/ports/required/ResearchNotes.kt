@@ -5,6 +5,7 @@ import thaumcraft.common.lib.research.ResearchNoteData
 
 interface ResearchNotes {
     val present: Boolean
+    val valid: Boolean
 
     val complete: Boolean
     

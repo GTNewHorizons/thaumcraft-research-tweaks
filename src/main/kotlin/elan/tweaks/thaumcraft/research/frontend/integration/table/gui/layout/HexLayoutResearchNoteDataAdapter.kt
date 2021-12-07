@@ -11,6 +11,7 @@ import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.ResearchNotesAdapter
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
 import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.lib.utils.HexUtils
@@ -56,6 +57,8 @@ class HexLayoutResearchNoteDataAdapter(
     }
 
     private fun generateCache(): Cache {
+        if(researchProcess.notesCorrupted()) return Cache(emptyMap(), emptyMap(), emptyMap())
+
         val hexEntries = getHexEntries()
         val hexes = getHexes()
 
@@ -79,7 +82,7 @@ class HexLayoutResearchNoteDataAdapter(
         hexEntries: Map<String, ResearchManager.HexEntry>,
         hexes: Map<String, HexUtils.Hex>
     ): Pair<Set<String>, Map<String, Set<String>>> {
-        val rootHexes = hexEntries.filterValues { entry -> entry.type == HexType.ROOT }.keys
+        val rootHexes = hexEntries.filterValues { entry -> entry.type == ResearchNotesAdapter.HexType.ROOT }.keys
 
         val traversedKeys = mutableSetOf<String>()
         val relatedNodeKeys = mutableMapOf<String, Set<String>>()
@@ -101,7 +104,7 @@ class HexLayoutResearchNoteDataAdapter(
                     .filter { neighbourKey ->
                         val neighborEntry = hexEntries[neighbourKey]!!
                         neighbourKey !in traversedKeys
-                                && neighborEntry.type != HexType.VACANT
+                                && neighborEntry.type != ResearchNotesAdapter.HexType.VACANT
                                 && neighborEntry.aspect in discoveredAspects
                                 && aspectTree.areRelated(entry.aspect, neighborEntry.aspect)
                     }.toSet()
@@ -134,13 +137,13 @@ class HexLayoutResearchNoteDataAdapter(
                 .toSet()
 
         return when (type) {
-            HexType.ROOT -> AspectHex.Occupied.Root(
+            ResearchNotesAdapter.HexType.ROOT -> AspectHex.Occupied.Root(
                 uiOrigin = uiOrigin,
                 uiCenter = uiCenter,
                 aspect = aspect,
                 connectionTargetsCenters = connections
             )
-            HexType.NODE -> AspectHex.Occupied.Node(
+            ResearchNotesAdapter.HexType.NODE -> AspectHex.Occupied.Node(
                 key = key,
                 uiOrigin = uiOrigin,
                 uiCenter = uiCenter,
@@ -157,12 +160,6 @@ class HexLayoutResearchNoteDataAdapter(
 
     private fun Map<String, HexUtils.Hex>.findUICenterOf(key: String) =
         toCenterVector(hex = getValue(key), hexSize) + centerUiOrigin
-
-    private object HexType {
-        const val VACANT = 0
-        const val ROOT = 1
-        const val NODE = 2
-    }
 
     private inner class Cache(
         val keyToAspectHex: Map<String, AspectHex>,
