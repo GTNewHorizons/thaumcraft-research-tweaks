@@ -1,0 +1,18 @@
+// Add any additional repositories for your dependencies here
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'GTNH Maven'
+        url 'http://jenkins.usrv.eu:8081/nexus/content/groups/public/'
+        allowInsecureProtocol
+    }
+    maven {
+        name 'Overmind forge repo mirror'
+        url 'https://gregtech.overminddl1.com/'
+    }
+    maven {
+        name = 'jitpack'
+        url = 'https://jitpack.io'
+    }
+}
