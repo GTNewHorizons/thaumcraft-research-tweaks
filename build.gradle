@@ -4,13 +4,15 @@ import org.gradle.internal.logging.text.StyledTextOutput
 import org.gradle.internal.logging.text.StyledTextOutputFactory
 import org.gradle.internal.logging.text.StyledTextOutput.Style
 
+import java.util.concurrent.TimeUnit
+
 buildscript {
     repositories {
         maven {
             name = 'Overmind forge repo mirror'
             url = 'https://gregtech.overminddl1.com/'
         }
-        maven {            
+        maven {
             name = 'forge'
             url = 'https://maven.minecraftforge.net'
         }
@@ -33,12 +35,76 @@ plugins {
     id 'idea'
     id 'eclipse'
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm'  version ('1.6.10')
-    id 'org.jetbrains.kotlin.kapt' version ('1.6.10')
-    id 'com.palantir.git-version'  version ('0.13.0')
+    id 'org.jetbrains.kotlin.jvm'        version '1.5.30'
+    id 'org.jetbrains.kotlin.kapt'       version '1.5.30'
+    id 'org.ajoberstar.grgit'            version '4.1.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.palantir.git-version'        version '0.13.0' apply false
+    id 'de.undercouch.download'          version '5.0.1'
+}
+
+if (project.file('.git/HEAD').isFile()) {
+    apply plugin: 'com.palantir.git-version'
 }
 
 apply plugin: 'forge'
+
+def projectJavaVersion = JavaLanguageVersion.of(8)
+
+java {
+    toolchain {
+        languageVersion.set(projectJavaVersion)
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+if(JavaVersion.current() != JavaVersion.VERSION_1_8) {
+    throw new GradleException("This project requires Java 8, but it's running on " + JavaVersion.current())
+}
+
+checkPropertyExists("modName")
+checkPropertyExists("modId")
+checkPropertyExists("modGroup")
+checkPropertyExists("autoUpdateBuildScript")
+checkPropertyExists("minecraftVersion")
+checkPropertyExists("forgeVersion")
+checkPropertyExists("replaceGradleTokenInFile")
+checkPropertyExists("gradleTokenModId")
+checkPropertyExists("gradleTokenModName")
+checkPropertyExists("gradleTokenVersion")
+checkPropertyExists("gradleTokenGroupName")
+checkPropertyExists("apiPackage")
+checkPropertyExists("accessTransformersFile")
+checkPropertyExists("usesMixins")
+checkPropertyExists("mixinPlugin")
+checkPropertyExists("mixinsPackage")
+checkPropertyExists("coreModClass")
+checkPropertyExists("containsMixinsAndOrCoreModOnly")
+checkPropertyExists("usesShadowedDependencies")
+checkPropertyExists("developmentEnvironmentUserName")
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+
+    // Make sure GregTech build won't time out
+    System.setProperty("org.gradle.internal.http.connectionTimeout", 120000 as String)
+    System.setProperty("org.gradle.internal.http.socketTimeout", 120000 as String)
+}
+
+// Fix Jenkins' Git: chmod a file should not be detected as a change and append a '.dirty' to the version
+try {
+    'git config core.fileMode false'.execute()
+}
+catch (Exception e) {
+    out.style(Style.Failure).println("git isn't installed at all")
+}
 
 // Pulls version first from the VERSION env and then git tag
 String identifiedVersion
@@ -55,56 +121,136 @@ catch (Exception e) {
     versionOverride = 'NO-GIT-TAG-SET'
     identifiedVersion = versionOverride
 }
-version = '1.7.10-' + identifiedVersion
+version = minecraftVersion + '-' + identifiedVersion
 String modVersion = identifiedVersion
 
 if( identifiedVersion.equals(versionOverride) ) {
     out.style(Style.Failure).text('Override version to ').style(Style.Identifier).text(modVersion).style(Style.Failure).println('!\7')
 }
 
-group = "elan.tweaks.thaumcraft.research"
-archivesBaseName = modId
+group = modGroup
+if(project.hasProperty("customArchiveBaseName") && customArchiveBaseName) {
+    archivesBaseName = customArchiveBaseName
+}
+else {
+    archivesBaseName = modId
+}
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+def arguments = []
+def jvmArguments = []
 
-idea {
-    module {
-        inheritOutputDirs = true
-        downloadJavadoc = true
-        downloadSources = true
+if(usesMixins.toBoolean()) {
+    arguments += [
+            "--tweakClass org.spongepowered.asm.launch.MixinTweaker"
+    ]
+    jvmArguments += [
+            "-Dmixin.debug.countInjections=true", "-Dmixin.debug.verbose=true", "-Dmixin.debug.export=true"
+    ]
+}
+
+minecraft {
+    version = minecraftVersion + "-" + forgeVersion + "-" + minecraftVersion
+    runDir = "run"
+
+    if (replaceGradleTokenInFile) {
+        replaceIn replaceGradleTokenInFile
+        if(gradleTokenModId) {
+            replace gradleTokenModId, modId
+        }
+        if(gradleTokenModName) {
+            replace gradleTokenModName, modName
+        }
+        if(gradleTokenVersion) {
+            replace gradleTokenVersion, modVersion
+        }
+        if(gradleTokenGroupName) {
+            replace gradleTokenGroupName, modGroup
+        }
     }
+
+    clientIntellijRun {
+        args(arguments)
+        jvmArgs(jvmArguments)
+
+        if(developmentEnvironmentUserName) {
+            args("--username", developmentEnvironmentUserName)
+        }
+    }
+
+    serverIntellijRun {
+        args(arguments)
+        jvmArgs(jvmArguments)
+    }
+}
+
+if(file("addon.gradle").exists()) {
+    apply from: "addon.gradle"
 }
 
 apply from: 'repositories.gradle'
 
+configurations {
+    implementation.extendsFrom(shadowImplementation)  // TODO: remove after all uses are refactored
+    implementation.extendsFrom(shadowCompile)
+    implementation.extendsFrom(shadeCompile)
+}
+
+repositories {
+    maven {
+        name 'Overmind forge repo mirror'
+        url 'https://gregtech.overminddl1.com/'
+    }
+    if(usesMixins.toBoolean()) {
+        maven {
+            name 'sponge'
+            url 'https://repo.spongepowered.org/repository/maven-public'
+        }
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}
+
+dependencies {
+    if(usesMixins.toBoolean()) {
+        annotationProcessor('org.ow2.asm:asm-debug-all:5.0.3')
+        annotationProcessor('com.google.guava:guava:24.1.1-jre')
+        annotationProcessor('com.google.code.gson:gson:2.8.6')
+        annotationProcessor('org.spongepowered:mixin:0.8-SNAPSHOT')
+        // using 0.8 to workaround a issue in 0.7 which fails mixin application
+        compile('com.github.GTNewHorizons:SpongePoweredMixin:0.7.12-GTNH') {
+            // Mixin includes a lot of dependencies that are too up-to-date
+            exclude module: 'launchwrapper'
+            exclude module: 'guava'
+            exclude module: 'gson'
+            exclude module: 'commons-io'
+            exclude module: 'log4j-core'
+        }
+        compile('com.github.GTNewHorizons:SpongeMixins:1.5.0')
+    }
+}
+
 apply from: 'dependencies.gradle'
 
-test {
-    useJUnitPlatform()
-}
-
-// Minecraft
-minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
-    runDir = "run"
-
-    replaceIn 'ThaumcraftResearchTweaks.kt'
-    replace 'GRADLETOKEN_VERSION', modVersion
-}
-
 processResources {
+    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
+        include 'mcmod.info'
+
+        // replace modVersion and minecraftVersion
         expand "minecraftVersion": project.minecraft.version,
-                "modVersion": modVersion,
-                "modId": modId,
-                "modName": modName
+            "modVersion": modVersion,
+            "modId": modId,
+            "modName": modName
     }
+
+    // copy everything else that's not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
+        exclude 'mcmod.info'
     }
 }
 
@@ -121,34 +267,6 @@ task sourcesJar(type: Jar) {
 artifacts {
     archives devJar
     archives sourcesJar
-}
-
-// Mixins
-repositories {
-    maven {
-        name 'sponge'
-        url 'https://repo.spongepowered.org/repository/maven-public'
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-}
-
-dependencies {
-    annotationProcessor('org.ow2.asm:asm-debug-all:5.0.3')
-    annotationProcessor('com.google.guava:guava:24.1.1-jre')
-    annotationProcessor('com.google.code.gson:gson:2.8.6')
-    annotationProcessor('org.spongepowered:mixin:0.8-SNAPSHOT')
-    // using 0.8 to workaround a issue in 0.7 which fails mixin application
-    compile('com.github.GTNewHorizons:SpongePoweredMixin:0.7.12-GTNH') {
-        // Mixin includes a lot of dependencies that are too up-to-date
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
-        exclude module: 'gson'
-        exclude module: 'commons-io'
-        exclude module: 'log4j-core'
-    }
-    compile('com.github.GTNewHorizons:SpongeMixins:1.5.0')
 }
 
 def mixinConfigJson = "mixins.${modId}.json"
@@ -190,25 +308,26 @@ afterEvaluate {
 }
 
 runClient {
-    def playerUserName = System.env.PLAYER_USER_NAME
-    if (playerUserName == null)  {
-        playerUserName = 'Developer'
+    if(developmentEnvironmentUserName) {
+        arguments += [
+                "--username",
+                developmentEnvironmentUserName
+        ]
     }
 
-    args("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
-            // Having mixin in the same jar as normal mode makes FML ignore it.
-            // It should be fine in production, however I suppose it's not properly read here.
-            // The only option which worked for me was adding it as a mod explicitly via next argument:
-            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar",
-            "--username", playerUserName)
+    args(arguments)
+    jvmArgs(jvmArguments)
 }
 
 runServer {
-    args("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
-            // Having mixin in the same jar as normal mode makes FML ignore it.
-            // It should be fine in production, however I suppose it's not properly read here.
-            // The only option which worked for me was adding it as a mod explicitly via next argument:
-            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar")
+    args(arguments)
+    jvmArgs(jvmArguments)
+}
+
+// The gradle metadata includes all of the additional deps that we disabled from POM generation (including forgeBin with no groupID),
+// and isn't strictly needed with the POM so just disable it.
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
 }
 
 publishing {
@@ -228,7 +347,7 @@ publishing {
                                    'org.scala-lang.plugins', 'net.sf.jopt-simple', 'lzma', 'com.mojang', 'org.apache.commons', 'org.apache.httpcomponents',
                                    'commons-logging', 'java3d', 'net.sf.trove4j', 'com.ibm.icu', 'com.paulscode', 'io.netty', 'com.google.guava',
                                    'commons-io', 'commons-codec', 'net.java.jinput', 'net.java.jutils', 'com.google.code.gson', 'org.apache.logging.log4j',
-                                   'org.lwjgl.lwjgl', 'tv.twitch', '']
+                                   'org.lwjgl.lwjgl', 'tv.twitch', 'org.jetbrains.kotlin', '']
                 Node pomNode = asNode()
                 pomNode.dependencies.'*'.findAll() {
                     badPomGroup.contains(it.groupId.text())
@@ -248,4 +367,16 @@ publishing {
             }
         }
     }
+}
+
+// Helper methods
+
+def checkPropertyExists(String propertyName) {
+    if (project.hasProperty(propertyName) == false) {
+        throw new GradleException("This project requires a property \"" + propertyName + "\"! Please add it your \"gradle.properties\". You can find all properties and their description here: https://github.com/GTNewHorizons/ExampleMod1.7.10/blob/main/gradle.properties")
+    }
+}
+
+def getFile(String relativePath) {
+    return new File(projectDir, relativePath)
 }
