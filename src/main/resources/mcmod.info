@@ -1,10 +1,10 @@
 [
   {
-    "modid": "${modid}",
+    "modid": "${modId}",
     "name": "${modName}",
     "description": "Makes thaumcraft research table ui resizable, adjusts sorting and allows 10x at a time aspect combination",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
+    "version": "${modVersion}",
+    "mcversion": "${minecraftVersion}",
     "url": "",
     "updateUrl": "",
     "authorList": [
