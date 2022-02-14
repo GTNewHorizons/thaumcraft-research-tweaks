@@ -12,7 +12,7 @@ repositories {
         url 'https://gregtech.overminddl1.com/'
     }
     maven {
-        name = 'jitpack'
-        url = 'https://jitpack.io'
+        name 'jitpack'
+        url 'https://jitpack.io'
     }
 }

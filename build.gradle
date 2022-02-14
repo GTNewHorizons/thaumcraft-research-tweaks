@@ -4,25 +4,29 @@ import org.gradle.internal.logging.text.StyledTextOutput
 import org.gradle.internal.logging.text.StyledTextOutputFactory
 import org.gradle.internal.logging.text.StyledTextOutput.Style
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 import java.util.concurrent.TimeUnit
 
 buildscript {
     repositories {
+        mavenCentral()
         maven {
-            name = 'Overmind forge repo mirror'
-            url = 'https://gregtech.overminddl1.com/'
+            name 'Overmind forge repo mirror'
+            url 'https://gregtech.overminddl1.com/'
         }
         maven {
-            name = 'forge'
-            url = 'https://maven.minecraftforge.net'
+            name 'forge'
+            url 'https://maven.minecraftforge.net'
         }
         maven {
-            name = 'sonatype'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            name 'sonatype'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
         maven {
-            name = 'jitpack'
-            url = 'https://jitpack.io'
+            name 'jitpack'
+            url 'https://jitpack.io'
         }
     }
     dependencies {
@@ -34,13 +38,15 @@ plugins {
     id 'java-library'
     id 'idea'
     id 'eclipse'
+    id 'scala'
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm'        version '1.5.30'
+    id 'org.jetbrains.kotlin.jvm'        version '1.5.30' apply false
     id 'org.jetbrains.kotlin.kapt'       version '1.5.30'
     id 'org.ajoberstar.grgit'            version '4.1.1'
     id 'com.github.johnrengelman.shadow' version '4.0.4'
     id 'com.palantir.git-version'        version '0.13.0' apply false
     id 'de.undercouch.download'          version '5.0.1'
+    id 'com.github.gmazzo.buildconfig'   version '3.0.3'  apply false
 }
 
 if (project.file('.git/HEAD').isFile()) {
@@ -122,7 +128,9 @@ catch (Exception e) {
     identifiedVersion = versionOverride
 }
 version = minecraftVersion + '-' + identifiedVersion
-String modVersion = identifiedVersion
+ext {
+    modVersion = identifiedVersion
+}
 
 if( identifiedVersion.equals(versionOverride) ) {
     out.style(Style.Failure).text('Override version to ').style(Style.Identifier).text(modVersion).style(Style.Failure).println('!\7')
@@ -216,7 +224,7 @@ dependencies {
         annotationProcessor('org.ow2.asm:asm-debug-all:5.0.3')
         annotationProcessor('com.google.guava:guava:24.1.1-jre')
         annotationProcessor('com.google.code.gson:gson:2.8.6')
-        annotationProcessor('org.spongepowered:mixin:0.8-SNAPSHOT')
+        kapt('org.spongepowered:mixin:0.8-SNAPSHOT')
         // using 0.8 to workaround a issue in 0.7 which fails mixin application
         compile('com.github.GTNewHorizons:SpongePoweredMixin:0.7.12-GTNH') {
             // Mixin includes a lot of dependencies that are too up-to-date

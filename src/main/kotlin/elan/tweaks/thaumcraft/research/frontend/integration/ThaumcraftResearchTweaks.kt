@@ -22,7 +22,7 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftRese
 object ThaumcraftResearchTweaks {
 
     const val MOD_ID = "ThaumcraftResearchTweaks"
-    const val VERSION = "GRADLETOKEN_VERSION"
+    const val VERSION = MODVER
     const val NAME = "Thaumcraft Research Tweaks"
     const val MOD_LANGUAGE_ADAPTER = "net.shadowfacts.forgelin.KotlinAdapter"
     const val DEPENDENCIES = "required-after:forgelin;" +
@@ -30,11 +30,11 @@ object ThaumcraftResearchTweaks {
             "required-after:Thaumcraft;"
 
     @SidedProxy(
-        clientSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer", 
+        clientSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer",
         serverSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ServerSingletonInitializer"
     )
     lateinit var singletonInitializer: SingletonInitializer
-    
+
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
         NetworkRegistry.INSTANCE.registerGuiHandler(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())

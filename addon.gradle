@@ -1,3 +1,14 @@
-test {
-    useJUnitPlatform()
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.github.gmazzo.buildconfig'
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = 1.8
+    }
+}
+
+buildConfig {
+    packageName("elan.tweaks.thaumcraft.research.frontend.integration")
+    buildConfigField('String', 'MODVER', "\"${project.modVersion}\"")
+    useKotlinOutput { topLevelConstants = true }
 }
