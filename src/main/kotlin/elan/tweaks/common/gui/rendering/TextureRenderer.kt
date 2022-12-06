@@ -19,9 +19,9 @@ object TextureRenderer {
         GL11.glPushMatrix()
         GL11.glEnable(GL11.GL_BLEND)
         GL11.glColor4f(colorMask.r, colorMask.g, colorMask.b, colorMask.a)
-        
+
         texture.bindAndDraw(origin, colorMask)
-        
+
         GL11.glPopMatrix()
     }
 

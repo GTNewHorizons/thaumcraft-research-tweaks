@@ -13,7 +13,7 @@ class AspectDragAndDropUIComponent(
 
     override fun onAttemptDrag(draggable: Any, uiMousePosition: VectorXY, context: UIContext) {
         if (this.draggable != null || draggable !is Aspect) return
-        
+
         this.draggable = draggable
     }
 
@@ -24,7 +24,7 @@ class AspectDragAndDropUIComponent(
         return droppedAspect
     }
 
-    override fun onDragClick(context: UIContext): Any? = 
+    override fun onDragClick(context: UIContext): Any? =
         draggable
 
     override fun onDragging(uiMousePosition: VectorXY, context: UIContext) {
@@ -33,7 +33,7 @@ class AspectDragAndDropUIComponent(
             draggable = null
             return
         }
-        
+
         context.drawOrb(uiMousePosition, draggedAspect.color)
     }
 

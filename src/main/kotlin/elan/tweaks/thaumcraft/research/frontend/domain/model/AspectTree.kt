@@ -66,7 +66,7 @@ object AspectTree : AspectsTreePort {
             aspectToOrder += orderDerivable.associateWith { aspect ->
                 aspectToOrder.getValue(aspect.components[0]) + aspectToOrder.getValue(aspect.components[1])
             }
-            
+
             affinityToOrder += orderDerivable.associateWith { aspect ->
                 (affinityToOrder.getValue(aspect.components[0]) + affinityToOrder.getValue(aspect.components[1])) / 2
             }

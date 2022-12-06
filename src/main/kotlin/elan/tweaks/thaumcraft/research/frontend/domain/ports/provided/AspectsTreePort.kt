@@ -8,5 +8,5 @@ interface AspectsTreePort {
     fun orderOf(aspect: Aspect): Int
     fun allEntropyLeaning(): List<Aspect>
     fun allOrderLeaning(): List<Aspect>
-    
+
 }

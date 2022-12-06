@@ -54,7 +54,7 @@ object OrbParticle {
             addVertexWithUV(16.0, 0.0, screenOrigin.z, var8.toDouble(), var10.toDouble())
             addVertexWithUV(0.0, 0.0, screenOrigin.z, var8.toDouble(), var11.toDouble())
         }
-        
+
         GL11.glPopMatrix()
     }
 

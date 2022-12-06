@@ -9,7 +9,7 @@ class GridLayoutDynamicListAdapter<ElementT>(
     private val cellSize: Int,
     private val provideElements: () -> List<ElementT>
 ) : GridLayout<ElementT> {
-    
+
     private val elements: List<ElementT>
         get() = provideElements()
 

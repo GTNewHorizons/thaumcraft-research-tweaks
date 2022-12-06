@@ -7,7 +7,7 @@ class MissingResearchFailure(message: String) : Exception(message) {
         fun <ResultT> missingResearchMastery() = Result.failure<ResultT>(
             MissingResearchFailure("${KnowledgeBase.RESEARCH_MASTERY} is required")
         )
-        
+
         fun <ResultT> missingResearchDuplication() = Result.failure<ResultT>(
             MissingResearchFailure("${KnowledgeBase.RESEARCH_DUPLICATION} is required")
         )

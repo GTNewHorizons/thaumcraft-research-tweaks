@@ -14,7 +14,7 @@ class TextureBackgroundUIComponent(
         context.drawBlending(texture, uiOrigin)
 
     companion object {
-        fun background(uiOrigin: VectorXY, texture: TextureInstance) = 
+        fun background(uiOrigin: VectorXY, texture: TextureInstance) =
             TextureBackgroundUIComponent(uiOrigin, texture)
     }
 

@@ -4,15 +4,15 @@ import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.lib.research.ResearchNoteData
 
 interface ResearchProcessPort {
-    
+
     val usedAspectAmounts: Map<Aspect, Int>
     val requiresInkToContinue: Boolean
     val data: ResearchNoteData?
-    
+
     fun notReadyToDuplicate() : Boolean = !readyToDuplicate()
     fun readyToDuplicate() : Boolean
     fun duplicate() : Result<Unit>
-    
+
     fun missingNotes(): Boolean = !notesPresent()
     fun notesPresent(): Boolean
     fun notesCorrupted(): Boolean

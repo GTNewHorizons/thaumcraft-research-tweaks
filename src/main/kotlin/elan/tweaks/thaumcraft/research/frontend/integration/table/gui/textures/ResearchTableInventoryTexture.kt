@@ -11,7 +11,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
     uvScale = Scale(width = 310, height =  219)
 ) {
     val inventoryOrigin = Vector2D(x = 67, y = 191)
-    
+
     object Slots {
         val scribeToolsOrigin = Vector2D(x = 75, y = 10)
         val notesOrigin = Vector2D(x = 219, y = 10)
@@ -28,7 +28,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
             origin = Vector2D(x = 12, y = 12),
             scale
         )
-        
+
         val rightBound = Rectangle(
             origin = Vector2D(x = 250, y = 12),
             scale
@@ -40,7 +40,7 @@ object ResearchTableInventoryTexture : ThaumcraftTextureInstance(
             origin = Vector2D(80, 35),
             scale = ParchmentTexture.scale
         )
-        val centerOrigin = bounds.origin + ParchmentTexture.centerOrigin 
+        val centerOrigin = bounds.origin + ParchmentTexture.centerOrigin
     }
 
     object CopyButton {

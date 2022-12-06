@@ -96,7 +96,7 @@ class CopyButtonUIComponent(
                 )
                 context.drawTag(aspect, amount, requirementsUiOrigin + tagOffset)
             }
-        
+
     }
 
 }

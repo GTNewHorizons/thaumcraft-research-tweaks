@@ -13,7 +13,7 @@ object HexTexture : ThaumcraftTextureInstance(
 ) {
     const val SIZE_PIXELS = 9
     val colorMask = Rgba(1f, 1f, 1f, 0.25f)
-    
+
     override fun beforeGL() {
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.003921569f)
     }
@@ -25,5 +25,5 @@ object HexTexture : ThaumcraftTextureInstance(
     override fun afterGL() {
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f)
     }
-    
+
 }

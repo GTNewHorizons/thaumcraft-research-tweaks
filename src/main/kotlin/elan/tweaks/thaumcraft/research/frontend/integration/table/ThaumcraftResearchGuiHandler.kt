@@ -37,4 +37,3 @@ class ThaumcraftResearchGuiHandler : IGuiHandler {
         getTileEntity(x, y, z) as TileResearchTable
 
 }
-

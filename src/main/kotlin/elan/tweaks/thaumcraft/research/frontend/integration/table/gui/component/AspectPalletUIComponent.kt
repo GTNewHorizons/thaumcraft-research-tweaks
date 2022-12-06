@@ -61,7 +61,7 @@ class AspectPalletUIComponent(
         }
     }
 
-    private fun Aspect.hasComponents() = 
+    private fun Aspect.hasComponents() =
         !isPrimal && components != null && components.isNotEmpty()
 
     override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
@@ -84,7 +84,7 @@ class AspectPalletUIComponent(
         return aspect
     }
 
-    private fun isIntendingToDeriveAspect() = 
+    private fun isIntendingToDeriveAspect() =
         isShiftKeyDown()
 
     private fun UIContext.playButtonAspect() {
@@ -95,7 +95,7 @@ class AspectPalletUIComponent(
             false
         )
     }
-    
+
     override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
         if (draggable !is Aspect) return
 
@@ -107,7 +107,7 @@ class AspectPalletUIComponent(
 
     override fun onDragClick(draggable: Any, uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
         if (draggable !is Aspect || button !is MouseButton.Right) return
-        
+
         whenAspectAt(uiMousePosition) { targetAspect ->
             combine(draggable, targetAspect).onSuccess { context.playCombine() }
         }
@@ -117,7 +117,7 @@ class AspectPalletUIComponent(
         if (isIntendingToBatch()) pallet.combineBatch(draggable, targetAspect)
         else pallet.combine(draggable, targetAspect)
 
-    private fun isIntendingToBatch() = 
+    private fun isIntendingToBatch() =
         isCtrlKeyDown()
 
     private inline fun whenAspectAt(uiMousePosition: VectorXY, action: (Aspect) -> Unit) {
