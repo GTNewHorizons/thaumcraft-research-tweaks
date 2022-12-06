@@ -21,7 +21,8 @@ spotless {
     }
     kotlin {
         toggleOffOn()
-        ktfmt('0.39')
+        // ktfmt('0.39')
+        // last version supporting jvm 8 is 0.12, but its dependency is missing
 
         trimTrailingWhitespace()
         indentWithSpaces(4)
