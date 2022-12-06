@@ -14,15 +14,20 @@ buildConfig {
     useKotlinOutput { topLevelConstants = true }
 }
 
-def mixingConfigRefMap = 'mixins.' + modId + '.refmap.json'
-def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
-def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
+if (usesMixins.toBoolean()) {
+    def mixingConfigRefMap = 'mixins.' + modId + '.refmap.json'
+    def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
+    def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
-kapt {
-    correctErrorTypes = true
-    javacOptions {
-        option("-AreobfSrgFile=${tasks.reobf.srg}")
-        option("-AoutSrgFile=$mixinSrg")
-        option("-AoutRefMapFile=$refMap")
+    kapt {
+        correctErrorTypes = true
+        javacOptions {
+            option("-AreobfSrgFile=${tasks.reobf.srg}")
+            option("-AoutSrgFile=$mixinSrg")
+            option("-AoutRefMapFile=$refMap")
+        }
+    }
+    jar {
+        from refMap
     }
 }
