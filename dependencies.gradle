@@ -10,4 +10,8 @@ dependencies {
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
+
+    if(usesMixins.toBoolean()) {
+        kapt('com.gtnewhorizon:gtnhmixins:2.1.1:processor')
+    }
 }
