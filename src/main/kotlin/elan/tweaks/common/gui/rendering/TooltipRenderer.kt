@@ -42,7 +42,7 @@ object TooltipRenderer {
     private fun Array<out String>.headerHeight() =
         if (size > 1) HEADER_SPACING + LINE_HEIGHT else LINE_HEIGHT
 
-    private fun Array<out String>.bodyHeight() = 
+    private fun Array<out String>.bodyHeight() =
         (size - 2) * LINE_HEIGHT
 
     fun FontRenderer.draw(lines: Array<out String>, textScale: Scale, origin: VectorXY, subTipColorColorHex: String) {

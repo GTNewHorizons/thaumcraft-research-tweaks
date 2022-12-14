@@ -12,9 +12,7 @@ import thaumcraft.common.blocks.BlockTable
 @Mixin(BlockTable::class)
 abstract class TableBlockMixin {
 
-    private companion object {
-        private const val THAUMCRAFT_RESEARCH_TABLE_GUI_ID = 10
-    }
+    private val `tcrt$THAUMCRAFT_RESEARCH_TABLE_GUI_ID`: Int = 10
 
     @Redirect(
         method = ["onBlockActivated"],
@@ -22,7 +20,7 @@ abstract class TableBlockMixin {
         require = 4
     )
     private fun correctGuiCallFor(entityPlayer: EntityPlayer, mod: Any, modGuiId: Int, world: World, x: Int, y: Int, z: Int) {
-        return if (modGuiId == THAUMCRAFT_RESEARCH_TABLE_GUI_ID) {
+        return if (modGuiId == `tcrt$THAUMCRAFT_RESEARCH_TABLE_GUI_ID`) {
             entityPlayer.openGui(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler.IDs.RESEARCH_TABLE, world, x, y, z)
         } else {
             entityPlayer.openGui(mod, modGuiId, world, x, y, z)

@@ -13,7 +13,7 @@ import java.util.*
 object ParchmentHexMapLayout {
 
     private val keyToHex: Map<String, Hex> = findAllFittingHexes()
-    override fun toString(): String = 
+    override fun toString(): String =
         "ParchmentHexMapLayout: $keyToHex"
 
     fun randomHex() = keyToHex.entries.random()
@@ -27,7 +27,7 @@ object ParchmentHexMapLayout {
         val hexesToTraverse = Stack<HexUtils.Hex>()
         hexesToTraverse += HexUtils.Hex(0, 0)
         visitedKeys += "0:0"
-        
+
         while (hexesToTraverse.isNotEmpty()) {
             val hex = hexesToTraverse.pop()
 

@@ -98,7 +98,7 @@ class ComposableContainerGui(
     }
 
     private fun handleDraggables(button: MouseButton, uiMousePosition: Vector3D) {
-        if (button is MouseButton.Left) handleDragAttempt(uiMousePosition) 
+        if (button is MouseButton.Left) handleDragAttempt(uiMousePosition)
         else handleDragClickables(uiMousePosition, button)
     }
 

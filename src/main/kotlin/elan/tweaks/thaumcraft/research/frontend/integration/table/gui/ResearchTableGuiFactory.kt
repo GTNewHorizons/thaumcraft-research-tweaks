@@ -74,7 +74,7 @@ object ResearchTableGuiFactory {
 
         val runes = Runes(
             uiOrigin = ResearchArea.bounds.origin,
-            
+
             runeLimit = 16,
 
             hexLayout = hexLayout,
@@ -101,7 +101,7 @@ object ResearchTableGuiFactory {
         val leftAspectPallet = palletComponent(
             bounds = AspectPools.leftBound,
             aspectProvider = tree::allOrderLeaning
-        ) 
+        )
 
         val rightAspectPallet = palletComponent(
             bounds = AspectPools.rightBound,

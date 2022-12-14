@@ -12,12 +12,12 @@ object HexHighlightTexture : ThaumcraftTextureInstance(
     scale = Scale.cube(16),
 ) {
     val colorMask = Rgba(1f, 1f, 1f, 1f)
-    
+
     override fun beforeGL() {
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.003921569f)
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, 1)
     }
-    
+
     override fun before(tessellator: Tessellator) {
         tessellator.setBrightness(240)
     }

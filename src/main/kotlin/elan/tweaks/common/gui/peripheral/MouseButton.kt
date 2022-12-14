@@ -7,9 +7,9 @@ sealed class MouseButton(private val index: Int) {
     object Right: MouseButton(1)
     object Middle: MouseButton(2)
     class Unknown(index: Int): MouseButton(index)
-    
+
     fun isDown() = Mouse.isButtonDown(index)
-    
+
     companion object {
         fun of(index: Int): MouseButton = when(index) {
             0 -> Left

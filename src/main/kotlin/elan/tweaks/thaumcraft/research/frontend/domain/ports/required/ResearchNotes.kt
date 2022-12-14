@@ -8,13 +8,13 @@ interface ResearchNotes {
     val valid: Boolean
 
     val complete: Boolean
-    
+
     val data: ResearchNoteData?
-    
+
     fun erase(hexKey: String): Result<Unit>
     fun write(hexKey: String, aspect: Aspect): Result<Unit>
-    
+
     fun duplicate(): Result<Unit>
-    
+
     fun findUsedAspectAmounts(): Map<Aspect, Int>
 }

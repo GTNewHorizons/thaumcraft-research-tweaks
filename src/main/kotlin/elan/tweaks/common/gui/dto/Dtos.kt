@@ -102,7 +102,7 @@ data class HexVector(
 ) {
 
     val key: String = "$q:$r"
-    
+
     fun toOrigin(hexSize: Int): VectorXY =
         HexMath.toOrigin(q, r, hexSize)
 
@@ -114,12 +114,12 @@ data class HexVector(
 
             return HexVector(roundQ, roundR)
         }
-        
+
         private fun findRoundedCoordinates(vector: VectorXY, hexSize: Int): Pair<Int, Int> {
             val q = 0.6666666666666666 * vector.x / hexSize.toDouble()
             val r = 0.3333333333333333 * (sqrt(3.0) * -vector.y - vector.x) / hexSize.toDouble()
             val s = -q - r
-            
+
             var roundQ = q.roundToInt()
             val roundR = r.roundToInt()
             var roundS = s.roundToInt()
@@ -131,7 +131,7 @@ data class HexVector(
             } else if (deltaR <= deltaS) {
                 roundS = -roundQ - roundR
             }
-            
+
             return roundQ to roundS
         }
     }

@@ -25,7 +25,7 @@ class TableUIContext(
     private val renderViewEntity: EntityLivingBase by lazy { Minecraft.getMinecraft().renderViewEntity }
     private val world: World by lazy { renderViewEntity.worldObj }
     override val random: Random by lazy { world.rand }
-    
+
     override fun drawBlending(texture: TextureInstance, uiPosition: VectorXY, colorMask: Rgba) {
         TextureRenderer.drawBlending(texture, screenOrigin + uiPosition, colorMask)
     }

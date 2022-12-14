@@ -6,7 +6,7 @@ interface ResearcherKnowledgePort {
     fun hasDiscovered(knowledge: Knowledge): Boolean
     fun hasDiscovered(aspect: Aspect): Boolean
     fun allDiscoveredAspects(): Array<Aspect>
-    
+
     enum class Knowledge {
         ResearchExpertise,
         ResearchMastery,

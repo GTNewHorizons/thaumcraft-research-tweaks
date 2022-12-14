@@ -10,7 +10,6 @@ interface AspectPalletPort {
 
     fun isDrainedOf(aspect: Aspect): Boolean
     fun amountAndBonusOf(aspect: Aspect): Pair<Int, Int>
-    
-    fun missing(aspectAmounts: Map<Aspect, Int>): Boolean 
-}
 
+    fun missing(aspectAmounts: Map<Aspect, Int>): Boolean
+}

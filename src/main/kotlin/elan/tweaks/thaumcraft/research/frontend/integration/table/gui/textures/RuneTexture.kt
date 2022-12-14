@@ -17,9 +17,9 @@ class RuneTexture private constructor(
 
     companion object {
         val offsetToFitInHexCenter = Vector2D(3,3)
-        
+
         private val allRunes = (0..15).map(::RuneTexture)
-        
+
         fun random() = allRunes.random()
     }
 }

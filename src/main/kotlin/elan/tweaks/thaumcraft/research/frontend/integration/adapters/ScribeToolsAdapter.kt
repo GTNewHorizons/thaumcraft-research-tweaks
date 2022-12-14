@@ -11,6 +11,6 @@ class ScribeToolsAdapter(
     override fun areMissingOrEmpty(): Boolean {
         val tools = table.getStackInSlot(SCRIBE_TOOLS_SLOT_INDEX) ?: return true
         return tools.itemDamage == tools.maxDamage
-    } 
+    }
 
 }

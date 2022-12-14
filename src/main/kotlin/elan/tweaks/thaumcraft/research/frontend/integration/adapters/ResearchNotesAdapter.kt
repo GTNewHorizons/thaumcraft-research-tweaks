@@ -30,7 +30,7 @@ class ResearchNotesAdapter(
 
     override val valid: Boolean
         get() = validateData()
-    
+
     override val data: ResearchNoteData?
         get() = notes?.let(ResearchManager::getData)
 
@@ -76,7 +76,7 @@ class ResearchNotesAdapter(
     override fun findUsedAspectAmounts(): Map<Aspect, Int> {
         val researchData = getResearchData()
         val aspects = ResearchCategories.getResearch(researchData.key).tags
-        
+
         return aspects.getAspects().associateWith { aspect -> researchData.copies + aspects.getAmount(aspect) }
     }
 

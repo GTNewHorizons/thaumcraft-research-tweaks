@@ -10,9 +10,9 @@ interface TextureInstance {
     val uv: UV
     val uvScale: Scale
     val textureScale: Scale
-    
+
     val resourceLocation: ResourceLocation
-    
+
     fun beforeGL() {}
     fun before(tessellator: Tessellator) {}
     fun afterGL() {}

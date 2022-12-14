@@ -49,11 +49,10 @@ class AspectPallet constructor(
 
     override fun isDrainedOf(aspect: Aspect): Boolean =
         pool.totalAmountOf(aspect) <= 0
-    
+
     private fun <ResultT> batch(function: () -> Result<ResultT>): Result<ResultT> {
         val batchResults = (1..batchSize).map { function() }
 
         return batchResults.firstOrNull { it.isSuccess } ?: batchResults.first()
     }
 }
-

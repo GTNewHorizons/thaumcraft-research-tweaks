@@ -10,7 +10,7 @@ import kotlin.math.sin
 object LineParticle {
     fun draw(from: VectorXY, to: VectorXY) {
         val count = nextValueOfSlowlyGrowingFunction()
-        
+
         val alpha = 0.3 + sin(count.toDouble()) * 0.3 + 0.3
         GL11.glPushMatrix()
         GL11.glLineWidth(3.0f)

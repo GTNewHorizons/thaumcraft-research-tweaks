@@ -12,7 +12,7 @@ class ResearcherKnowledge constructor(
 ) : ResearcherKnowledgePort {
     override fun hasDiscovered(knowledge: ResearcherKnowledgePort.Knowledge): Boolean =
         base.hasDiscovered(knowledge)
-        
+
     override fun hasDiscovered(aspect: Aspect): Boolean =
         pool.hasDiscovered(aspect)
 
@@ -20,4 +20,3 @@ class ResearcherKnowledge constructor(
         pool.allDiscovered()
 
 }
-

@@ -18,7 +18,7 @@ class KnowledgeBaseAdapter(
 
     override fun hasDiscovered(knowledge: Knowledge): Boolean =
         knowledgeToResearchKey.containsKey(knowledge) && hasDiscovered(knowledgeToResearchKey[knowledge]!!)
-    
+
     private fun hasDiscovered(researchName: String) =
         ResearchManager.isResearchComplete(player.commandSenderName, researchName)
 
