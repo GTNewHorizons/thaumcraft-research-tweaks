@@ -1,33 +1,9 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.github.gmazzo.buildconfig'
 apply plugin: 'org.jetbrains.kotlin.kapt'
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = 1.8
-    }
-}
+apply plugin: 'com.github.gmazzo.buildconfig'
 
 buildConfig {
     packageName("elan.tweaks.thaumcraft.research.frontend.integration")
     buildConfigField('String', 'MODVER', "\"${project.modVersion}\"")
     useKotlinOutput { topLevelConstants = true }
-}
-
-if (usesMixins.toBoolean()) {
-    def mixingConfigRefMap = 'mixins.' + modId + '.refmap.json'
-    def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
-    def mixinSrg = "${tasks.reobfJar.temporaryDir}" + File.separator + "mixins.srg"
-
-    kapt {
-        correctErrorTypes = true
-        javacOptions {
-            option("-AreobfSrgFile=${tasks.reobfJar.srg}")
-            option("-AoutSrgFile=$mixinSrg")
-            option("-AoutRefMapFile=$refMap")
-        }
-    }
-    jar {
-        from refMap
-    }
 }

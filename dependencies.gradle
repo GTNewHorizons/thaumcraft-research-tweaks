@@ -1,17 +1,18 @@
 // Add your dependencies here
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
-    compile 'com.github.GTNewHorizons:Forgelin:1.9.2-GTNH-1.7.10-Edition'
+    api 'com.github.GTNewHorizons:Forgelin:1.9.7-GTNH'
 
     // Thaumcraft
-    compile 'thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev'
-    compile 'com.github.GTNewHorizons:Baubles:1.0.1.14:dev'
+    implementation 'thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev'
+    implementation 'com.github.GTNewHorizons:Baubles:1.0.1.15:dev'
 
     // Testing
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.0")
-    testImplementation("org.assertj:assertj-core:3.20.2")
-
-    if(usesMixins.toBoolean()) {
-        kapt('com.gtnewhorizon:gtnhmixins:2.1.1:processor')
-    }
+    testImplementation platform('org.junit:junit-bom:5.9.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 }
