@@ -12,17 +12,19 @@ class AspectCombinerAdapter(
     private val player: EntityPlayer,
     private val table: TileResearchTable
 ) : AspectCombiner {
-    override fun combine(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> {
-        val combineAspectsPacket = PacketAspectCombinationToServer(
+  override fun combine(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> {
+    val combineAspectsPacket =
+        PacketAspectCombinationToServer(
             player,
-            table.xCoord, table.yCoord, table.zCoord,
-            firstAspect, secondAspect,
+            table.xCoord,
+            table.yCoord,
+            table.zCoord,
+            firstAspect,
+            secondAspect,
             table.bonusAspects.getAmount(firstAspect) > 0,
             table.bonusAspects.getAmount(secondAspect) > 0,
-            true
-        )
-        PacketHandler.INSTANCE.sendToServer(combineAspectsPacket)
-        return success()
-    }
-
+            true)
+    PacketHandler.INSTANCE.sendToServer(combineAspectsPacket)
+    return success()
+  }
 }

@@ -17,29 +17,28 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftRese
     name = NAME,
     version = VERSION,
     dependencies = DEPENDENCIES,
-    modLanguageAdapter = MOD_LANGUAGE_ADAPTER
-)
+    modLanguageAdapter = MOD_LANGUAGE_ADAPTER)
 object ThaumcraftResearchTweaks {
 
-    const val MOD_ID = "ThaumcraftResearchTweaks"
-    const val VERSION = MODVER
-    const val NAME = "Thaumcraft Research Tweaks"
-    const val MOD_LANGUAGE_ADAPTER = "net.shadowfacts.forgelin.KotlinAdapter"
-    const val DEPENDENCIES = "required-after:forgelin;" +
-            "required-after:spongemixins;" +
-            "required-after:Thaumcraft;"
+  const val MOD_ID = "ThaumcraftResearchTweaks"
+  const val VERSION = MODVER
+  const val NAME = "Thaumcraft Research Tweaks"
+  const val MOD_LANGUAGE_ADAPTER = "net.shadowfacts.forgelin.KotlinAdapter"
+  const val DEPENDENCIES =
+      "required-after:forgelin;" + "required-after:spongemixins;" + "required-after:Thaumcraft;"
 
-    @SidedProxy(
-        clientSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer",
-        serverSide = "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ServerSingletonInitializer"
-    )
-    lateinit var singletonInitializer: SingletonInitializer
+  @SidedProxy(
+      clientSide =
+          "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer",
+      serverSide =
+          "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ServerSingletonInitializer")
+  lateinit var singletonInitializer: SingletonInitializer
 
-    @Mod.EventHandler
-    fun onInit(event: FMLInitializationEvent) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())
+  @Mod.EventHandler
+  fun onInit(event: FMLInitializationEvent) {
+    NetworkRegistry.INSTANCE.registerGuiHandler(
+        ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())
 
-        singletonInitializer.initialize()
-    }
-
+    singletonInitializer.initialize()
+  }
 }

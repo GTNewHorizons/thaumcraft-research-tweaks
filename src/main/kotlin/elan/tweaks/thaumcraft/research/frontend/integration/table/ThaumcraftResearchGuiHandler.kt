@@ -13,27 +13,41 @@ import thaumcraft.common.tiles.TileResearchTable
 
 class ThaumcraftResearchGuiHandler : IGuiHandler {
 
-    private val logger: Logger = LogManager.getLogger(ThaumcraftResearchTweaks.MOD_ID)
+  private val logger: Logger = LogManager.getLogger(ThaumcraftResearchTweaks.MOD_ID)
 
-    object IDs {
-        const val RESEARCH_TABLE = 0
-    }
+  object IDs {
+    const val RESEARCH_TABLE = 0
+  }
 
-    override fun getServerGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any? =
-        if (id == RESEARCH_TABLE) ResearchTableContainerFactory.create(player.inventory, world.getTableTileEntity(x, y, z))
-        else unknownGui(id)
+  override fun getServerGuiElement(
+      id: Int,
+      player: EntityPlayer,
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int
+  ): Any? =
+      if (id == RESEARCH_TABLE)
+          ResearchTableContainerFactory.create(player.inventory, world.getTableTileEntity(x, y, z))
+      else unknownGui(id)
 
+  override fun getClientGuiElement(
+      id: Int,
+      player: EntityPlayer,
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int
+  ): Any? =
+      if (id == RESEARCH_TABLE)
+          ResearchTableGuiFactory.create(player, world.getTableTileEntity(x, y, z))
+      else unknownGui(id)
 
-    override fun getClientGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any? =
-        if (id == RESEARCH_TABLE) ResearchTableGuiFactory.create(player, world.getTableTileEntity(x, y, z))
-        else unknownGui(id)
+  private fun unknownGui(id: Int): Any? {
+    logger.error("Received unknown gui id: $id")
+    return null
+  }
 
-    private fun unknownGui(id: Int): Any? {
-        logger.error("Received unknown gui id: $id")
-        return null
-    }
-
-    private fun World.getTableTileEntity(x: Int, y: Int, z: Int) =
-        getTileEntity(x, y, z) as TileResearchTable
-
+  private fun World.getTableTileEntity(x: Int, y: Int, z: Int) =
+      getTileEntity(x, y, z) as TileResearchTable
 }

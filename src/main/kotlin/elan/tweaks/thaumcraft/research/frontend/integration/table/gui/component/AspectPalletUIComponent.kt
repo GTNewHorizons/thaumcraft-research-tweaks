@@ -25,112 +25,114 @@ class AspectPalletUIComponent(
     private val aspectGrid: GridLayout<Aspect>,
     private val pallet: AspectPalletPort,
     private val researcher: ResearcherKnowledgePort
-) : BackgroundUIComponent, MouseOverUIComponent, ClickableUIComponent,
-    DraggableSourceUIComponent, DropDestinationUIComponent, DragClickableDestinationUIComponent {
+) :
+    BackgroundUIComponent,
+    MouseOverUIComponent,
+    ClickableUIComponent,
+    DraggableSourceUIComponent,
+    DropDestinationUIComponent,
+    DragClickableDestinationUIComponent {
 
-    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
-        aspectGrid
-            .asOriginList()
-            .forEach { (uiOrigin, aspect) ->
-                val (amount, bonusAmount) = pallet.amountAndBonusOf(aspect)
+  override fun onDrawBackground(
+      uiMousePosition: VectorXY,
+      partialTicks: Float,
+      context: UIContext
+  ) =
+      aspectGrid.asOriginList().forEach { (uiOrigin, aspect) ->
+        val (amount, bonusAmount) = pallet.amountAndBonusOf(aspect)
 
-                context.drawTag(
-                    aspect, amount, bonusAmount,
-                    alpha = if (pallet.isDrainedOf(aspect)) 0.33f else 1.0f,
-                    uiPosition = uiOrigin
-                )
-            }
+        context.drawTag(
+            aspect,
+            amount,
+            bonusAmount,
+            alpha = if (pallet.isDrainedOf(aspect)) 0.33f else 1.0f,
+            uiPosition = uiOrigin)
+      }
 
-    override fun onMouseOver(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
-        whenAspectAt(uiMousePosition) { aspect ->
-            drawTooltip(aspect, uiOrigin = uiMousePosition, context)
-        }
+  override fun onMouseOver(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) =
+      whenAspectAt(uiMousePosition) { aspect ->
+        drawTooltip(aspect, uiOrigin = uiMousePosition, context)
+      }
 
-    private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
-        val tooltipOrigin = uiOrigin + AspectTooltipLayout.textBoxOffset
-        context.drawTooltip(tooltipOrigin, aspect.name, aspect.localizedDescription)
+  private fun drawTooltip(aspect: Aspect, uiOrigin: VectorXY, context: UIContext) {
+    val tooltipOrigin = uiOrigin + AspectTooltipLayout.textBoxOffset
+    context.drawTooltip(tooltipOrigin, aspect.name, aspect.localizedDescription)
 
-        if (aspect.hasComponents() && researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
-            val firstBackgroundOrigin =  uiOrigin + AspectTooltipLayout.firstTagBackgroundOffset
-            context.drawBlending(AspectBackgroundTexture, firstBackgroundOrigin)
-            context.drawTag(aspect.components[0], uiPosition = uiOrigin + firstTagOffset)
+    if (aspect.hasComponents() && researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+      val firstBackgroundOrigin = uiOrigin + AspectTooltipLayout.firstTagBackgroundOffset
+      context.drawBlending(AspectBackgroundTexture, firstBackgroundOrigin)
+      context.drawTag(aspect.components[0], uiPosition = uiOrigin + firstTagOffset)
 
-            val secondBackgroundOrigin =  uiOrigin + AspectTooltipLayout.secondTagBackgroundOffset
-            context.drawBlending(AspectBackgroundTexture, secondBackgroundOrigin)
-            context.drawTag(aspect.components[1], uiPosition = uiOrigin + secondTagOffset)
-        }
+      val secondBackgroundOrigin = uiOrigin + AspectTooltipLayout.secondTagBackgroundOffset
+      context.drawBlending(AspectBackgroundTexture, secondBackgroundOrigin)
+      context.drawTag(aspect.components[1], uiPosition = uiOrigin + secondTagOffset)
     }
+  }
 
-    private fun Aspect.hasComponents() =
-        !isPrimal && components != null && components.isNotEmpty()
+  private fun Aspect.hasComponents() = !isPrimal && components != null && components.isNotEmpty()
 
-    override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
-        whenAspectAt(uiMousePosition) { aspect ->
-            if (button is MouseButton.Left && isIntendingToDeriveAspect()) {
-                derive(aspect).onSuccess { context.playCombine() }
-            }
-        }
+  override fun onMouseClicked(uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
+    whenAspectAt(uiMousePosition) { aspect ->
+      if (button is MouseButton.Left && isIntendingToDeriveAspect()) {
+        derive(aspect).onSuccess { context.playCombine() }
+      }
     }
+  }
 
-    private fun derive(aspect: Aspect) =
-        if (isIntendingToBatch()) pallet.deriveBatch(aspect)
-        else pallet.derive(aspect)
+  private fun derive(aspect: Aspect) =
+      if (isIntendingToBatch()) pallet.deriveBatch(aspect) else pallet.derive(aspect)
 
-    override fun onDrag(uiMousePosition: VectorXY, context: UIContext): Any? {
-        val aspect = aspectGrid[uiMousePosition] ?: return null
-        if (pallet.isDrainedOf(aspect) || isIntendingToDeriveAspect()) return null
+  override fun onDrag(uiMousePosition: VectorXY, context: UIContext): Any? {
+    val aspect = aspectGrid[uiMousePosition] ?: return null
+    if (pallet.isDrainedOf(aspect) || isIntendingToDeriveAspect()) return null
 
-        context.playButtonAspect()
-        return aspect
+    context.playButtonAspect()
+    return aspect
+  }
+
+  private fun isIntendingToDeriveAspect() = isShiftKeyDown()
+
+  private fun UIContext.playButtonAspect() {
+    playSound("thaumcraft:hhoff", 0.2f, 1.0f + random.nextFloat() * 0.1f, false)
+  }
+
+  override fun onDropped(
+      draggable: Any,
+      uiMousePosition: VectorXY,
+      partialTicks: Float,
+      context: UIContext
+  ) {
+    if (draggable !is Aspect) return
+
+    whenAspectAt(uiMousePosition) { targetAspect ->
+      combine(draggable, targetAspect).onSuccess { context.playCombine() }
     }
+  }
 
-    private fun isIntendingToDeriveAspect() =
-        isShiftKeyDown()
+  override fun onDragClick(
+      draggable: Any,
+      uiMousePosition: VectorXY,
+      button: MouseButton,
+      context: UIContext
+  ) {
+    if (draggable !is Aspect || button !is MouseButton.Right) return
 
-    private fun UIContext.playButtonAspect() {
-        playSound(
-            "thaumcraft:hhoff",
-            0.2f,
-            1.0f + random.nextFloat() * 0.1f,
-            false
-        )
+    whenAspectAt(uiMousePosition) { targetAspect ->
+      combine(draggable, targetAspect).onSuccess { context.playCombine() }
     }
+  }
 
-    override fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (draggable !is Aspect) return
+  private fun combine(draggable: Aspect, targetAspect: Aspect) =
+      if (isIntendingToBatch()) pallet.combineBatch(draggable, targetAspect)
+      else pallet.combine(draggable, targetAspect)
 
-        whenAspectAt(uiMousePosition) { targetAspect ->
-            combine(draggable, targetAspect).onSuccess { context.playCombine() }
-        }
-    }
+  private fun isIntendingToBatch() = isCtrlKeyDown()
 
+  private inline fun whenAspectAt(uiMousePosition: VectorXY, action: (Aspect) -> Unit) {
+    aspectGrid[uiMousePosition]?.run(action)
+  }
 
-    override fun onDragClick(draggable: Any, uiMousePosition: VectorXY, button: MouseButton, context: UIContext) {
-        if (draggable !is Aspect || button !is MouseButton.Right) return
-
-        whenAspectAt(uiMousePosition) { targetAspect ->
-            combine(draggable, targetAspect).onSuccess { context.playCombine() }
-        }
-    }
-
-    private fun combine(draggable: Aspect, targetAspect: Aspect) =
-        if (isIntendingToBatch()) pallet.combineBatch(draggable, targetAspect)
-        else pallet.combine(draggable, targetAspect)
-
-    private fun isIntendingToBatch() =
-        isCtrlKeyDown()
-
-    private inline fun whenAspectAt(uiMousePosition: VectorXY, action: (Aspect) -> Unit) {
-        aspectGrid[uiMousePosition]?.run(action)
-    }
-
-    private fun UIContext.playCombine() = apply {
-        playSound(
-            soundName = "thaumcraft:hhon",
-            volume = 0.3f,
-            pitch = 1.0f,
-            distanceDelay = false
-        )
-    }
-
+  private fun UIContext.playCombine() = apply {
+    playSound(soundName = "thaumcraft:hhon", volume = 0.3f, pitch = 1.0f, distanceDelay = false)
+  }
 }

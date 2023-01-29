@@ -11,15 +11,18 @@ class ScribeToolsNotificationUIComponent(
     private val uiCenter: VectorXY,
 ) : BackgroundUIComponent {
 
-    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (research.requiresInkToContinue && research.notesPresent()) drawNoInkTooltip(context)
-    }
+  override fun onDrawBackground(
+      uiMousePosition: VectorXY,
+      partialTicks: Float,
+      context: UIContext
+  ) {
+    if (research.requiresInkToContinue && research.notesPresent()) drawNoInkTooltip(context)
+  }
 
-    private fun drawNoInkTooltip(context: UIContext) {
-        val noInkFirstLine = StatCollector.translateToLocal("tile.researchtable.noink.0")
-        val noInkSecondLine = StatCollector.translateToLocal("tile.researchtable.noink.1")
+  private fun drawNoInkTooltip(context: UIContext) {
+    val noInkFirstLine = StatCollector.translateToLocal("tile.researchtable.noink.0")
+    val noInkSecondLine = StatCollector.translateToLocal("tile.researchtable.noink.1")
 
-        context.drawTooltipCentered(uiCenterPosition = uiCenter, noInkFirstLine, noInkSecondLine)
-    }
-
+    context.drawTooltipCentered(uiCenterPosition = uiCenter, noInkFirstLine, noInkSecondLine)
+  }
 }

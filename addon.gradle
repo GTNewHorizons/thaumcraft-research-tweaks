@@ -17,12 +17,12 @@ buildConfig {
 if (usesMixins.toBoolean()) {
     def mixingConfigRefMap = 'mixins.' + modId + '.refmap.json'
     def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
-    def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
+    def mixinSrg = "${tasks.reobfJar.temporaryDir}" + File.separator + "mixins.srg"
 
     kapt {
         correctErrorTypes = true
         javacOptions {
-            option("-AreobfSrgFile=${tasks.reobf.srg}")
+            option("-AreobfSrgFile=${tasks.reobfJar.srg}")
             option("-AoutSrgFile=$mixinSrg")
             option("-AoutRefMapFile=$refMap")
         }

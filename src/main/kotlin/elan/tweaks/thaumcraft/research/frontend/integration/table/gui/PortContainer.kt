@@ -14,43 +14,39 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.R
 import net.minecraft.entity.player.EntityPlayer
 import thaumcraft.common.tiles.TileResearchTable
 
-class PortContainer(
-    player: EntityPlayer,
-    table: TileResearchTable
-) {
-    val inventory = ResearchTableContainerFactory.create(
-        playerInventory = player.inventory, table = table,
-        scribeToolsSlotOrigin = ResearchTableInventoryTexture.Slots.scribeToolsOrigin,
-        notesSlotOrigin = ResearchTableInventoryTexture.Slots.notesOrigin,
-        inventoryUiOrigin = ResearchTableInventoryTexture.inventoryOrigin,
-    )
+class PortContainer(player: EntityPlayer, table: TileResearchTable) {
+  val inventory =
+      ResearchTableContainerFactory.create(
+          playerInventory = player.inventory,
+          table = table,
+          scribeToolsSlotOrigin = ResearchTableInventoryTexture.Slots.scribeToolsOrigin,
+          notesSlotOrigin = ResearchTableInventoryTexture.Slots.notesOrigin,
+          inventoryUiOrigin = ResearchTableInventoryTexture.inventoryOrigin,
+      )
 
-    private val base = KnowledgeBaseAdapter(player)
-    private val pool = AspectPoolAdapter(player, table)
-    private val combiner = AspectCombinerAdapter(player, table)
-    private val notes = ResearchNotesAdapter(player, table, inventory)
-    private val scribeTools = ScribeToolsAdapter(table)
-    private val playerInventory = PlayerInventoryAdapter(player)
+  private val base = KnowledgeBaseAdapter(player)
+  private val pool = AspectPoolAdapter(player, table)
+  private val combiner = AspectCombinerAdapter(player, table)
+  private val notes = ResearchNotesAdapter(player, table, inventory)
+  private val scribeTools = ScribeToolsAdapter(table)
+  private val playerInventory = PlayerInventoryAdapter(player)
 
-    val pallet: AspectPalletPort = AspectPallet(
-        base = base,
-        pool = pool,
-        combiner = combiner,
-        batchSize = 10
-    )
+  val pallet: AspectPalletPort =
+      AspectPallet(base = base, pool = pool, combiner = combiner, batchSize = 10)
 
-    val tree: AspectsTreePort = AspectTree
+  val tree: AspectsTreePort = AspectTree
 
-    val researcher: ResearcherKnowledgePort = ResearcherKnowledge(
-        base = base,
-        pool = pool,
-    )
+  val researcher: ResearcherKnowledgePort =
+      ResearcherKnowledge(
+          base = base,
+          pool = pool,
+      )
 
-    val research: ResearchProcessPort = ResearchProcess(
-        pool = pool,
-        notes = notes,
-        scribeTools = scribeTools,
-        knowledgeBase = base,
-        playerInventory = playerInventory
-    )
+  val research: ResearchProcessPort =
+      ResearchProcess(
+          pool = pool,
+          notes = notes,
+          scribeTools = scribeTools,
+          knowledgeBase = base,
+          playerInventory = playerInventory)
 }

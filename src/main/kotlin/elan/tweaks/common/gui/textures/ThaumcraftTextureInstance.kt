@@ -7,15 +7,13 @@ import net.minecraft.util.ResourceLocation
 abstract class ThaumcraftTextureInstance(
     path: String,
     override val textureScale: Scale,
-
     override val uv: UV = UV(u = 0, v = 0),
     override val uvScale: Scale = textureScale,
-
     override val scale: Scale = uvScale
 ) : TextureInstance {
-    companion object {
-        private const val DOMAIN = "thaumcraft"
-    }
+  companion object {
+    private const val DOMAIN = "thaumcraft"
+  }
 
-    override val resourceLocation = ResourceLocation(DOMAIN, "textures/$path")
+  override val resourceLocation = ResourceLocation(DOMAIN, "textures/$path")
 }

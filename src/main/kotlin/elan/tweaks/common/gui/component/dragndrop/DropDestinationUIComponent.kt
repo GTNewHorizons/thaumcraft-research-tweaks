@@ -6,6 +6,5 @@ import elan.tweaks.common.gui.dto.VectorXY
 
 interface DropDestinationUIComponent : UIComponent {
 
-    fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext)
-
+  fun onDropped(draggable: Any, uiMousePosition: VectorXY, partialTicks: Float, context: UIContext)
 }

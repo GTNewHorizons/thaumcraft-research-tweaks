@@ -14,29 +14,32 @@ class ParchmentUIComponent(
     private val uiOrigin: VectorXY,
 ) : BackgroundUIComponent, TickingUIComponent {
 
-    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (research.missingNotes()) return
+  override fun onDrawBackground(
+      uiMousePosition: VectorXY,
+      partialTicks: Float,
+      context: UIContext
+  ) {
+    if (research.missingNotes()) return
 
-        drawParchment(context)
-        drawRunes(context)
+    drawParchment(context)
+    drawRunes(context)
+  }
+
+  private fun drawParchment(context: UIContext) {
+    context.drawBlending(ParchmentTexture, uiOrigin)
+  }
+
+  private fun drawRunes(context: UIContext) {
+    runes.forEach { rune ->
+      val colorMask = Rgba(0f, 0f, 0f, rune.alpha)
+      context.drawBlending(rune.texture, rune.uiOrigin, colorMask)
     }
+  }
 
-    private fun drawParchment(context: UIContext) {
-        context.drawBlending(ParchmentTexture, uiOrigin)
+  override fun onTick(partialTicks: Float, context: UIContext) {
+    if (research.missingNotes()) {
+      runes.clear()
     }
-
-    private fun drawRunes(context: UIContext) {
-        runes.forEach { rune ->
-            val colorMask = Rgba(0f, 0f, 0f, rune.alpha )
-            context.drawBlending(rune.texture, rune.uiOrigin, colorMask)
-        }
-    }
-
-    override fun onTick(partialTicks: Float, context: UIContext) {
-        if (research.missingNotes()) {
-            runes.clear()
-        }
-        runes.update(partialTicks, context.random)
-    }
-
+    runes.update(partialTicks, context.random)
+  }
 }
