@@ -10,14 +10,14 @@ class TextureBackgroundUIComponent(
     private val texture: TextureInstance
 ) : BackgroundUIComponent {
 
-    override fun onDrawBackground(
-        uiMousePosition: VectorXY,
-        partialTicks: Float,
-        context: UIContext
-    ) = context.drawBlending(texture, uiOrigin)
+  override fun onDrawBackground(
+      uiMousePosition: VectorXY,
+      partialTicks: Float,
+      context: UIContext
+  ) = context.drawBlending(texture, uiOrigin)
 
-    companion object {
-        fun background(uiOrigin: VectorXY, texture: TextureInstance) =
-            TextureBackgroundUIComponent(uiOrigin, texture)
-    }
+  companion object {
+    fun background(uiOrigin: VectorXY, texture: TextureInstance) =
+        TextureBackgroundUIComponent(uiOrigin, texture)
+  }
 }

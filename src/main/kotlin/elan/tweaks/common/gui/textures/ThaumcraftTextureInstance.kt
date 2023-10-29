@@ -11,9 +11,9 @@ abstract class ThaumcraftTextureInstance(
     override val uvScale: Scale = textureScale,
     override val scale: Scale = uvScale
 ) : TextureInstance {
-    companion object {
-        private const val DOMAIN = "thaumcraft"
-    }
+  companion object {
+    private const val DOMAIN = "thaumcraft"
+  }
 
-    override val resourceLocation = ResourceLocation(DOMAIN, "textures/$path")
+  override val resourceLocation = ResourceLocation(DOMAIN, "textures/$path")
 }

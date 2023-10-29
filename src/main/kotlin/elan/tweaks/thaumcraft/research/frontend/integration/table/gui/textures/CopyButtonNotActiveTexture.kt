@@ -10,5 +10,4 @@ object CopyButtonNotActiveTexture :
         "research/table/research-table.png",
         textureScale = Scale(310, 245),
         uv = UV(1, 220),
-        uvScale = Scale.cube(SIZE_WITH_SHADOW_PIXELS)
-    )
+        uvScale = Scale.cube(SIZE_WITH_SHADOW_PIXELS))

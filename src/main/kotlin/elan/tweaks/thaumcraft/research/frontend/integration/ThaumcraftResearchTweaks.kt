@@ -13,26 +13,23 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.ThaumcraftRese
     name = "Thaumcraft Research Tweaks",
     version = MODVER,
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
-    dependencies = "required-after:forgelin;required-after:spongemixins;required-after:Thaumcraft;"
-)
+    dependencies = "required-after:forgelin;required-after:spongemixins;required-after:Thaumcraft;")
 object ThaumcraftResearchTweaks {
 
-    const val MOD_ID = "ThaumcraftResearchTweaks"
+  const val MOD_ID = "ThaumcraftResearchTweaks"
 
-    @SidedProxy(
-        clientSide =
-        "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer",
-        serverSide =
-        "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ServerSingletonInitializer"
-    )
-    lateinit var singletonInitializer: SingletonInitializer
+  @SidedProxy(
+      clientSide =
+          "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer",
+      serverSide =
+          "elan.tweaks.thaumcraft.research.frontend.integration.proxies.ServerSingletonInitializer")
+  lateinit var singletonInitializer: SingletonInitializer
 
-    @Mod.EventHandler
-    fun onInit(event: FMLLoadCompleteEvent) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(
-            ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler()
-        )
+  @Mod.EventHandler
+  fun onInit(event: FMLLoadCompleteEvent) {
+    NetworkRegistry.INSTANCE.registerGuiHandler(
+        ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())
 
-        singletonInitializer.initialize()
-    }
+    singletonInitializer.initialize()
+  }
 }
