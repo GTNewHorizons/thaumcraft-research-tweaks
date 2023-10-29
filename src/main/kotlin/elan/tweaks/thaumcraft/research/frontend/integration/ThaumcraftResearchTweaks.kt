@@ -2,7 +2,7 @@ package elan.tweaks.thaumcraft.research.frontend.integration
 
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.SidedProxy
-import cpw.mods.fml.common.event.FMLInitializationEvent
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent
 import cpw.mods.fml.common.network.NetworkRegistry
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.DEPENDENCIES
 import elan.tweaks.thaumcraft.research.frontend.integration.ThaumcraftResearchTweaks.MOD_ID
@@ -35,7 +35,7 @@ object ThaumcraftResearchTweaks {
   lateinit var singletonInitializer: SingletonInitializer
 
   @Mod.EventHandler
-  fun onInit(event: FMLInitializationEvent) {
+  fun onInit(event: FMLLoadCompleteEvent) {
     NetworkRegistry.INSTANCE.registerGuiHandler(
         ThaumcraftResearchTweaks, ThaumcraftResearchGuiHandler())
 
