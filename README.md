@@ -29,16 +29,15 @@ You can also do the same with auto combination unlocked in research mastery.
 ### Research duplication
 Copy button is active only when all required components present (aspects, paper, ink).
 
-
-
 ## Roadmap
 
 ### Functional
 Nice to have
+- "Info" element (question mark icon?) which explains how to use the table
+- A way to switch (in-game?) to old UI in case a fallback needed
 - Configurable bonus aspect particle (change size/turn off)
 - Batch aspect combination in one packet (see PacketAspectCombinationToServer)
 - Stable aspect layout (aspect is always in same position, even if this means having gaps)
-- "Info" element (question mark icon?) which explains how to use the table
 - Old style combine section between scribbling tools and copy button
 
 ### Non-functional
@@ -46,8 +45,58 @@ Nice to have:
 - Migrate gradle to kts
 - Automatic Testing
 
-## Development
-To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
+## Maintenance
+It is possible to do trivial updates (not introducing new/removing existing concepts) to UI
+without diving deep into code base, knowing Kotlin or even having little coding exp.
+
+This mod only adds one new texture, others are sourced from original thaumcraft mod in runtime (to avoid any problems with licensing).
+It's encouraged to fiddle with `ResearchTableInventoryTexture` values before any changes to see how it affects the UI.
+
+For example, you need next steps to add one more colum to aspect pools:
+1. Replace [main texture](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png) with updated one.
+2. Modify [ResearchTableInventoryTexture](src/main/kotlin/elan/tweaks/thaumcraft/research/frontend/integration/table/gui/textures/ResearchTableInventoryTexture.kt),
+   this is a texture descriptor.
+   It contains all texture related constants which are used to build the UI (origins, column/row count, areas).
+   Bump row count in `object AspectPools`.
+3. Test and fiddle with `x` coordinates/sizes of various constants found inside until everything looks in place.
+4. Make sure to check how it looks with empty scribe tools, put research parchment, etc.
+
+Which is precisely what I've done in [this PR](https://github.com/GTNewHorizons/thaumcraft-research-tweaks/pull/8)
+to add 4th column
+
+
+## Testing tips
+Don't forget to test:
+- With/without/with empty scribe tools - renders an error message
+- With finished/unfinished/empty research papers - rendering of research paper
+- With all aspects unlocked (if everything fits alright)
+- With all/none research unlocked - if copy button appears correctly
+
+Useful commands:
+- Add 10 of all aspects to Developer player (default player name)
+```
+/thaum aspect Developer all 10
+```
+
+- Obtain all research
+```
+/thaum research Developer all
+```
+
+## Known issues
+
+### Aspect from mod X is not showing up in the aspect pools.
+
+**Probable Cause**: Mod X creates its aspects on `FMLLoadCompleteEvent` or later
+which causes aspect caching of this mod to miss it.
+
+**Solutions**:
+1. Move aspect creation of mod X earlier (e.g. FMLInitializeEvent).
+   This would be a preferred solution since aspects should be created early if possible.
+2. Drop `AspectTree` initialization in `elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer`
+   (two lines, one creating the tree and second one printing).
+   This will cause caching on first UI opening.
+   This is not crucial, but somewhat reduces UX, since it will cause a small delay
 
 ## Known issues
 
