@@ -17,41 +17,42 @@ constructor(
     private val playerInventory: PlayerInventory
 ) : ResearchProcessPort {
 
-  override val usedAspectAmounts: Map<Aspect, Int>
-    get() = notes.findUsedAspectAmounts()
+    override val usedAspectAmounts: Map<Aspect, Int>
+        get() = notes.findUsedAspectAmounts()
 
-  override val requiresInkToContinue: Boolean
-    get() = scribeTools.areMissingOrEmpty()
+    override val requiresInkToContinue: Boolean
+        get() = scribeTools.areMissingOrEmpty()
 
-  override val data: ResearchNoteData?
-    get() = notes.data
+    override val data: ResearchNoteData?
+        get() = notes.data
 
-  override fun duplicate(): Result<Unit> =
-      when {
-        knowledgeBase.hasNotDiscovered(Knowledge.ResearchDuplication) ->
-            missingResearchDuplication()
-        notReadyToDuplicate() -> researchNotReady()
-        else -> notes.duplicate()
-      }
+    override fun duplicate(): Result<Unit> =
+        when {
+            knowledgeBase.hasNotDiscovered(Knowledge.ResearchDuplication) ->
+                missingResearchDuplication()
 
-  override fun readyToDuplicate(): Boolean =
-      notes.present &&
-          notes.complete &&
-          pool.contains(usedAspectAmounts) &&
-          playerInventory.containsPaper() &&
-          playerInventory.containsBlackDye()
+            notReadyToDuplicate() -> researchNotReady()
+            else -> notes.duplicate()
+        }
 
-  override fun notEditable(): Boolean = missingNotes() || notes.complete || notesCorrupted()
+    override fun readyToDuplicate(): Boolean =
+        notes.present &&
+            notes.complete &&
+            pool.contains(usedAspectAmounts) &&
+            playerInventory.containsPaper() &&
+            playerInventory.containsBlackDye()
 
-  override fun notesPresent(): Boolean = notes.present
+    override fun notEditable(): Boolean = missingNotes() || notes.complete || notesCorrupted()
 
-  override fun notesCorrupted(): Boolean = !notes.valid
+    override fun notesPresent(): Boolean = notes.present
 
-  override fun complete(): Boolean = notes.present && notes.complete
+    override fun notesCorrupted(): Boolean = !notes.valid
 
-  override fun shouldObfuscate(aspect: Aspect): Boolean = !pool.hasDiscovered(aspect)
+    override fun complete(): Boolean = notes.present && notes.complete
 
-  override fun erase(hexKey: String): Result<Unit> = notes.erase(hexKey)
+    override fun shouldObfuscate(aspect: Aspect): Boolean = !pool.hasDiscovered(aspect)
 
-  override fun write(hexKey: String, aspect: Aspect): Result<Unit> = notes.write(hexKey, aspect)
+    override fun erase(hexKey: String): Result<Unit> = notes.erase(hexKey)
+
+    override fun write(hexKey: String, aspect: Aspect): Result<Unit> = notes.write(hexKey, aspect)
 }

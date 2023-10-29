@@ -10,10 +10,10 @@ constructor(
     private val pool: AspectPool,
     private val base: KnowledgeBase,
 ) : ResearcherKnowledgePort {
-  override fun hasDiscovered(knowledge: ResearcherKnowledgePort.Knowledge): Boolean =
-      base.hasDiscovered(knowledge)
+    override fun hasDiscovered(knowledge: ResearcherKnowledgePort.Knowledge): Boolean =
+        base.hasDiscovered(knowledge)
 
-  override fun hasDiscovered(aspect: Aspect): Boolean = pool.hasDiscovered(aspect)
+    override fun hasDiscovered(aspect: Aspect): Boolean = pool.hasDiscovered(aspect)
 
-  override fun allDiscoveredAspects(): Array<Aspect> = pool.allDiscovered()
+    override fun allDiscoveredAspects(): Array<Aspect> = pool.allDiscovered()
 }
