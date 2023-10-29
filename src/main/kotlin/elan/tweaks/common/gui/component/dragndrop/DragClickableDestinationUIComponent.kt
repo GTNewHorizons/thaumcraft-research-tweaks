@@ -7,10 +7,10 @@ import elan.tweaks.common.gui.peripheral.MouseButton
 
 interface DragClickableDestinationUIComponent : UIComponent {
 
-  fun onDragClick(
-      draggable: Any,
-      uiMousePosition: VectorXY,
-      button: MouseButton,
-      context: UIContext
-  )
+    fun onDragClick(
+        draggable: Any,
+        uiMousePosition: VectorXY,
+        button: MouseButton,
+        context: UIContext
+    )
 }

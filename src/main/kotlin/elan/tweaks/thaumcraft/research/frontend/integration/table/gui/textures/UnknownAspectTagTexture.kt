@@ -10,5 +10,5 @@ object UnknownAspectTagTexture :
         textureScale = Scale.cube(32),
         scale = Scale.cube(16),
     ) {
-  val colorMask = Rgba(0.0f, 0.0f, 0.0f, 0.5f)
+    val colorMask = Rgba(0.0f, 0.0f, 0.0f, 0.5f)
 }

@@ -9,13 +9,14 @@ import thaumcraft.client.lib.PlayerNotifications
 import thaumcraft.common.Thaumcraft
 
 class KnowledgeNotificationUIComponent : ForegroundUIComponent {
-  override fun onDrawForeground(uiMousePosition: VectorXY, scale: Scale, context: UIContext) {
-    val time = System.nanoTime() / 1000000L
-    if (PlayerNotifications.getListAndUpdate(time).size > 0) {
-      GL11.glPushMatrix()
-      Thaumcraft.instance.renderEventHandler.notifyHandler.renderNotifyHUD(
-          scale.width.toDouble(), scale.height.toDouble(), time)
-      GL11.glPopMatrix()
+    override fun onDrawForeground(uiMousePosition: VectorXY, scale: Scale, context: UIContext) {
+        val time = System.nanoTime() / 1000000L
+        if (PlayerNotifications.getListAndUpdate(time).size > 0) {
+            GL11.glPushMatrix()
+            Thaumcraft.instance.renderEventHandler.notifyHandler.renderNotifyHUD(
+                scale.width.toDouble(), scale.height.toDouble(), time
+            )
+            GL11.glPopMatrix()
+        }
     }
-  }
 }

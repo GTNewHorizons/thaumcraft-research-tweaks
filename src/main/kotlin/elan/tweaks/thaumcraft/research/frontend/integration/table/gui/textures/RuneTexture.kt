@@ -11,13 +11,14 @@ class RuneTexture private constructor(index: Int) :
         textureScale = Scale(width = 256, height = 16),
         uv = UV(u = 16 * index, v = 0),
         uvScale = Scale.cube(16),
-        scale = Scale.cube(10)) {
+        scale = Scale.cube(10)
+    ) {
 
-  companion object {
-    val offsetToFitInHexCenter = Vector2D(3, 3)
+    companion object {
+        val offsetToFitInHexCenter = Vector2D(3, 3)
 
-    private val allRunes = (0..15).map(::RuneTexture)
+        private val allRunes = (0..15).map(::RuneTexture)
 
-    fun random() = allRunes.random()
-  }
+        fun random() = allRunes.random()
+    }
 }

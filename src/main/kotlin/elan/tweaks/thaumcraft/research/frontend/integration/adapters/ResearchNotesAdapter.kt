@@ -22,73 +22,75 @@ class ResearchNotesAdapter(
     private val table: TileResearchTable,
     private val container: Container
 ) : ResearchNotes {
-  override val present: Boolean
-    get() = notes != null
+    override val present: Boolean
+        get() = notes != null
 
-  override val complete: Boolean
-    get() = notes?.stackTagCompound?.getBoolean("complete") ?: false
+    override val complete: Boolean
+        get() = notes?.stackTagCompound?.getBoolean("complete") ?: false
 
-  override val valid: Boolean
-    get() = validateData()
+    override val valid: Boolean
+        get() = validateData()
 
-  override val data: ResearchNoteData?
-    get() = notes?.let(ResearchManager::getData)
+    override val data: ResearchNoteData?
+        get() = notes?.let(ResearchManager::getData)
 
-  private val notes: ItemStack?
-    get() = table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
+    private val notes: ItemStack?
+        get() = table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX)
 
-  private fun validateData(): Boolean {
-    val hexes = data?.hexEntries?.values ?: return true
-    return hexes.all(this::nonVacantHexesHaveAspects)
-  }
-
-  private fun nonVacantHexesHaveAspects(hex: ResearchManager.HexEntry) =
-      hex.type == HexType.VACANT || hex.aspect != null
-
-  override fun erase(hexKey: String): Result<Unit> = sendAspectPlacePacket(hexKey, aspect = null)
-
-  override fun write(hexKey: String, aspect: Aspect): Result<Unit> =
-      sendAspectPlacePacket(hexKey, aspect)
-
-  override fun duplicate(): Result<Unit> {
-    Minecraft.getMinecraft()
-        .playerController
-        .sendEnchantPacket(container.windowId, DUPLICATE_ACTION_ID)
-
-    return success()
-  }
-
-  private fun sendAspectPlacePacket(hexKey: String, aspect: Aspect?): Result<Unit> {
-    val screenHex = getResearchData().hexes[hexKey] ?: return screenHexNotFound(hexKey)
-
-    PacketHandler.INSTANCE.sendToServer(
-        PacketAspectPlaceToServer(
-            player,
-            screenHex.q.toByte(),
-            screenHex.r.toByte(),
-            table.xCoord,
-            table.yCoord,
-            table.zCoord,
-            aspect))
-
-    return success()
-  }
-
-  override fun findUsedAspectAmounts(): Map<Aspect, Int> {
-    val researchData = getResearchData()
-    val aspects = ResearchCategories.getResearch(researchData.key).tags
-
-    return aspects.getAspects().associateWith { aspect ->
-      researchData.copies + aspects.getAmount(aspect)
+    private fun validateData(): Boolean {
+        val hexes = data?.hexEntries?.values ?: return true
+        return hexes.all(this::nonVacantHexesHaveAspects)
     }
-  }
 
-  private fun getResearchData() =
-      ResearchManager.getData(table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX))
+    private fun nonVacantHexesHaveAspects(hex: ResearchManager.HexEntry) =
+        hex.type == HexType.VACANT || hex.aspect != null
 
-  object HexType {
-    const val VACANT = 0
-    const val ROOT = 1
-    const val NODE = 2
-  }
+    override fun erase(hexKey: String): Result<Unit> = sendAspectPlacePacket(hexKey, aspect = null)
+
+    override fun write(hexKey: String, aspect: Aspect): Result<Unit> =
+        sendAspectPlacePacket(hexKey, aspect)
+
+    override fun duplicate(): Result<Unit> {
+        Minecraft.getMinecraft()
+            .playerController
+            .sendEnchantPacket(container.windowId, DUPLICATE_ACTION_ID)
+
+        return success()
+    }
+
+    private fun sendAspectPlacePacket(hexKey: String, aspect: Aspect?): Result<Unit> {
+        val screenHex = getResearchData().hexes[hexKey] ?: return screenHexNotFound(hexKey)
+
+        PacketHandler.INSTANCE.sendToServer(
+            PacketAspectPlaceToServer(
+                player,
+                screenHex.q.toByte(),
+                screenHex.r.toByte(),
+                table.xCoord,
+                table.yCoord,
+                table.zCoord,
+                aspect
+            )
+        )
+
+        return success()
+    }
+
+    override fun findUsedAspectAmounts(): Map<Aspect, Int> {
+        val researchData = getResearchData()
+        val aspects = ResearchCategories.getResearch(researchData.key).tags
+
+        return aspects.getAspects().associateWith { aspect ->
+            researchData.copies + aspects.getAmount(aspect)
+        }
+    }
+
+    private fun getResearchData() =
+        ResearchManager.getData(table.getStackInSlot(RESEARCH_NOTES_SLOT_INDEX))
+
+    object HexType {
+        const val VACANT = 0
+        const val ROOT = 1
+        const val NODE = 2
+    }
 }

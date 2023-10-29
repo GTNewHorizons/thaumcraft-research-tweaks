@@ -5,9 +5,10 @@ import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.P
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture
 
 object ResearchTableLayout {
-  val guiScale =
-      Scale(
-          width = ResearchTableInventoryTexture.scale.width,
-          height =
-              ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.scale.height)
+    val guiScale =
+        Scale(
+            width = ResearchTableInventoryTexture.scale.width,
+            height =
+            ResearchTableInventoryTexture.inventoryOrigin.y + PlayerInventoryTexture.scale.height
+        )
 }
