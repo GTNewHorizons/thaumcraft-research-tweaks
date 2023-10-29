@@ -10,7 +10,7 @@ object ResearchTableInventoryTexture :
         "research/table/research-table.png",
         textureScale = Scale(width = 342, height = 245),
         uvScale = Scale(width = 342, height = 219)) {
-  val inventoryOrigin = Vector2D(x = 67, y = 191)
+  val inventoryOrigin = Vector2D(x = 83, y = 191)
 
   object Slots {
     val scribeToolsOrigin = Vector2D(x = 91, y = 10)
@@ -25,7 +25,7 @@ object ResearchTableInventoryTexture :
     private val scale =
         Scale(width = COLUMNS * ASPECT_CELL_SIZE_PIXEL, height = ROWS * ASPECT_CELL_SIZE_PIXEL)
 
-    val leftBound = Rectangle(origin = Vector2D(x = 0, y = 12), scale)
+    val leftBound = Rectangle(origin = Vector2D(x = 12, y = 12), scale)
 
     val rightBound = Rectangle(origin = Vector2D(x = 266, y = 12), scale)
   }

@@ -53,15 +53,13 @@ This mod only adds one new texture, others are sourced from original thaumcraft 
 It's encouraged to fiddle with `ResearchTableInventoryTexture` values before any changes to see how it affects the UI.
 
 For example, you need next steps to add one more colum to aspect pools:
-1. Update UI source to fit additional column. It can be found in [texture-src](texture-src).
-   You most likely will need a Photoshop, at least at the moment of writing the texture was created in it.
-2. Replace [main texture](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png) with updated one.
-3. Modify [ResearchTableInventoryTexture](src/main/kotlin/elan/tweaks/thaumcraft/research/frontend/integration/table/gui/textures/ResearchTableInventoryTexture.kt),
+1. Replace [main texture](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png) with updated one.
+2. Modify [ResearchTableInventoryTexture](src/main/kotlin/elan/tweaks/thaumcraft/research/frontend/integration/table/gui/textures/ResearchTableInventoryTexture.kt),
    this is a texture descriptor.
    It contains all texture related constants which are used to build the UI (origins, column/row count, areas).
    Bump row count in `object AspectPools`.
-4. Test and fiddle with `x` coordinates/sizes of various constants found inside until everything looks in place.
-5. Make sure to check how it looks with empty scribe tools, put research parchment, etc.
+3. Test and fiddle with `x` coordinates/sizes of various constants found inside until everything looks in place.
+4. Make sure to check how it looks with empty scribe tools, put research parchment, etc.
 
 Which is precisely what I've done in [this PR](https://github.com/GTNewHorizons/thaumcraft-research-tweaks/pull/8)
 to add 4th column
