@@ -40,7 +40,27 @@ object ResearchTableInventoryTexture :
     private const val SIZE_PIXEL = 18
     const val SIZE_WITH_SHADOW_PIXELS = SIZE_PIXEL + SHADOW_PIXELS
     private val uiOrigin = Vector2D(x = 207, y = 6)
-    val bounds = Rectangle(origin = uiOrigin, scale = Scale(SIZE_PIXEL, SIZE_PIXEL))
+    val bounds = Rectangle(
+        origin = uiOrigin,
+        scale = Scale.cube(SIZE_PIXEL)
+    )
     val requirementsUiOrigin = ResearchArea.bounds.origin + Vector2D(x = 6, y = 4)
   }
+
+  object UsageHint {
+      private const val SHADOW_PIXELS = 6
+      private const val SIZE_PIXEL = 18
+      const val SIZE_WITH_SHADOW_PIXELS = SIZE_PIXEL + SHADOW_PIXELS
+      private val uiOrigin = Vector2D(x = 111, y = 6)
+      val uiBounds = Rectangle(
+          origin = uiOrigin,
+          scale = Scale.cube(SIZE_WITH_SHADOW_PIXELS)
+      )
+      private val onMouseOverOrigin = Vector2D(x = 114, y = 10)
+      val onMouseOverBounds = Rectangle(
+          origin = onMouseOverOrigin,
+          scale = Scale.cube(SIZE_PIXEL)
+      )
+  }
+
 }

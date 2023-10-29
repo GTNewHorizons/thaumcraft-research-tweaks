@@ -30,6 +30,7 @@ interface UIContext {
 
   fun drawTooltip(uiPosition: VectorXY = Vector2D.ZERO, vararg text: String)
   fun drawTooltipCentered(uiCenterPosition: VectorXY = Vector2D.ZERO, vararg text: String)
+  fun drawTooltipVerticallyCentered(uiCenterPosition: VectorXY = Vector2D.ZERO, vararg text: String)
 
   fun drawOrb(uiPosition: VectorXY, color: Int)
   fun drawOrb(uiPosition: VectorXY)
