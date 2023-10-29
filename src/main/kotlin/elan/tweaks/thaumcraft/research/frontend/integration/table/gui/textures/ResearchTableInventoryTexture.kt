@@ -56,7 +56,7 @@ object ResearchTableInventoryTexture :
           origin = uiOrigin,
           scale = Scale.cube(SIZE_WITH_SHADOW_PIXELS)
       )
-      private val onMouseOverOrigin = Vector2D(x = 98, y = 10)
+      private val onMouseOverOrigin = Vector2D(x = 114, y = 10)
       val onMouseOverBounds = Rectangle(
           origin = onMouseOverOrigin,
           scale = Scale.cube(SIZE_PIXEL)
