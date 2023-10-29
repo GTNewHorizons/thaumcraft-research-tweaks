@@ -46,8 +46,42 @@ Nice to have:
 - Migrate gradle to kts
 - Automatic Testing
 
-## Development
-To run client with specific username set it in `PLAYER_USER_NAME` environment variable.
+## Maintenance
+It is possible to do trivial updates (not introducing new/removing existing concepts) to UI
+without diving deep into code base, knowing Kotlin or even having little coding exp.
+
+For example, you need next steps to add one more colum to aspect pools:
+1. Update UI source to fit additional column. It can be found in [texture-src](texture-src).
+   You most likely will need a Photoshop, at least at the moment of writing the texture was created in it.
+2. Replace [main texture](src/main/resources/assets/thaumcraft/textures/research/table/research-table.png) with updated one.
+3. Modify [ResearchTableInventoryTexture](src/main/kotlin/elan/tweaks/thaumcraft/research/frontend/integration/table/gui/textures/ResearchTableInventoryTexture.kt),
+   this is a texture descriptor.
+   It contains all texture related constants which are used to build the UI (origins, column/row count, areas).
+   Bump row count in `object AspectPools`.
+4. Test and fiddle with `x` coordinates/sizes of various constants found inside until everything looks in place.
+5. Make sure to check how it looks with empty scribe tools, put research parchment, etc.
+
+It's encouraged to fiddle with `ResearchTableInventoryTexture` values before any changes to see how it affects the UI.
+
+This mod only adds one new texture, others are sourced from original thaumcraft mod in runtime (to avoid any problems with licensing).
+
+## Testing tips
+Don't forget to test:
+- With/without/with empty scribe tools - renders an error message
+- With finished/unfinished/empty research papers - rendering of research paper
+- With all aspects unlocked (if everything fits alright)
+- With all/none research unlocked - if copy button appears correctly
+
+Useful commands:
+- Add 10 of all aspects to Developer player (default player name)
+```
+/thaum aspect Developer all 10
+```
+
+- Obtain all research
+```
+/thaum research Developer all
+```
 
 ## Known issues
 
