@@ -33,7 +33,6 @@ Copy button is active only when all required components present (aspects, paper,
 
 ### Functional
 Nice to have
-- "Info" element (question mark icon?) which explains how to use the table
 - A way to switch (in-game?) to old UI in case a fallback needed
 - Configurable bonus aspect particle (change size/turn off)
 - Batch aspect combination in one packet (see PacketAspectCombinationToServer)
