@@ -1,13 +1,12 @@
 package elan.tweaks.thaumcraft.research.frontend.domain.model
 
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
-import kotlin.math.absoluteValue
 import thaumcraft.api.aspects.Aspect
+import kotlin.math.absoluteValue
 
 object AspectTree : AspectsTreePort {
 
   private val orderedBalance = findBalance()
-  override fun toString(): String = "AspectTree: $orderedBalance"
 
   private fun findBalance(): OrderedBalance {
     val (aspectToOrder, affinityToOrder, affinityToEntropy) = findOrderAndAffinities()
