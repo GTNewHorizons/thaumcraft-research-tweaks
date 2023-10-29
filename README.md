@@ -29,16 +29,15 @@ You can also do the same with auto combination unlocked in research mastery.
 ### Research duplication
 Copy button is active only when all required components present (aspects, paper, ink).
 
-
-
 ## Roadmap
 
 ### Functional
 Nice to have
+- "Info" element (question mark icon?) which explains how to use the table
+- A way to switch (in-game?) to old UI in case a fallback needed
 - Configurable bonus aspect particle (change size/turn off)
 - Batch aspect combination in one packet (see PacketAspectCombinationToServer)
 - Stable aspect layout (aspect is always in same position, even if this means having gaps)
-- "Info" element (question mark icon?) which explains how to use the table
 - Old style combine section between scribbling tools and copy button
 
 ### Non-functional
@@ -49,6 +48,9 @@ Nice to have:
 ## Maintenance
 It is possible to do trivial updates (not introducing new/removing existing concepts) to UI
 without diving deep into code base, knowing Kotlin or even having little coding exp.
+
+This mod only adds one new texture, others are sourced from original thaumcraft mod in runtime (to avoid any problems with licensing).
+It's encouraged to fiddle with `ResearchTableInventoryTexture` values before any changes to see how it affects the UI.
 
 For example, you need next steps to add one more colum to aspect pools:
 1. Update UI source to fit additional column. It can be found in [texture-src](texture-src).
@@ -61,9 +63,9 @@ For example, you need next steps to add one more colum to aspect pools:
 4. Test and fiddle with `x` coordinates/sizes of various constants found inside until everything looks in place.
 5. Make sure to check how it looks with empty scribe tools, put research parchment, etc.
 
-It's encouraged to fiddle with `ResearchTableInventoryTexture` values before any changes to see how it affects the UI.
+Which is precisely what I've done in [this PR](https://github.com/GTNewHorizons/thaumcraft-research-tweaks/pull/8)
+to add 4th column
 
-This mod only adds one new texture, others are sourced from original thaumcraft mod in runtime (to avoid any problems with licensing).
 
 ## Testing tips
 Don't forget to test:
