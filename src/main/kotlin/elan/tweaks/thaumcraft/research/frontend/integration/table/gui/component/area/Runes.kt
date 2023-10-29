@@ -6,7 +6,7 @@ import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPr
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.layout.ParchmentHexMapLayout
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.RuneTexture
-import java.util.*
+import java.util.Random
 
 class Runes(
     private val uiOrigin: VectorXY,

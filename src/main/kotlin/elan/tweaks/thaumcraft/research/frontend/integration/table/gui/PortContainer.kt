@@ -8,7 +8,12 @@ import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectPall
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.AspectsTreePort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
-import elan.tweaks.thaumcraft.research.frontend.integration.adapters.*
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.AspectCombinerAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.AspectPoolAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.KnowledgeBaseAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.PlayerInventoryAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.ResearchNotesAdapter
+import elan.tweaks.thaumcraft.research.frontend.integration.adapters.ScribeToolsAdapter
 import elan.tweaks.thaumcraft.research.frontend.integration.table.container.ResearchTableContainerFactory
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ResearchTableInventoryTexture
 import net.minecraft.entity.player.EntityPlayer

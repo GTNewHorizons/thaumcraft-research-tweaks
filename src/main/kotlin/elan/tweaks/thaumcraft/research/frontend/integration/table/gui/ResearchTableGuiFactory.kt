@@ -9,7 +9,11 @@ import elan.tweaks.common.gui.layout.grid.GridLayout
 import elan.tweaks.common.gui.layout.grid.GridLayoutDynamicListAdapter
 import elan.tweaks.common.gui.layout.hex.HexLayout
 import elan.tweaks.thaumcraft.research.frontend.integration.table.TableUIContext
-import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.*
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.AspectDragAndDropUIComponent
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.AspectPalletUIComponent
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.CopyButtonUIComponent
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.KnowledgeNotificationUIComponent
+import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.ScribeToolsNotificationUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapEditorUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.AspectHexMapUIComponent
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component.area.ParchmentUIComponent

@@ -10,7 +10,7 @@ import elan.tweaks.common.gui.rendering.AspectRenderer
 import elan.tweaks.common.gui.rendering.TextureRenderer
 import elan.tweaks.common.gui.rendering.TooltipRenderer
 import elan.tweaks.common.gui.textures.TextureInstance
-import java.util.*
+import java.util.Random
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.entity.EntityLivingBase

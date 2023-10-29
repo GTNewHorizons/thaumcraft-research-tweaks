@@ -4,7 +4,7 @@ import elan.tweaks.common.gui.dto.Rgba
 import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.common.gui.textures.TextureInstance
-import java.util.*
+import java.util.Random
 import thaumcraft.api.aspects.Aspect
 
 interface UIContext {

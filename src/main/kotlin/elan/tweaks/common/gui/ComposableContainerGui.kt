@@ -1,6 +1,12 @@
 package elan.tweaks.common.gui
 
-import elan.tweaks.common.gui.component.*
+import elan.tweaks.common.gui.component.BackgroundUIComponent
+import elan.tweaks.common.gui.component.ClickableUIComponent
+import elan.tweaks.common.gui.component.ForegroundUIComponent
+import elan.tweaks.common.gui.component.MouseOverUIComponent
+import elan.tweaks.common.gui.component.TickingUIComponent
+import elan.tweaks.common.gui.component.UIComponent
+import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.component.dragndrop.DragAndDropUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DragClickableDestinationUIComponent
 import elan.tweaks.common.gui.component.dragndrop.DraggableSourceUIComponent

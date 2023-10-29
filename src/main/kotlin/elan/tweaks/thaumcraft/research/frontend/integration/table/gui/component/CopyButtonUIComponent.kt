@@ -1,6 +1,10 @@
 package elan.tweaks.thaumcraft.research.frontend.integration.table.gui.component
 
-import elan.tweaks.common.gui.component.*
+import elan.tweaks.common.gui.component.BackgroundUIComponent
+import elan.tweaks.common.gui.component.ClickableUIComponent
+import elan.tweaks.common.gui.component.MouseOverUIComponent
+import elan.tweaks.common.gui.component.TickingUIComponent
+import elan.tweaks.common.gui.component.UIContext
 import elan.tweaks.common.gui.dto.Rectangle
 import elan.tweaks.common.gui.dto.Vector2D
 import elan.tweaks.common.gui.dto.VectorXY

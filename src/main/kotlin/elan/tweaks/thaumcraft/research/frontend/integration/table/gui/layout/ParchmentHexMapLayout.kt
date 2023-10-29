@@ -7,7 +7,7 @@ import elan.tweaks.common.ext.key
 import elan.tweaks.common.gui.dto.VectorXY
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.HexTexture
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.textures.ParchmentTexture
-import java.util.*
+import java.util.Stack
 import thaumcraft.common.lib.utils.HexUtils
 
 object ParchmentHexMapLayout {

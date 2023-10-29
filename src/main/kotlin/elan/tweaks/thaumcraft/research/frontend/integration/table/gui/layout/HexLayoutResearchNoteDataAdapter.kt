@@ -13,7 +13,7 @@ import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchPr
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort
 import elan.tweaks.thaumcraft.research.frontend.integration.adapters.ResearchNotesAdapter
 import elan.tweaks.thaumcraft.research.frontend.integration.table.gui.dto.AspectHex
-import java.util.*
+import java.util.Stack
 import thaumcraft.common.lib.research.ResearchManager
 import thaumcraft.common.lib.utils.HexUtils
 

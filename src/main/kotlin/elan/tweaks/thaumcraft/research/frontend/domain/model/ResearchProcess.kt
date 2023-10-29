@@ -4,7 +4,11 @@ import elan.tweaks.thaumcraft.research.frontend.domain.failures.DuplicationFailu
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.MissingResearchFailure.Companion.missingResearchDuplication
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearchProcessPort
 import elan.tweaks.thaumcraft.research.frontend.domain.ports.provided.ResearcherKnowledgePort.Knowledge
-import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.*
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.AspectPool
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.KnowledgeBase
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.PlayerInventory
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.ResearchNotes
+import elan.tweaks.thaumcraft.research.frontend.domain.ports.required.ScribeTools
 import thaumcraft.api.aspects.Aspect
 import thaumcraft.common.lib.research.ResearchNoteData
 
