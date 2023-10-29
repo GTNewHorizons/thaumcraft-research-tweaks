@@ -16,10 +16,10 @@ class UsageHintUIComponent(
     private val uiBounds: Rectangle,
     private val onMouseOverBounds: Rectangle,
     private val researcher: ResearcherKnowledgePort
-): BackgroundUIComponent, MouseOverUIComponent {
+) : BackgroundUIComponent, MouseOverUIComponent {
 
-    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext){
-        if(researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
+        if (researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
             context.drawBlending(UsageHintResearchExpertiseTexture, uiBounds.origin)
         } else {
             context.drawBlending(UsageHintTexture, uiBounds.origin)
@@ -34,7 +34,7 @@ class UsageHintUIComponent(
         val hintHeaderLine = StatCollector.translateToLocal("researchtable.usagehint.header")
         val hintDescriptionLine = StatCollector.translateToLocal("researchtable.usagehint.description")
 
-        if(researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+        if (researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
             val hintResearchExpertise =
                 StatCollector.translateToLocal("researchtable.usagehint.research_expertise")
             context.drawTooltipVerticallyCentered(
