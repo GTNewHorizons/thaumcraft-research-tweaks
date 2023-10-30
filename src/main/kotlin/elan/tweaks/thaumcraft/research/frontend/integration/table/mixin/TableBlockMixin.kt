@@ -20,7 +20,8 @@ abstract class TableBlockMixin {
           At(
               value = "INVOKE",
               target =
-                  "net.minecraft.entity.player.EntityPlayer.openGui(Ljava/lang/Object;ILnet/minecraft/world/World;III)V"),
+                  "net.minecraft.entity.player.EntityPlayer.openGui(Ljava/lang/Object;ILnet/minecraft/world/World;III)V",
+              remap = false),
       require = 4)
   private fun correctGuiCallFor(
       entityPlayer: EntityPlayer,
