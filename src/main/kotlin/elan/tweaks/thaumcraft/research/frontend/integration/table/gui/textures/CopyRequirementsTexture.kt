@@ -9,5 +9,4 @@ object CopyRequirementsTexture :
         "gui/guiresearchtable2.png",
         textureScale = Scale.cube(256),
         uv = UV(184, 224),
-        uvScale = Scale(width = 48, height = 16)
-    )
+        uvScale = Scale(width = 48, height = 16))

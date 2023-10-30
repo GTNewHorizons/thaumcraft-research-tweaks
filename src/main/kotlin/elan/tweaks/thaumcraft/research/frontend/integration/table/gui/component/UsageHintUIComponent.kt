@@ -18,34 +18,39 @@ class UsageHintUIComponent(
     private val researcher: ResearcherKnowledgePort
 ) : BackgroundUIComponent, MouseOverUIComponent {
 
-    override fun onDrawBackground(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
-            context.drawBlending(UsageHintResearchExpertiseTexture, uiBounds.origin)
-        } else {
-            context.drawBlending(UsageHintTexture, uiBounds.origin)
-        }
+  override fun onDrawBackground(
+      uiMousePosition: VectorXY,
+      partialTicks: Float,
+      context: UIContext
+  ) {
+    if (researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+      context.drawBlending(UsageHintResearchExpertiseTexture, uiBounds.origin)
+    } else {
+      context.drawBlending(UsageHintTexture, uiBounds.origin)
     }
+  }
 
-    override fun onMouseOver(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
-        if (uiMousePosition in onMouseOverBounds) drawHint(uiMousePosition, context)
+  override fun onMouseOver(uiMousePosition: VectorXY, partialTicks: Float, context: UIContext) {
+    if (uiMousePosition in onMouseOverBounds) drawHint(uiMousePosition, context)
+  }
+
+  private fun drawHint(uiMousePosition: VectorXY, context: UIContext) {
+    val hintHeaderLine = StatCollector.translateToLocal("researchtable.usagehint.header")
+    val hintDescriptionLine = StatCollector.translateToLocal("researchtable.usagehint.description")
+
+    if (researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
+      val hintResearchExpertise =
+          StatCollector.translateToLocal("researchtable.usagehint.research_expertise")
+      context.drawTooltipVerticallyCentered(
+          uiCenterPosition = uiMousePosition + UsageHintLayout.textBoxOffset,
+          hintHeaderLine,
+          hintDescriptionLine,
+          hintResearchExpertise)
+    } else {
+      context.drawTooltipVerticallyCentered(
+          uiCenterPosition = uiMousePosition + UsageHintLayout.textBoxOffset,
+          hintHeaderLine,
+          hintDescriptionLine)
     }
-
-    private fun drawHint(uiMousePosition: VectorXY, context: UIContext) {
-        val hintHeaderLine = StatCollector.translateToLocal("researchtable.usagehint.header")
-        val hintDescriptionLine = StatCollector.translateToLocal("researchtable.usagehint.description")
-
-        if (researcher.hasDiscovered(Knowledge.ResearchExpertise)) {
-            val hintResearchExpertise =
-                StatCollector.translateToLocal("researchtable.usagehint.research_expertise")
-            context.drawTooltipVerticallyCentered(
-                uiCenterPosition = uiMousePosition + UsageHintLayout.textBoxOffset,
-                hintHeaderLine, hintDescriptionLine, hintResearchExpertise
-            )
-        } else {
-            context.drawTooltipVerticallyCentered(
-                uiCenterPosition = uiMousePosition + UsageHintLayout.textBoxOffset,
-                hintHeaderLine, hintDescriptionLine
-            )
-        }
-    }
+  }
 }

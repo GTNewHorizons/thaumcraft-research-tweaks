@@ -6,14 +6,14 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.ResourceLocation
 
 interface TextureInstance {
-    val scale: Scale
-    val uv: UV
-    val uvScale: Scale
-    val textureScale: Scale
+  val scale: Scale
+  val uv: UV
+  val uvScale: Scale
+  val textureScale: Scale
 
-    val resourceLocation: ResourceLocation
+  val resourceLocation: ResourceLocation
 
-    fun beforeGL() {}
-    fun before(tessellator: Tessellator) {}
-    fun afterGL() {}
+  fun beforeGL() {}
+  fun before(tessellator: Tessellator) {}
+  fun afterGL() {}
 }
