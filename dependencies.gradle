@@ -1,11 +1,7 @@
 // Add your dependencies here
 
-repositories {
-    mavenLocal()
-}
-
 dependencies {
-    api 'com.github.GTNewHorizons:Forgelin:1.9.8-GTNH'
+    api 'com.github.GTNewHorizons:Forgelin:1.10.0-GTNH'
 
     // Thaumcraft
     implementation 'thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev'
