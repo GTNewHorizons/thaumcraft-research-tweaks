@@ -4,6 +4,9 @@ This mod brings a reworked research table GUI.
 
 ![new UI](doc/example-gui.png)
 
+## Dependency
+This mod requires [Forgelin](https://github.com/GTNewHorizons/Forgelin/tags) to work.
+
 ## Features
 Tutorial and research pages where expanded to include explanations on new features.
 
@@ -81,36 +84,6 @@ Useful commands:
 ```
 /thaum research Developer all
 ```
-
-## Known issues
-
-### Aspect from mod X is not showing up in the aspect pools.
-
-**Probable Cause**: Mod X creates its aspects on `FMLLoadCompleteEvent` or later
-which causes aspect caching of this mod to miss it.
-
-**Solutions**:
-1. Move aspect creation of mod X earlier (e.g. FMLInitializeEvent).
-   This would be a preferred solution since aspects should be created early if possible.
-2. Drop `AspectTree` initialization in `elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer`
-   (two lines, one creating the tree and second one printing).
-   This will cause caching on first UI opening.
-   This is not crucial, but somewhat reduces UX, since it will cause a small delay
-
-## Known issues
-
-### Aspect from mod X is not showing up in the aspect pools.
-
-**Probable Cause**: Mod X creates its aspects on `FMLLoadCompleteEvent` or later
-which causes aspect caching of this mod to miss it.
-
-**Solutions**:
-1. Move aspect creation of mod X earlier (e.g. FMLInitializeEvent).
-   This would be a preferred solution since aspects should be created early if possible.
-2. Drop `AspectTree` initialization in `elan.tweaks.thaumcraft.research.frontend.integration.proxies.ClientSingletonInitializer`
-   (two lines, one creating the tree and second one printing).
-   This will cause caching on first UI opening.
-   This is not crucial, but somewhat reduces UX, since it will cause a small delay
 
 ## Known issues
 
