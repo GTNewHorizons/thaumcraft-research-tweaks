@@ -7,3 +7,11 @@ buildConfig {
     buildConfigField('String', 'MODVER', "\"${project.modVersion}\"")
     useKotlinOutput { topLevelConstants = true }
 }
+
+// Gradle 9 strict validation: reobfJar reads build/tmp/mixins/mixins.srg which kapt
+// also touches; declare ordering to satisfy the implicit-dependency check.
+afterEvaluate {
+    tasks.named('reobfJar').configure {
+        mustRunAfter 'kaptTestKotlin'
+    }
+}
