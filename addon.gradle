@@ -8,10 +8,17 @@ buildConfig {
     useKotlinOutput { topLevelConstants = true }
 }
 
-// Gradle 9 strict validation: reobfJar reads build/tmp/mixins/mixins.srg which kapt
-// also touches; declare ordering to satisfy the implicit-dependency check.
 afterEvaluate {
+    // Gradle 9 strict validation: reobfJar reads build/tmp/mixins/mixins.srg which kapt
+    // also touches; declare ordering to satisfy the implicit-dependency check.
     tasks.named('reobfJar').configure {
         mustRunAfter 'kaptTestKotlin'
+    }
+
+    // RFG doesn't configure useJUnitPlatform(); without it Gradle uses the JUnit 4
+    // runner and can't discover JUnit 5 tests. Gradle 9 then fails with
+    // failOnNoDiscoveredTests. Configure it explicitly here.
+    tasks.named('test').configure {
+        useJUnitPlatform()
     }
 }
