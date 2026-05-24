@@ -8,7 +8,9 @@ dependencies {
     runtimeOnlyNonPublishable 'com.github.GTNewHorizons:Baubles-Expanded:2.2.11-GTNH:dev'
 
     // Testing
-    testImplementation platform('org.junit:junit-bom:5.9.2')
+    testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.assertj:assertj-core:3.24.2'
 }
