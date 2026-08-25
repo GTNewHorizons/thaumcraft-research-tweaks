@@ -1,5 +1,6 @@
 package elan.tweaks.thaumcraft.research.frontend.domain.model
 
+import elan.tweaks.common.ext.ResultExt.success
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinationFailure.Companion.cannotDerivePrimalAspect
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.AspectCombinationFailure.Companion.missingComponents
 import elan.tweaks.thaumcraft.research.frontend.domain.failures.MissingResearchFailure.Companion.missingResearchMastery
@@ -23,32 +24,36 @@ constructor(
 
   override fun missing(aspectAmounts: Map<Aspect, Int>): Boolean = pool.missing(aspectAmounts)
 
-  override fun deriveBatch(desiredAspect: Aspect): Result<Unit> = batch { derive(desiredAspect) }
+  override fun deriveBatch(desiredAspect: Aspect): Result<Unit> = derive(desiredAspect, batchSize)
 
-  override fun derive(desiredAspect: Aspect): Result<Unit> =
+  override fun derive(desiredAspect: Aspect): Result<Unit> = derive(desiredAspect, 1)
+
+  private fun derive(desiredAspect: Aspect, count: Int): Result<Unit> =
       when {
         base.hasNotDiscovered(Knowledge.ResearchMastery) -> missingResearchMastery()
         desiredAspect.isPrimal -> cannotDerivePrimalAspect()
-        pool.anyComponentMissingFor(desiredAspect) -> missingComponents()
-        else -> combiner.combine(desiredAspect.components[0], desiredAspect.components[1])
+        else -> combineBatch(desiredAspect.components[0], desiredAspect.components[1], count)
       }
 
   override fun combineBatch(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> =
-      if (base.hasDiscovered(Knowledge.ResearchExpertise))
-          batch { combine(firstAspect, secondAspect) }
-      else combine(firstAspect, secondAspect)
+      combineBatch(
+          firstAspect,
+          secondAspect,
+          if (base.hasDiscovered(Knowledge.ResearchExpertise)) batchSize else 1)
 
   override fun combine(firstAspect: Aspect, secondAspect: Aspect): Result<Unit> =
-      when {
-        isDrainedOf(firstAspect) || isDrainedOf(secondAspect) -> missingComponents()
-        else -> combiner.combine(firstAspect, secondAspect)
-      }
+      combineBatch(firstAspect, secondAspect, 1)
+
+  private fun combineBatch(firstAspect: Aspect, secondAspect: Aspect, count: Int): Result<Unit> {
+    val maxAffordable = minOf(pool.totalAmountOf(firstAspect), pool.totalAmountOf(secondAspect))
+    val toCombine = count.coerceAtMost(maxAffordable)
+    if (toCombine <= 0) return missingComponents()
+    repeat(toCombine) {
+      val result = combiner.combine(firstAspect, secondAspect)
+      if (result.isFailure) return result
+    }
+    return success()
+  }
 
   override fun isDrainedOf(aspect: Aspect): Boolean = pool.totalAmountOf(aspect) <= 0
-
-  private fun <ResultT> batch(function: () -> Result<ResultT>): Result<ResultT> {
-    val batchResults = (1..batchSize).map { function() }
-
-    return batchResults.firstOrNull { it.isSuccess } ?: batchResults.first()
-  }
 }
