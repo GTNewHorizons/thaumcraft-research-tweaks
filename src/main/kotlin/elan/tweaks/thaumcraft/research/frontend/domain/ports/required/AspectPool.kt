@@ -10,7 +10,6 @@ interface AspectPool {
   fun bonusAmountOf(aspect: Aspect): Int
   fun totalAmountOf(aspect: Aspect): Int
 
-  fun anyComponentMissingFor(aspect: Aspect): Boolean
   fun missing(aspectAmounts: Map<Aspect, Int>): Boolean = !contains(aspectAmounts)
   fun contains(aspectAmounts: Map<Aspect, Int>): Boolean
 }

@@ -14,17 +14,6 @@ class AspectPoolAdapter(private val player: EntityPlayer, private val table: Til
 
   override fun allDiscovered(): Array<Aspect> = playerAspectList().getAspects()
 
-  override fun anyComponentMissingFor(aspect: Aspect): Boolean {
-    val components = aspect.components ?: return false
-    return aspect.isCompound &&
-        components.size == 2 &&
-        totalAmountOf(components[0]) <= 0 &&
-        totalAmountOf(components[1]) <= 0
-  }
-
-  private val Aspect.isCompound
-    get() = !isPrimal
-
   override fun contains(aspectAmounts: Map<Aspect, Int>): Boolean =
       aspectAmounts.all { (aspect, requiredAmount) -> totalAmountOf(aspect) >= requiredAmount }
 
